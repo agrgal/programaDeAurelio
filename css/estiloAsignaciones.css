@@ -1,0 +1,115 @@
+/* Estilo Asignaciones */
+
+#eligeAsignacion {
+	background: url("../imagenes/patterns/science-background.png") repeat; 
+    position: relative;
+    border: 0px solid red;
+    padding: 2px 2px; /* Un poco con los márgenes separados */
+    margin: 5px 5px;
+    text-align: center;
+    overflow: hidden; /* permite que el padre tenga el alto de los hijos */
+}
+
+
+/* DIV Nueva Asignación */
+
+#nuevaAsignacion {
+    background: url("../imagenes/patterns/science-background.png") repeat; 
+    position: relative;
+    border: 0px solid red;
+    padding: 2px 2px; /* Un poco con los márgenes separados */
+    text-align: center;
+    overflow: hidden; /* permite que el padre tenga el alto de los hijos */
+}
+
+/************* ZONA A ********************/
+
+#zonaSeleccionable {
+    border: 0px solid orange;    
+    text-align: center;
+    overflow: auto;
+    float: left;
+    width: 69%; /* original 69% */
+    margin: 10px 2px;
+}
+
+/* --------------------------- */
+#zonaCursosContenedor {
+    border-right: 2px solid black;
+    /* background: lightblue; */
+    float: left;
+    margin: 5px 5px;
+    width: 36%; /* original 42% */
+    text-align: center;
+    overflow: hidden;
+}
+
+#zonaNiveles {
+	    border: 0px solid black;
+	    clear: both;
+	    margin: 3px auto;
+	    width: auto;
+		text-align: center;
+		overflow: hidden;
+}
+
+#zonaNiveles span {
+	    font-size: 0.7em; /* permite poner los botones algo más pequeños, para elegir Nivel */
+}
+	
+#zonaCursos {
+	    border: 0px solid orange;
+	    clear: both;
+	    margin: 3px auto;
+	    width: auto;
+		text-align: center;
+		overflow: hidden;
+		display: table;
+}
+
+/* --------------------------- */	
+
+#zonaAlumnos {
+    border-left: 0px solid black;
+    float: right;
+    margin: 5px 5px;
+    width: 61%; /* original: 54% */
+}
+
+/* --------------------------- */	
+
+#zonaDatos {
+    border-bottom: 0px solid black;
+    clear:both;
+    width:90%;
+    margin: 10px auto;
+    padding-bottom: 20px;
+    overflow: hidden;
+}
+
+#materias {
+	float: left;
+	width: 79%;
+	border: 0px solid black;
+}
+
+/*
+#tutoria {
+	float: right;
+	width: 19%;
+	border: 0px solid black;
+} */
+/************* ZONA B ********************/
+
+#zonaSeleccion {
+    position: relative;
+    float:right;
+    width: 29%; /* original 29 % */
+    margin-right: 10px;
+    margin-top: 40px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    border: 0px solid green;
+    background-color: rgba(113,223,113,0.3); /* un color verde y su alfa */
+}
+

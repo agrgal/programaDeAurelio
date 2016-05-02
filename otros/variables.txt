@@ -1,0 +1,171 @@
+Repasar o introducir
+====================
+1º) Seguridad en el INDEX.php
+2º) Estilos en los menús a la izquierda
+3º) Menú de tutoría... Cuando llegue el momento hay que hacerlo.
+4º) En formulario -> scripts -> InsertarFORM (¿Y en modificarForm?) terminar la funcion tipología
+    que reconoce si hay un tipo de datos y si el valor pasado pertenece a él.
+5º) En editaFormulario, intentar cambiar un poco más lo del label del slider...
+6º) En class.alumnos.php, en devuelveAlumno, recuperar foto si existe...
+7º) En asignacion.php, en el dialogo de confirmación de grabar o no, mostrar los datos de la asignación...
+    dialog-confim... span confirmarAsignacion
+8º) En opiniones.php: repasar lo del sincronismo de las llamadas AJAX. Lo he conseguido gracias a retornar 
+la "promesa" con return $.ajax y usar la función $.when( ).done(function(){  }); ¡¡Parece que funciona !!
+8ºB) En opiniones.php: repasar lo de incluir una entrada con "la última fecha"...
+8ºC) Creé una llanda AJAX llamada setVariableSesionAlumno por si hacía falta hacer un reload, estableciendo una
+variable de sesión idAlumno. No la he usado en opiniones, aunque dejo la función de llamada y el script por si me hace falta posteriormente.
+8ºD) ¿opción Autosave apagar-encender o establecer tiempo? ¿Opción Grabar con un botón? 
+8ºE) Instrucciones de Opiniones. ¿Introducir Instrucciones de Asignaciones?
+9º) Repasar todos los <title>
+10º) En listaPanel.php, script de opiniones Histórico, incluir foto si existe...
+11º) En "Histórico de Opiniones", quizás mejorar un poco más el aspecto de los botones...
+12º) Opiniones Generales. Modificar instrucciones.
+
+
+Includes htmlsuelto
+===================
+cabecera.php -> Cabecera donde parece los títulos, logotipos y hora - fecha
+barrasuperior.php --> Menú de la barra superior
+menuinicial.php --> menú a la izquierda que aparece cuando estamos en el index.
+menuIZQUIERDO.php -> aquí estarían los menús
+js_menu.js -> script javascript que permite la funcionalidad en menuIZQUIERDO
+  ORDEN: barrasuperior.php --> cargar en la página el script js_menu.js --> este 
+  lee de menuIZQUIERDO.php el html del menú y lo carga. Además establece la 
+  variable de sesión $_SESSION["menuIZQ"]
+js_datepicker_espannol.js -> Pone en español los datepicker.
+
+Variables de sesion
+===================
+
+$_SESSION['permisos'] --> establece la variable de permiso de la página
+                      --> 0 sin acceso, 1 como profesor y 2 como administrador
+
+$_SESSION['profesor'] // Identificación del profesor
+$_SESSION['menuIZQ']  // Identifica el menú que fue pulsado y lo recuerda
+$_SESSION['IDform']   // controla el ID en el formulario.
+$_SESSION['nombreTabla'] // Identifica el nombre de la tabla con la que se trabaja en el modo edición
+$_SESSION["idasignacion"] // Identifica la asignación elegida...
+$_SESSION["tutor"] // Guarda si es o no tutor
+
+Clase profesores
+================
+ 
+    var $idprofesor;
+	var $Empleado;	
+	var $listaprofesorado; // array con la informacion del profesorado ["Empleado"][i]...
+	var $DNI;
+	
+	function nombreEmpleado();  // hay que establecer $this->idprofesor y retorna $this->profesorado
+	function listaProfesores(); // retorna el array listaprofesorado
+	function compruebaPASS ();  // hay que establecer $this->DNI y retorna la id del profesor. No establece %this->idprofesor
+							    // usada en el script "./profesores/scripts/compruebacontrasenna.php"
+							    
+Clase formulario
+================
+
+    // Esta clase es capaz de reconocer datos tipo INT, VARCHAR y DATE, definidos en MySQL.
+    // Reconoce también una clave primaria, y lo que se ponga en comentarios.
+    
+    var $nombreTabla; //guarda el nombre de la tabla
+	var $arrayNombreCampos;	//guarda un array con el nombre de los campos, el tipo, lo que ocupa...
+	var $nombrePK; // nombre de la clave primaria
+	var $mivalor; // array que guarda los valores de un registro
+
+	function nombreCampos (); // Obtiene un array tipo campo, tipo, longitud, claveprimaria en el arrayNombreCampos
+							  // que informa de qué tipo es cada campo.
+	function tipoCampo ($a, $cual): // $a es el resultado de $row["Type"]. Si $cual=0 devuelve el tipo de campo
+	                                // y si 1, la longitud máxima del campo.
+	function nombreClavePrimaria () // devuelve el nombre de la clave primaria. Establece $arrayNombreCampos y $nombrePK
+	function minmaxClavePrimaria ($cual) //devuelve el mínimo y el máximo de la clave primaria según cual=0 ó 1
+	function valoresTabla($id) // dado un Id, retorna los valores de la tabla. Establece $this->arrayNombreCampos
+	function datosPK() // funcion que devuelve todos los valores de clave primaria de la tabla.
+	
+Clase Cursos
+============
+
+	var $listaDeCursos; // array que guarda una lista con los cursos existentes
+					    // largo (nombre de la unidad tal como aparece en Séneca) 1 Bach A, 1 ESO A
+					    // curso - clase - nivel 
+					    // alumnado: lista de los alumnos de cada clase separados por #
+					    // corto: unidad en formato corto. Por ejemplo 1BACHA, 1ESOA...
+	var $listaDeNiveles; // array que guarda una lista con los niveles existentes
+	                     // input -> guarda html que presentar en la página como buttonset
+	var $esteCurso; // array que guarda el curso actual, con su curso - nivel - letra; ejemplo: 1 ESO C
+	                // Opción div: dibuja una caja para presentar en la página.	
+	                // Opción corto: nombre corto de la unidad.
+	function listarCursos // crea la variable listaDeCursos
+	function listarNiveles // crea la variable listaDeNiveles; implica la de listaDeCursos
+	function devuelveCurso ($cual) // devuelve, según la clave un curso - nivel -clase y un div.
+	function devuelveListaAlumnos ($curso) // dado un curso, devuelve la lista de alumnado separados por un #
+	function devuelveCursoCorto ($nombreCorto) // dado un nombre corto, devuelve la clave del array $ListaDeCursos...
+	function devuelveAsignacionLarga ($asignacionCorta) //
+	         // Doy una asignacion del tipo 1ESOC#12#45 y devuelve una cadena tipo 1#2#...#12#45 con los índices del alumnado
+	         // sin repetir y ordenada.
+	function devuelveCursosdeAsignacion ($asignacionLarga, $tipo)
+	         // dada una signación con la retahíla de alumnos 1#2#24#45#...#23#467...
+	         // devuelve una cadena con los cursos 1ESOC#1ESOD... a los que pertenecen esos alumnos.
+	         // según el valor $tipo: 0-> devuelve cursos cortos 1ESOD. Con 1 -> como en Séneca 1 ESO D
+	
+Clase alumnos
+=============
+
+	var $esteAlumno; // array que devuelve, según el id los datos del alumno
+	                 // idalumno, nombre (Apellidos, Nombre), nombre2 (Nombre + Apellidos), unidad, div
+	                
+	function devuelveAlumno ($id) // según el id busca en la base de datos los parámetros para esteAlumno
+
+Clase asignaciones
+===================
+
+    private $clasecurso;
+    private $claseprofesor;
+    private $clasemateria; // variables de clase que "paso" a variables privadas dentro de la clase asignacion
+    var $estaAsignacion; // variable que guarda una asignación por id.
+    var $listaDeAsignaciones; // listado de asignaciones
+    
+    constructor --> llama a todas esas clases, para usarlas después en la función.
+    
+    function listarAsignaciones ($profesor) // dada la id de un profesor, pone en la variables 
+       // listaDeAsignaciones los datos de la misma: idasignacion, profesor, materia, datos, descripcion, tutorada
+       // nombreProfesor -> nombre largo quitada la coma
+       // nombreMateria y abreviaturaMateria
+       // cursosAfectados -> los cursos a los que pertenecen los alumnos de esa asignacion
+       // alumnado -> retahíla de alumnos, del tipo 12#45#...
+       // descripcion -> devuelve la descripción (profesor, cursos afectados, materia)
+       // div -> Información html para mostrar en pantalla en ASIGNACIONES
+	function devuelveDescripcionAsignacion ($id, $profesor) 
+    	// Funcion que retorna la descripcion de una asignación, dado id y profesor 
+	function devuelveTutorAsignacion ($id, $profesor) 
+	    // Funcion que retorna si es tutor o no
+	function devuelveListadoAlumnosdeEstaAsignacion ($id, $profesor) {	    
+	    // Función que retorna el listado de alumnos de una asignación
+	    
+    	    
+Clase opiniones
+===============
+
+     var $listadoDeItems; // Items que existen para opinar: iditem, item, grupo, positivo y div
+                          // variable POSITIVO: negativo --> 0 ; positivo --> 1 ; neutro --> mayor que 1
+     function listaItems () // devuelve todos los items que hay en la tabla tb_itemsopiniones                 
+     function checkOpinion($fecha, $asignacion, $alumno) // dada fecha, asignacion y alumno, devuelve el id de la misma si existe...
+     function listaFechasOpinion($asignacion, $alumno) // devuelve listado de fechas por cada alumno y asignación
+     function listaFechasGlobal($asignacion) // devuelve listado de fechas por asignación
+        // estas dos últimas fucniones sirven para recuperar el listado de fechas en las que se ha opinado del alumno/a
+     function divOpinionResumen($fecha, $asignacion, $alumno) // dada fecha, asignacion y alumno
+        // devuelve un array codificado en JSON  con los valores de items y observaciones 
+     function retornaItem ($id) // dado un identificador de item, id, recupera un json con el valor de ese identificador
+     function itemsElegidos ($cadena) // dada una cadena del tipo 9#14#.. devuelve los items separados por punto y coma.
+     
+Clase evaluaciones
+==================
+
+     var $listadoDeEvaluaciones; // Lista de los períodos de evaluación: Primera, segunda. tercera...
+                                 // ideval, nombreeval, fechafin (si cero, es extraordinaria)
+                                 // div -> Región donde se muestra el período de evaluación
+     function listaEvaluaciones -> A la variable anterior, asigna los datos de la BDD.
+     function calculaFecha ($fechaDada,$id) // Paso dos parámetros, una fecha y la variable true o false ($id)
+                                            // Si id es true, retorna el ideval del período de evaluación que toca a esa fecha. 
+                                            // Cero, si no lo encuentra.
+                                            // Si id es false, retorna la fecha de fin del período de evaluación que toca para esa fecha.
+                                            // Si fuera del período, la fecha actual.
+                                 

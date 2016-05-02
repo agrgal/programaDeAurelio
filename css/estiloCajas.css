@@ -1,0 +1,167 @@
+/* Estilo Cajas */
+
+/* DIV del curso y alumnos */
+
+.divcurso , .divalumno {
+   border: 3px solid black;
+   background: #82a3c3;
+   text-align: center;
+   padding: 0px 0px;   
+   position: relative;
+   display: inline-block;
+   /* float: left; */
+   /* color: #214c75; */
+   color: darkblue;
+   width: 90px; /* caben de 3 en 3 */ /* original  110px */
+   font-size: 0.8em;
+   margin: 5px 5px;
+        border-radius: 10px;
+        box-shadow: 2px 2px 2px darkgrey;
+}
+
+.divalumno {
+  width: 137px; /* caben de 3 en 3 */ /* original  147px */
+  background: #b7cde2;
+  margin: 3px 3px;
+}
+
+.divcurso:hover,
+.divalumno:hover {
+   background: #CDB9E4;
+   color: #4C237A;
+}
+
+.divcurso p, 
+.divalumno p {
+  font-size: 1em;
+  font-weight: bold;
+  padding: 1px 1px;
+  margin: 0px 0px;
+    word-wrap: break-word; /* permite romper palabras largas */
+}
+
+.divalumno p {
+  font-size: 0.8em;
+}
+
+.divalumno img {
+  width: 50px;
+  height: auto;
+}
+
+.divalumno table {
+ width:80%;
+ margin: 0 auto;
+ border: 0px solid black;
+}
+
+/* ============================ */
+/* DIV de la caja de Asignacion */
+/* ============================ */
+
+.divasignacion {
+   border: 3px solid black;
+   background: #82a3c3;
+   text-align: center;
+   padding: auto 2px;   
+   position: relative;
+   display: inline-block; 
+   color: darkblue;
+   width: 95%;
+   font-size: 0.9em;
+   margin: 15px 5px;
+        border-radius: 10px;
+        box-shadow: 5px 5px 5px black;
+}
+
+.divasignacionprofesor, .divasignacionmateria, 
+.divasignacioncursos, .divasignacionbotones, 
+.divasignaciontutor {
+  width: auto;
+  max-width: 23%;
+  font-size: 1em;
+  font-weight: bold;
+  margin: 10px 10px;
+  padding: 2px 5px;
+  border: 0px solid green;
+  float: left;
+  background: #b7cde2;
+        border-radius: 10px;
+        box-shadow: 5px 5px 5px black;
+}
+
+.divasignacioncursos {
+    max-width: 15%;
+}
+
+.divasignaciontutor {
+    float: left;
+    max-width: 10%;
+}
+
+.divasignacionbotones {
+    float: right;
+    max-width: 40%;
+    padding: 10px 10px;
+}
+
+.divasignacionbotones img , .divasignaciontutor img {
+  width: 50px;
+  height: auto;
+  margin: 10px 10px;
+}
+
+/* ============================ */
+/* DIV ITEMS EVALUATIVOS        */
+/* ============================ */
+
+.divitem {
+   border: 3px solid black;
+   text-align: center;
+   padding: 5px 5px;   
+   position: relative;
+   display: inline-block; 
+   /* float: left;  */
+   color: darkblue;
+   font-size: 0.9em;
+        border-radius: 10px;
+        box-shadow: 2px 2px 2px darkgrey;
+   width: 250px;
+   height: auto;
+   background: #b7cde2;    
+   margin: 8px 8px; 
+}
+
+.divitem:hover {
+   background: #CDB9E4;
+   color: #4C237A;
+}
+
+.divitem p {
+  font-size: 0.8em;
+  font-weight: bold;
+  padding: 1px 1px;
+  margin: 1px 1px;
+  text-align: center;
+  /* word-wrap: break-word; /* permite romper palabras largas */
+  text-overflow: ellipsis;
+  overflow: hidden; 
+  white-space: nowrap; /* Se mantiene en una línea; tiene que ir acompañado de height y width auto en lo de antes */
+}
+
+.positivo, .positivo:hover {
+  background: #C8F6F6; /* verde pastel */
+}
+
+.positivo p , .positivo p:hover {
+  color: Darkgreen;}
+
+
+.negativo, .negativo:hover {
+  background: #FCE0E0; /* rojito pastel */
+}
+.negativo p , .negativo p:hover{
+  color: Darkred;
+}
+
+

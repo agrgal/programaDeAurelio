@@ -1,0 +1,20 @@
+.overflow, .overflow2, .overflow3 {
+ height: 300px; /* permite limitar la lista del select menu */
+ text-align: left;
+ font-weight: bold;
+ font-size: 1.2em; /* Y también modifico el texto para que se vea bien de la lista */
+ color: black;
+}
+
+.overflow2 {
+ color: red;
+}
+
+.overflow3 {
+ font-size: 1em;
+}
+
+#selectorTAG {
+   position:absolute;
+   width: 50px;
+}

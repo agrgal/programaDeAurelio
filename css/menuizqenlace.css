@@ -1,0 +1,44 @@
+@charset "ISO-8859-15";
+/* -------- Código --------- */
+
+ul.menuIZQul {
+   list-style-type: none;
+   /* background-color: red; */
+}
+
+.menuIZQul li {
+   /* background-color: blue; */
+   margin-top: 20px;
+   margin-bottom: 20px;
+   margin-left: -30px;
+   text-align: center;
+}
+
+.menuIZQul li a {    
+   font-family: verdana, arial, sans-serif;
+   font-size: 1em; 
+   font-weight: bold;
+   padding: 10px;
+   margin: 0px;
+   background-color: #E7AB76;
+   color: #E7D4C3;
+   text-decoration: none;
+   display: block;
+}
+.menuIZQul li a:link,
+.menuIZQul li a:visited {
+   background-color: #E7AB76;
+   color: #412100;
+   border-top: 1px solid #412100;
+   border-bottom: 5px solid #412100;
+   border-left: 1px solid #412100;
+   border-right: 5px solid #412100;
+}
+.menuIZQul li a:hover {
+   background-color: #FFD2A9;
+   color: darkbrown;
+   border-bottom: 1px solid darkbrown;
+   border-top: 5px solid darkbrown;
+   border-right: 1px solid darkbrown;
+   border-left: 5px solid darkbrown;
+}

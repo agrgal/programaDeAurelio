@@ -1,0 +1,171 @@
+/* Estilo Asignaciones */
+
+/* =============================== */
+
+#opinionesAlumno {
+ background: url("../imagenes/patterns/science-background.png") repeat; 
+ border: 0px solid orange;
+ padding: 2px 4px;
+ overflow: hidden;
+}
+
+/* =============================== */
+
+#contenedorAlumno {
+	/* background: url("../imagenes/patterns/old_mathematics.png") repeat; */
+    border: 0px solid black;
+    float: left;
+    margin: 10px 2px;
+    padding: 5px;
+    width: 24%; /* original: 54% */
+}
+
+#carrusel {
+    border: 0px peru solid;
+    text-align: center;
+}
+
+#zonaSlider {
+    clear:both;
+    width:100%;
+    height: auto;
+    margin: 0px auto;
+    text-align: center;
+    border: 0px green solid;
+}
+
+#selectorAlumnos {
+   border: 0px orange solid;
+   margin: 0px auto;
+}
+
+#zonaBotones {
+    clear:both;
+    width:100%;
+    height: auto;
+    margin: 0px auto;
+    text-align: center;
+    border: 0px blue solid;
+    vertical-align: middle;
+}
+
+#zonaBotones span {
+	font-size: 1.5em; /* permite poner los botones algo más pequeños, para elegir Nivel */
+	padding: 2px 2px;
+}
+
+#zonaOrdenes, #zonaFecha {
+    clear:both;
+    width:100%;
+    height: auto;
+    margin: 10px auto;
+    text-align: center;
+    border: 0px blue solid;
+    vertical-align: middle;
+}
+
+#zonaOrdenes .ordenes {
+	width: 90%;
+	margin: 10px auto;
+	text-align: left;
+	padding: 5px 5px;
+	font-size: 0.8em;
+	font-weight: bold;
+}
+
+
+/* ======== Imagen del alumnado ========= */
+
+.divalumno2 {
+    width: 200px;
+    height: 125px;
+}
+
+/* ========= =============================================================  ===== */
+
+/* ========= Opiniones ===== */
+
+#contenedorOpiniones {
+    border: 0px solid black;
+    /* background: url("../imagenes/patterns/old_mathematics.png") repeat; */
+    float: right;
+    margin: 5px auto;
+    margin-top: 10px;
+    margin-left: 20px;
+    padding-left: 10px;
+    width: 72%;
+    text-align: center;
+}
+
+#menuGrupos {
+	border: 0px solid black;
+    float: left;
+    margin: 2px auto;
+    width: 98%;
+    text-align: center;
+}
+
+#menuGrupos .jqx-menu-item-top, #menuGrupos .jqx-menu-item /* cambia el estilo de JQmenu */
+{
+    font-size: 1.6em;
+}
+
+#fecha, #muestrafecha { /* estilo de la caja de fechas */
+	font-size: 0.9em;
+	width: 140px;
+}
+
+#zonaItems {
+    /* border: 2px solid #1947D1; 
+        border-radius: 20px;
+        box-shadow: 2px 2px 2px #C2CBD7; */
+    /* background-color: #DDDDFF; */
+    clear: both;
+    margin: 10px auto;
+    padding: 0px 0px;
+    width: 98%;
+    min-height:30px;
+    text-align: center;
+}
+
+/* ========= =============================================================  ===== */
+
+/* ========= Opiniones Elegidas  ============ */
+
+#contenedorOpinionesElegidas {
+    border: 2px solid green;
+    background-color: rgba(113,223,113,0.3); /* un color verde y su alfa */
+        border-radius: 20px;
+        box-shadow: 2px 2px 2px darkgreen;
+    clear: both;
+    margin: 10px 0px;
+    padding: 10px 0px;
+    width: 98%;
+    text-align: center;
+}
+
+#zonaEscribir {
+    border: 0px solid green;
+    width: 90%;
+    margin: 10px auto;
+}
+
+#editor { /* cargando el editor froala, es posible que no sirvan todas estas características */
+	font-size: 1.1em;
+	text-align: left;
+	padding: 10px;
+	background-color: rgba(0, 60, 30, 0.2);
+	    border-radius: 2px;
+        box-shadow: 2px 2px 2px darkgreen;
+    min-height: 1em;
+}
+
+/* ========= =============================================================  ===== */
+
+/* ========= Lista de fechas ============ */
+
+.ui-selectmenu-text { /* Del listado de fechas . reduzco un poco su tamaño */
+	font-size: 1em;
+}
+
+

@@ -1,0 +1,433 @@
+
+<?php
+// Codigo que se ejecuta al principio de la página
+// importante incluir al principio de cada una, lo de las funciones
+include_once("./funciones/funciones.php"); // funciones varias de conexión a base de datos, etc.
+
+// Incluyo además las clases que se van a usar
+include_once("./clases/class.micalendario.php"); //clase mi calendario que presenta fechas formateadas
+// include_once("./clases/class.profesores.php"); //clase que recupera datos de profesores
+include_once("./clases/class.formulario.php"); //clase que recupera datos de profesores
+
+// incluyo las variables de esas clases
+$calendario = New micalendario(); // variable de calendario. Lo necesito para la cabecera
+// $profesorado = New profesores(); //variable de la clase profesores
+$formulario = New formulario(); // variable de la clase formulario
+
+// Variables de sesión
+session_start();
+if ($_SESSION['permisos']<>2) { // en caso que no tenga permisos para entrar
+	echo header("Location: ./index.php");
+}
+
+// Las variables de sesión se establecen en los scripts AJAX en 
+
+?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="es">	
+<head profile="http://www.w3.org/2005/10/profile">
+  <!-- *** Principio del HEAD *************************************-->	
+  <meta content="text/html; charset=iso-8859-15" http-equiv="content-type">
+  <title>Controlar datos de la Base de Datos</title>
+  <link rel="icon" 
+        type="image/png" 
+        href="./imagenes/logoA.png">
+  <meta content="Aurelio Gallardo Rodríguez" name="author">  
+  <meta content="Página índice de la web de tutoría" name="description">
+
+  <!-- ***************************** -->
+  <!-- Linkar a hojas de estilo CSS -->
+  <!-- ***************************** -->
+  <?php include_once("./css/cargarestiloscss.php"); ?>
+ 
+  <!-- *** Final del HEAD, antes los ficheros de enlace a CSS ******-->
+</head>
+
+<body>
+<!-- **************************************************************************-->	
+<!-- *** Principio del BODY ***************************************************-->	
+<!-- **************************************************************************-->	
+
+<div id="container"> <!-- CONTENEDOR PRINCIPAL -->
+	
+	<!-- HTML suelto: barra superior, menu superior, menu lateral,   -->
+	<?php include_once("./htmlsuelto/cabecera.php"); ?>
+	<?php include_once("./htmlsuelto/barrasuperior.php"); // y dentro de él el include al menú correspondiente ?> 
+	<div id="menu" style="text-align: justify; padding-right: 1em;">
+		<?php include_once("./htmlsuelto/menuIZQUIERDO.php"); ?> 
+ 	</div>     
+    
+    <!-- ******************************************* -->
+    <!-- ******** ZONA DE CÁLCULOS PREVIOS ********* -->
+    <!-- ******************************************* -->
+    <?php // Extrae variables para la página de la clase formulario
+		$campos = array();
+		if (!isset($_GET['tabla']) && !isset($_SESSION['nombreTabla'])) 
+		    { $_SESSION['nombreTabla']= "tb_profesores"; }
+		else if (isset($_GET['tabla']) && $_SESSION['nombreTabla']!=$_GET['tabla'] ) 
+		    { $_SESSION['nombreTabla']= $_GET['tabla']; $_SESSION["IDform"]=0; }
+		$formulario->nombreTabla= $_SESSION['nombreTabla'];
+		// $formulario->nombreTabla="tb_alumno";
+		$formulario->NombreCampos(); // Función que asigna a arrayNombreCampos el nombre de los campos de la tabla
+		$campos = $formulario->arrayNombreCampos;
+		$tamanno = sizeof($campos["campo"])+1; // coloca columna a la izquierda del form
+		// Establece el valor de la variable de sesión IDform
+		// define la variable SESSION para el control del formulario
+        if (!isset($_SESSION['IDform'])) { $_SESSION['IDform']= $formulario->minmaxClavePrimaria(0); }
+        // Margen para el dato sesión IDform
+        if ($_SESSION['IDform']<$formulario->minmaxClavePrimaria(0)) { $_SESSION['IDform']= $formulario->minmaxClavePrimaria(0);} // establece el mínimo
+        if ($_SESSION['IDform']>$formulario->minmaxClavePrimaria(1)) { $_SESSION['IDform']= $formulario->minmaxClavePrimaria(1);} // establece el máximo
+		$dato = $formulario->valoresTabla($_SESSION["IDform"]); // Dato de un registro.
+		$listaID = $formulario->datosPK(); // Listado de las claves primarias.
+    ?>    
+    <!-- *********************************************************** -->
+     
+	<div id="test"> <!-- TESTER -->
+	    <p id="testear">
+			<?php // echo $formulario->minmaxClavePrimaria(0)." - ". $formulario->minmaxClavePrimaria(1); ?>	    
+			<?php // foreach($listaID as $clave => $valor) { echo "[".$clave."]: ".$valor." - ";} ?>
+			<?php // echo "GET: ".$_GET["tabla"]." SESIÓN: ".$_SESSION["nombreTabla"]; ?>
+			<?php // echo " SESIÓN: ".$_SESSION["IDform"]; ?>			
+		</p>
+    </div>	<!-- TESTER -->
+    
+    <!-- ********************************************************** -->
+    <!-- Contenido Principal -->
+    <!-- ********************************************************** --> 
+    
+    <div id="contents"> <!-- &&&& -->
+		<form id="edicionDatos">
+		   <h2 style="text-align: center;">Edición de la tabla <?php echo $formulario->nombreTabla;?></h2>			   	   	   
+		   <table width="80%" align="center" style="border: 0px solid black;"><tbody>
+			   <!-- <tr><td colspan="2" style="text-align: center;">
+				   <div id="selector" style="width:80%; margin: 0 auto;"></div></br>
+			   </td></tr> -->
+		   <?php	foreach($campos["campo"] as $clave => $valor) {
+			        $longitud = $campos["longitud"][$clave]; 
+			        $longitud = ($longitud>=50)*50+$longitud*($longitud<50); // calcula la longitud visible en el form
+    				echo '<tr>';
+					if ($clave==0) { // Selector rápido
+					 	echo '<td style="border: 0px solid black; text-align:center; " width="5%" rowspan="'.$tamanno.'">';
+					 	echo '<div id="selector" style="height:300px; margin: 0 auto;"></div>';
+					 	echo '</td>'; 
+					} // columna a la izquierda
+					echo '<td width="15%" style="border: 0px solid black; font-weight: bold; text-align: right; padding-right: 15px;">'.ucfirst($valor)
+					.'</td><td width="70%" style="border: 0px solid black;">';
+							if ($clave==0) { // selecciono número de identificación
+								echo '<select name="Escoger" id="Escoger" class="seleccionaid">';
+								foreach ($listaID as $clave2 => $valor2) {
+									$dato2 = $formulario->valoresTabla($valor2);	
+									if ($valor2==$_SESSION["IDform"]) { $selected="selected"; } else {$selected="";} 
+									echo '<option '.$selected.' value="'.$valor2.'">'.$valor2.'.- '.$dato2[$campos["campo"][1]].'</option>'; // presenta el segundo campo
+								}	
+								echo '</select>';
+							} else { // si no, es un input
+								echo '<input style="text-align: left;" type="text" id="'
+							   .$valor.'" size="'.$longitud. '" title="'.$campos["comentario"][$clave]. '" name="'.$campos["tipo"][$clave].'"'
+					           .'" value="'.$dato[$valor].'" maxlength="'.$campos["longitud"][$clave].'" class="inputFormCSS">'; // ¿y si en la primera introduzco el combo?					
+					           // echo '<p>'.$campos["tipo"][$clave].' - '.$campos["longitud"][$clave].'</p>';
+							}
+					echo '</td></tr>';	// cierro la celda
+			    }	// fin del foreach		    
+		   ?>
+		   <tr><td colspan="2" id="filademenu" style="border: 0px solid black; text-align: center; padding: 10px;" >
+		   <button id="Primero" class="inputFormCSS"><<</button>
+	       <button id="Atrás" class="inputFormCSS"><</button>
+	       <button id="Adelante" class="inputFormCSS">></button>
+	       <button id="Último" class="inputFormCSS">>></button> 
+		   &nbsp;&nbsp;
+	       <button id="Modificar" class="inputFormCSS">Modificar</button>
+	       <button id="NuevoGrabar" class="inputFormCSS">Nuevo</button>
+	       &nbsp;&nbsp;
+	       <button id="Borrar" class="inputFormCSS">Borrar</button>
+		   </td></tr>
+		   </tbody></table>
+		</form>	
+	</div> <!-- &&&& -->	
+	
+	 <!-- Dialogo de Borrado -->	
+	<div id="dialog-confirm" title="Borrado de datos">
+       <p><span class="fa fa-trash fa-2x" style="float:left; margin:0 7px 20px 0;"> </span>
+       ¿De verdad quieres borrar <?php echo $dato[$campos["campo"][0]].".- ".$dato[$campos["campo"][1]];?>?</p>
+    </div>
+	
+
+	<!-- ********************************************************** -->
+	<!-- FIN DEL CONTENIDO PRINCIPAL -->
+	<!-- ********************************************************** -->
+    
+    <!-- HTML suelto: pie de página *******************************  -->
+    <?php include_once("./htmlsuelto/pie.php"); ?> 
+    <!-- ********************************************************** -->
+    
+</div> <!-- FIN del CONTENEDOR PRINCIPAL -->
+
+<!-- **************************************************************************-->	
+<!-- *** Final del BODY, antes los scripts ************************************-->
+<!-- **************************************************************************-->	
+
+<!-- *************************** -->
+<!-- Scripts JQUERY y Javascript -->
+<!-- *************************** -->
+  
+  <script src="./jquery/external/jquery/jquery.js"></script>
+  <!-- <script src="./jquery/jquerymousewheel/jquery.mousewheel.js"></script>  -->
+  <!-- <script src="./jquery/jquery-ui.min.js"></script> <!-- version 1.11.2 -->
+  <script src="//code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script> <!-- version 1.11.0 -->
+  <script src="./htmlsuelto/js_menu.js"></script>  
+
+  <!-- <script src="./htmlsuelto/js_menu.js"></script>   Incorpora al script los menús a la izquierda -->  
+  <script>
+     
+     $(document).ready(function() {  		 
+		 
+		 // Versiones de JQUERY y JQUERY-UI
+		 // alert($().jquery);
+	     // alert($.ui.version);
+	     
+	     // *********** CALENDARIO DATAPICKER ******************
+	     $("input").each(function(index) {
+			   if ($(this).attr('name')=="date") {
+				   // alert($(this).attr('id'));
+				   $(this).datepicker({  
+					   dateFormat: 'yy-mm-dd',
+					   showOn: "button",
+					   buttonImage: "./imagenes/iconos/calendar_mini.png",
+					   buttonImageOnly: true,
+					   buttonText: "Elige un día",
+					   changeMonth: true,
+					   changeYear: true
+				   }); // con el mismo formato que el date de evaluacion
+				   // $(this).datepicker( "option", "dateFormat", "yy-mm-dd");
+			   }
+		 });	     
+	     // **************** FIN CALENDARIO ********************	   
+
+	     // **********  SLIDER ******************
+	     var minimo = $('#Escoger option:first-child').val();
+	     var maximo = $('#Escoger option:last-child').val();
+	     var seleccionado = $('#Escoger').val();
+	     // alert(minimo+" "+maximo+" - " + seleccionado);
+     
+	     // Definición del slider	     
+	       $( "#selector" ).slider({
+			 orientation: "vertical",
+			 min: 1,
+			 max: 10000,
+			 step: 100,
+			 value: parseInt(((10000-1)/(maximo-minimo))*(seleccionado-minimo))+parseInt(1),
+			 slide: function (event,ui) {
+				var valores = parseInt(((maximo-minimo)/(10000-1))*(ui.value-1))+parseInt(minimo);	 
+                $(this).find('.ui-slider-handle')
+                   .html('<div class="value-label" style="font-size: 1em; text-align: center;">'+valores+'</div>');
+			 },
+			 change: function( event, ui ) {
+				 var valores = parseInt(((maximo-minimo)/(10000-1))*(ui.value-1))+parseInt(minimo);				 
+				 moverseTabla(valores); // carga valor				 
+			 },
+			 create: function(event, ui) {
+				 $('.ui-slider-handle').width("3em");
+				 $('.ui-slider-handle').css("margin-left","-20px");
+				 // $('.ui-slider-handle').left(-20);
+                 $(this).find('.ui-slider-handle')
+                   .html('<div class="value-label" style="font-size: 1em;  text-align: center;">'+seleccionado+'</div>');
+                 // Para comprender como posicionar el handle: http://osdir.com/ml/jquery-ui/2009-03/msg00886.html
+			 }
+		   });	             
+           
+           // ********** FIN DEL SLIDER ******************
+	      
+		// Definición del diálogo de confirmación de borrado
+		  $("#dialog-confirm").dialog({
+			autoOpen: false,
+			modal: true,
+			maxWidth:600,
+            maxHeight: 280,
+            width: 600,
+            height: 280,
+			position: { my: "center center-100", at: "center center", of: "#container" }
+			// el "centro arriba" de mi cuadro de diálogo (my) , en el centro arriba (at) del contenedor (of)
+		  });
+		  
+		// Definición del SELECT
+		   $( "#Escoger" )
+			.selectmenu({width:800, style:'dropdown'})
+			.selectmenu("menuWidget")
+			   .addClass("overflow"); // carga un estilo que está en /css/estiloSelectMenuOverflow.css
+		 
+		// 1a) Incorpora la funcionalidad del menú
+		$.getScript( "./htmlsuelto/js_menu.js", function( data, textStatus, jqxhr ) {
+		console.log( data ); // Data returned
+		console.log( textStatus ); // Success
+		console.log( jqxhr.status ); // 200
+		console.log( "Load was performed." );
+		}); 
+		
+		// 1b) Y del datepicker en español
+		$.getScript( "./htmlsuelto/js_datepicker_espannol.js", function( data, textStatus, jqxhr ) {
+		console.log( data ); // Data returned
+		console.log( textStatus ); // Success
+		console.log( jqxhr.status ); // 200
+		console.log( "Load was performed." );
+		}); 
+		
+		// 1c) Activa los ToolTIP en el documento
+	    $.getScript( "./htmlsuelto/js_tooltips.js", function( data, textStatus, jqxhr ) {
+		console.log( data ); // Data returned
+		console.log( textStatus ); // Success
+		console.log( jqxhr.status ); // 200
+		console.log( "Load was performed." );
+		}); 
+		
+		// 2) Reconoce los INPUTS como botones
+		$(".inputFormCSS").button();	
+	    
+		// 3) Botones de control
+		$("#Primero").click( function(event) { moverseTabla("first"); });
+		
+		$("#Atrás").click( function(event) { moverseTabla("previous"); });
+		
+		$("#Adelante").click( function(event) { moverseTabla("next"); });
+		
+		$("#Último").click( function(event) { moverseTabla("last");	});	
+		
+		$("#Escoger").selectmenu({ // Simplemente manda el valor, y ya en el script PHP se asigna la variable de sesión
+			                         // que recargará la página. 
+			select: function( event, ui ) { 
+			   moverseTabla($("#Escoger option:selected").val());
+			}
+		});
+		
+		// Reconoce los campos que existen dentro del form
+		// 4) Atributos para MODIFICAR. 
+		$("#Modificar").click( function(event) { 
+			var miarray = new Object();
+			var miarrayJSON = new Object();
+			$("input").each(function(index) {
+			   // alert( $(this).attr('id') + ": " + $(this).val());
+			   miarray[$(this).attr('id')]=$(this).val();
+			});		
+			miarrayJSON=jQuery.makeArray(miarray);
+			// alert(JSON.stringify(miarrayJSON));
+			modificarRegistro(JSON.stringify(miarrayJSON));
+		});	
+		
+		// 5) Insertar un nuevo dato
+        $("#NuevoGrabar").click(function(event) {
+			// alert("aqui");
+			event.preventDefault();
+			$("span", this).text(function(i, text){
+			   // NUEVO
+			   if (text==="Nuevo") 
+					{ // alert (text); 
+				      $("button").hide(); // Oculta todos los botones
+				      $(this).parent().show(); // Pero muestra este	
+				      $("input").each(function(index) { $(this).val(""); });	// Vacía los campos	
+				      $("#Escoger").selectmenu("disable"); // desconecta el select
+				      return "Grabar";
+					}
+			   // GRABAR
+			   if (text==="Grabar") 
+			        { // alert ("He pulsado Grabar"); 
+					  // ******** LLAMADA AL SCRIPT QUE GRABA **************
+					  $("button").show(); // Muestra otra vez todos los botones
+					  // ***************************
+					  // Crear ARRAY de datos
+					  // ***************************
+					  var miarray = new Object();
+					  var miarrayJSON = new Object();
+				      $("input").each(function(index) {
+					   // alert( $(this).attr('id') + ": " + $(this).val());
+					   miarray[$(this).attr('id')]=$(this).val();
+					  });		
+				      miarrayJSON=jQuery.makeArray(miarray);
+					  // alert(JSON.stringify(miarrayJSON));
+					  insertarRegistro(JSON.stringify(miarrayJSON));
+					  $("#Escoger").selectmenu("enable"); // conecta el select
+					  return "Nuevo";
+					}
+            });            
+		}); // Fin del 5
+		
+		// 5) Insertar un nuevo dato. Confirmado a través de dialog
+        $("#Borrar").click(function(event) {
+		    // alert("Borrar");
+            event.preventDefault();
+            $("#dialog-confirm").dialog({
+			buttons : {
+				"Sí, Bórralo" : function() {
+				  // alert("dato borrado");
+				  borrarRegistro();
+			 	  $(this).dialog("close");
+			    },
+				"No,no... Cancela" : function() {
+				  $(this).dialog("close");
+			    }
+			} // fin del buttons
+            }); // fin del dialog
+            
+            $("#dialog-confirm").dialog("open"); // si no, no lo abre
+            
+	    }); // fin del click al borrar
+				
+	 });
+	 
+	 // ******************************************************
+	 // Funciones en la página *******************************
+	 // ******************************************************
+	 
+	 // F1) Moverse por la tabla 
+	 function moverseTabla(puntero) {
+				 var posting = $.post( "./formulario/scripts/cambiarIDform.php", { 
+					  lee: puntero,
+				  });
+				  posting.done(function(data,status) { 
+					  // alert(data);
+					  // $("#testear").html(data);
+					  location.reload();
+				  });
+		}
+		
+	 // F2) Modificación de un registro /*
+	 function modificarRegistro(cadena) {
+				 var posting = $.post( "./formulario/scripts/modificarFORM.php", { 
+					  lee: cadena,
+				  });
+				  posting.done(function(data,status) { 
+					  // alert(data);
+					  // $("#testear").html(data);
+					  location.reload();
+				  });
+		}
+		
+	 // F3) Insertar un registro /*
+	 function insertarRegistro(cadena) {
+				 var posting = $.post( "./formulario/scripts/insertarFORM.php", { 
+					  lee: cadena,
+				  });
+				  posting.done(function(data,status) { 
+					  // alert(data);
+					  // $("#testear").html(data);
+					  location.reload();
+				  });
+	  }
+	  
+	 // F4) Borrar un registro /*
+	 function borrarRegistro() {
+		         // alert("activado");
+				 var posting = $.post( "./formulario/scripts/borrarFORM.php", {
+					 lee: 0, 
+				  });
+				  posting.done(function(data,status) { 
+					  // alert(data);
+					  // $("#testear").html(data);
+					  location.reload();
+				  });
+	  }
+
+
+  </script>
+  
+<!-- **************************************************************************************** -->
+</body></html>

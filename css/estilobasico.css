@@ -1,0 +1,275 @@
+/* -------------------------------------------------------- */
+/* http://www.maxdesign.com.au/articles/process/            */
+/* -------------------------------------------------------- */
+
+@charset "ISO-8859-15";
+/* -------- Código --------- */
+
+body
+{
+	margin: 0;
+	padding: 0;
+	font: 1.4em arial, hevetica, sans-serif;
+	text-align: center;
+	color: #333;
+	background-color: #E7AB76;
+}
+
+a:link { color: #B52C07; }
+a:visited { color: #b93411; }
+a:focus { color: #000; }
+a:hover { color: #7d8206; }
+a:active { color: #453323; }
+h1, h2, h3, h4, h5, h6 { margin: 0 0 .5em; }
+
+h1
+{
+	color: 	#2E2218;
+	font: 140% georgia, times, "times new roman", serif;
+}
+
+h2
+{
+	color: #453323;
+	font: 125% georgia, times, "times new roman", serif;
+}
+
+h2 a { text-decoration: none; }
+
+h3
+{
+	color: #5C442F;
+	font: 110% georgia, times, "times new roman", serif;
+}
+
+h4,h5,h6
+{
+	color: #5C442F;
+	font: 100% georgia, times, "times new roman", serif;
+}
+
+/* ------------------------------
+container styles
+------------------------------ */
+
+#container
+{
+	margin: 0.8em auto;
+	width: 95%;
+	text-align: left;
+	background: #E7D4C3;
+	border: 1px solid #676767;
+}
+
+/* ------------------------------
+header styles
+------------------------------ */
+
+#header
+{
+	height: 50px;
+	width: 100%;
+	position: relative;
+	/* background: url(../imagenes/iesseritium.png) no-repeat 0 0; */
+	padding-top:1%;
+	padding-bottom: 2%;
+	border-bottom: 1px solid black;
+}
+
+#header h1
+{
+	position: absolute;
+	left: 1em;
+}
+
+#logo
+{
+	float: right;
+	position: relative;
+	text-align: center;
+	margin-top: -12px;
+	/* background: red; */
+}
+
+#iesseritium
+{
+	float: left;
+	position: relative;
+	text-align: center;
+	margin-top: -12px;
+	/* background: red; */
+}
+
+#calendario 
+{
+   float:left;
+   position: relative;
+   text-align: justify;
+   margin-left: 10em;
+}
+
+/* ------------------------------
+mainnav styles
+------------------------------ */
+
+#mainnav
+{
+	background: #B9AA9C;
+	color: #272900;
+	padding: 8px 0;
+	margin-bottom: 22px;
+	border-bottom: 1px solid black;
+}
+
+/* --------------------------------------------
+en la barra superior, para poner la descripción
+-------------------------------------------- */
+
+#descripcion {
+ border: 0px solid black;
+ position:relative;
+ top: -23px;
+ right: 5px;
+ float: right;
+ width: auto;
+ height: auto;
+ font-size: 0.7em;
+ font-weight: bolder;
+ text-align: right;
+}
+
+/* -----
+ul
+-------*/
+
+#mainnav ul
+{
+	margin: 0 0 0 20px;
+	padding: 0;
+	list-style-type: none;
+	border-left: 1px solid black;
+}
+
+#mainnav li
+{
+	display: inline;
+	padding: 0 10px;
+	border-right: 1px solid black;
+}
+
+#mainnav li a
+{
+	text-decoration: none;
+	color: #272900;
+}
+
+#mainnav li a:hover
+{
+	text-decoration: none;
+	color: #F3EAE1;
+	/* background-color: #272900; */
+}
+
+/* ------------------------------
+menu styles
+------------------------------ */
+
+#menu
+{
+	float: left;
+	width: 18%;
+	border-left: 1px solid #C5C877;
+	padding-left: 15px;
+	margin-bottom: 10px;
+	border-right: 2px solid black;
+	min-height: 550px;
+	/* background: red; */
+}
+
+/*
+#menu ul
+{
+	margin: 1em 0;
+	padding: 0;
+}
+
+#menu ul li
+{
+	margin: 0 0 1em;
+	padding: 0;
+	list-style-type: none;
+} */
+
+/* ------------------------------
+contents styles
+------------------------------ */
+
+#contents
+{
+	float: right;
+	width: 75%;
+	margin-right: 1em;
+	margin-left:1em;
+	margin-bottom: 10px;
+	/* background: blue; */
+}
+
+#contents p { line-height: 165%; }
+.blogentry { border-bottom: 1px solid #C5C877; }
+
+.blogentry ul
+{
+	text-align: right;
+	margin: 1em 0;
+	padding: 0;
+	font-size: 95%;
+}
+
+.blogentry li
+{
+	list-style-type: none;
+	display: inline;
+	margin: 0;
+	padding: 0 0 0 7px;
+}
+
+.imagefloat
+{
+	float: right;
+	padding: 2px;
+	border: 1px solid #9FA41D;
+	margin: 0 0 10px 10px;
+}
+
+/* ------------------------------
+footer styles
+------------------------------ */
+
+#footer
+{
+	clear: both;
+	overflow: hidden;
+	color: #272900;
+	text-align: center;
+	font-size: 0.6em;
+	background: #B9AA9C;
+	margin: 0px auto;
+	padding: 4px 2px;
+}
+
+
+#footer_img
+{
+    float:right;
+    position: relative;
+    margin: 0.5em 1em 0.5em 5em;
+    /* background: yellow; */
+}
+#footer_text
+{
+    float:left;
+    position: relative;
+    text-align: left;
+    margin: 0.5em 30em 0.5em 5em;
+    /* background: yellow; */
+}

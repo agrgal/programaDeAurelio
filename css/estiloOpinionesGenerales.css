@@ -1,0 +1,96 @@
+/* Zona Origen */
+/* =============================== */
+/* http://www.css3generator.in/text-shadow.html */
+
+#opinionesGenerales {
+ background: url("../imagenes/patterns/science-background.png") repeat; 
+ border: 0px solid orange;
+ padding: 2px 4px;
+ overflow: hidden;
+}
+
+#opinar {
+	float:left;
+	width: 89%;
+	border: 0px solid green;
+	margin-top: 10px;
+}
+
+#opinar h2 {
+	text-align: left;
+	margin: 20px 0px 8px 10px;
+	font-weight: bold;
+text-shadow:7px 1px 10px rgba(11, 107, 112, 0.8);
+font-size: 40px;
+color: #184208;
+font-family:Averia Gruesa Libre;
+}	
+
+#eligeEval {
+	float:right;
+	width: 10%;
+	border: 0px solid red;
+	margin-top: 10px;
+	text-align: center;
+}
+
+.zonaEscrituraOpiniones {
+    width: 98%;
+    margin: 5px auto;
+    padding: 4px 4px;
+    
+-moz-box-shadow: 7px 7px 2px 4px rgba(18, 115, 27, 0.29);
+-webkit-box-shadow: 7px 7px 2px 4px rgba(18, 115, 27, 0.29);
+box-shadow: 7px 7px 2px 4px rgba(18, 115, 27, 0.29);
+
+background: -webkit-linear-gradient(214deg, #6F856D 5%, #1B4A09 100%);
+background: -moz-linear-gradient(214deg, #6F856D 5%, #1B4A09 100%);
+background: -o-linear-gradient(214deg, #6F856D 5%, #1B4A09 100%);
+background: -ms-linear-gradient(214deg, #6F856D 5%, #1B4A09 100%);
+background: linear-gradient(304deg, #6F856D 5%, #1B4A09 100%);
+
+transform:rotateZ(0.2deg);
+-ms-transform:rotateZ(0.2deg);
+-moz-transform:rotateZ(0.2deg);
+-webkit-transform:rotateZ(0.2deg);
+-o-transform:rotateZ(0.2deg);
+}
+
+/* Clase del div donde se encuentran las evaluaciones */
+.divNombreEval {
+background-color: #82A3C3;
+width: 80%;
+
+padding: 4px;
+margin: 8px auto; /* con text-align: center en eligeEval se centran */
+
+font-variant: small-caps;
+text-transform: uppercase;
+font-family: Averia Gruesa Libre;
+font-weight: bold;
+color: #131385;
+text-align: center;
+font-size: 14px;
+word-wrap: break-word;
+
+line-height: 1.4;
+-webkit-border-radius: 13px 13px 13px 13px;
+-moz-border-radius: 13px 13px 13px 13px;
+border-radius: 13px 13px 13px 13px;
+-moz-box-shadow: 6px 7px 6px 3px rgba(161, 205, 212, 0.59);
+-webkit-box-shadow: 6px 7px 6px 3px rgba(161, 205, 212, 0.59);
+box-shadow: 6px 7px 6px 3px rgba(161, 205, 212, 0.59);
+}
+
+.divNombreEvalSeleccionado {
+  background-color: #7FC7AE;
+}
+
+.grabar {
+	width: 15%;
+	position: relative;
+	left: 75%;
+	top: 30px;
+}
+
+
