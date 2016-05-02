@@ -30,12 +30,12 @@ session_start();
 		</ul>
 	    ';
 	
-	} else if ($_POST["lee"]=="2" || (!isset($_POST["lee"]) && $_SESSION["menuIZQ"]=="2")) { // Menú del Administrador
+	} else if ($_POST["lee"]=="2" || (!isset($_POST["lee"]) && $_SESSION["menuIZQ"]=="2")) { // Menú del Tutor
 	$_SESSION["menuIZQ"]=2; // la establece por si acaso
 	echo'
 		<h2 style="text-align: center; font-weight: bold;"> Menú del Tutor/a </h2>
 		<ul class="menuIZQul">
-			<li><a href="./#">Prueba que hay que quitar</a></li>
+			<li><a href="./listadoAlumnos.php">Listado de los alumnos/as de mi tutoría</a></li>
 		</ul>
 	    ';
 	} else {

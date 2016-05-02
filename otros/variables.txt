@@ -19,7 +19,7 @@ variable de sesión idAlumno. No la he usado en opiniones, aunque dejo la función
 9º) Repasar todos los <title>
 10º) En listaPanel.php, script de opiniones Histórico, incluir foto si existe...
 11º) En "Histórico de Opiniones", quizás mejorar un poco más el aspecto de los botones...
-12º) Opiniones Generales. Modificar instrucciones.
+HECHO 12º) Opiniones Generales. Modificar instrucciones. 
 
 
 Includes htmlsuelto
@@ -45,7 +45,7 @@ $_SESSION['menuIZQ']  // Identifica el menú que fue pulsado y lo recuerda
 $_SESSION['IDform']   // controla el ID en el formulario.
 $_SESSION['nombreTabla'] // Identifica el nombre de la tabla con la que se trabaja en el modo edición
 $_SESSION["idasignacion"] // Identifica la asignación elegida...
-$_SESSION["tutor"] // Guarda si es o no tutor
+$_SESSION["tutor"] // Guarda si es o no tutor (1 si es tutor)
 
 Clase profesores
 ================
