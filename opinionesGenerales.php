@@ -139,6 +139,13 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 	<!-- ******************************************************************************************** --> 
 	
 		<div id="Instrucciones">
+			<div id="instruccionesOG">
+				<ol>
+					<li>Selecciona primero una evaluación de la lista de la derecha.</li>
+					<li>Escribe tu opinión o modifica un contenido previo.</li>
+					<li>IMPORTANTE: acepta los cambios pulsando GRABAR.</li>
+				</ol>
+			</div>
 		</div>
 		
 	   </div> <!-- &&&& FIN DE PESTAÑAS-->	
