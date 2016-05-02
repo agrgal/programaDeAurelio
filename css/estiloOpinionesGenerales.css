@@ -2,7 +2,7 @@
 /* =============================== */
 /* http://www.css3generator.in/text-shadow.html */
 
-#opinionesGenerales {
+#opinionesGenerales, #Instrucciones {
  background: url("../imagenes/patterns/science-background.png") repeat; 
  border: 0px solid orange;
  padding: 2px 4px;
@@ -14,6 +14,14 @@
 	width: 89%;
 	border: 0px solid green;
 	margin-top: 10px;
+}
+
+#instruccionesOG {
+	float:left;
+	width: 95%;
+	border: 0px solid green;
+	margin-top: 10px;
+	margin-left: 3em;
 }
 
 #opinar h2 {
