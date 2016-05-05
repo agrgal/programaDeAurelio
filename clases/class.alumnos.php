@@ -59,16 +59,34 @@ class misAlumnos
 					<img src="./imagenes/iconos/chicochica.png" title="ID: '.$row["idalumno"].'.- Curso: '.$row["unidad"].'">
 					</td></tr>
 					</tbody></table></div>'; */
-				  $this->esteAlumno["div"]= //formateado en tabla
+				 // **************************************
+				 // Opción para asignaciones, opiniones...
+				 // ************************************** 
+				  $this->esteAlumno["div"]= //formateado en tabla. Con dos parámetros , %s en orden, y antes de ponerle el nombre.
 					'<div id="'.$id.'" name="'.$row["alumno"].'" 
 					title="ID: '.$row["idalumno"].'.- Curso: '.$row["unidad"].' - '.cambiarnombre($row["alumno"])
 					.'" class="divalumno" orden="%s" unidad="'.$row["unidad"].'">
 					<div id="image"
 					style="background-image: url(./imagenes/iconos/chicochica.png); 
-					background-size: 50px 50px; background-repeat: no-repeat; background-position: center center; opacity: 0.2;
+					background-size: 50px 50px; 
+					background-repeat: no-repeat; background-position: center center; opacity: 0.2;
 					width: 127px; height: 75px; border: 0px solid black;">
 					</div>
 					<div id="texto" style="position: absolute; border: 0px solid black; bottom: 0px; left: 0px; width: 127px; height: auto;">
+					<p>%s: '.retornaNombre($row["alumno"]).'</p>
+					</div>
+				    </div>'; 
+				   // **************************************
+				   // Opción para listado de alumnos: fotos...
+				   // ************************************** 
+				   $this->esteAlumno["divFotos"]= //formateado en tabla. Con dos parámetros , %s en orden, y antes de ponerle el nombre.
+					'<div id="'.$id.'" name="'.$row["alumno"].'" 
+					title="ID: '.$row["idalumno"].'.- Curso: '.$row["unidad"].' - '.cambiarnombre($row["alumno"])
+					.'" class="divalumno2" orden="%s" unidad="'.$row["unidad"].'">
+					<div id="image">
+					  <img src="./imagenes/iconos/chicochica.png">
+					</div>
+					<div id="texto">
 					<p>%s: '.retornaNombre($row["alumno"]).'</p>
 					</div>
 				    </div>'; 

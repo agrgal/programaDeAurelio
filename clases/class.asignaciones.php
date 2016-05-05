@@ -63,7 +63,7 @@ class misAsignaciones
 			$this->claseprofesor->idprofesor=$profesor; // en esa clase, establezco la id del profesor
 			$this->claseprofesor->nombreEmpleado(); // Llamo a la función nombre de Empleado
 			$this->listaDeAsignaciones['nombreProfesor'][$ii]=cambiarnombre($this->claseprofesor->Empleado);
-			// llama a la clase clasemateria para recuperar el nombre y la areviatura de la materia
+			// llama a la clase clasemateria para recuperar el nombre y la abreviatura de la materia
 			$this->listaDeAsignaciones['materia'][$ii]=$row['materia']; 	
 			$this->clasemateria->devuelveMateria($row['materia']); // llama al procedimiento que establece la materia
 			$this->listaDeAsignaciones['nombreMateria'][$ii]= strtoupper($this->clasemateria->estaMateria["materia"]);

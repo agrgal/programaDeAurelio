@@ -2,7 +2,9 @@
 
 /* DIV del curso y alumnos */
 
-.divcurso , .divalumno {
+/* divalumno2: cajas para el listado de los alumnos */
+
+.divcurso , .divalumno, .divalumno2 {
    border: 3px solid black;
    background: #82a3c3;
    text-align: center;
@@ -26,13 +28,15 @@
 }
 
 .divcurso:hover,
-.divalumno:hover {
+.divalumno:hover 
+{
    background: #CDB9E4;
    color: #4C237A;
 }
 
 .divcurso p, 
-.divalumno p {
+.divalumno p
+{
   font-size: 1em;
   font-weight: bold;
   padding: 1px 1px;
@@ -44,6 +48,7 @@
   font-size: 0.8em;
 }
 
+
 .divalumno img {
   width: 50px;
   height: auto;
@@ -53,6 +58,36 @@
  width:80%;
  margin: 0 auto;
  border: 0px solid black;
+}
+
+/* =========================================== */
+/* DIV listado de alumnos. Basado en divalumno */
+/* =========================================== */
+
+.divalumno2 {
+   min-width: 300px;
+   width: 300px;
+   vertical-align: middle;
+}
+
+.divalumno2 #image {
+    width: 40%;
+    border: 1px solid black;   
+	float: left;
+	display: inline-block;
+	margin: 0px auto;
+}
+
+.divalumno2 #image img {
+    width: 80px;
+    height: auto;
+    display: inline-block;
+}
+
+.divalumno2 #texto {
+    width: 58%;
+    border: 1px solid black;
+	float: right;
 }
 
 /* ============================ */

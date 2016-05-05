@@ -40,7 +40,7 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 <head profile="http://www.w3.org/2005/10/profile">
   <!-- *** Principio del HEAD *************************************-->	
   <meta content="text/html; charset=iso-8859-15" http-equiv="content-type">
-  <title>Plantilla</title>
+  <title>Listado de los alumnos y Fotografías</title>
   <link rel="icon" 
         type="image/png" 
         href="./imagenes/logoA.png">
@@ -87,8 +87,16 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
     <!-- Contenido Principal -->
     <!-- ********************************************************** --> 
     
-    <div id="contents"> <!-- &&&& -->   
-			
+    <div id="contents"> <!-- &&&& --> 
+			<?php 
+				$alumnado = $asignacion->devuelveListadoAlumnosdeEstaAsignacion($_SESSION["idasignacion"],$_SESSION["profesor"]);
+				$alumnadoArray=explode("#",$alumnado); // devuelve un array con los números de alumnos...
+				  foreach ($alumnadoArray as $clave => $i) {
+					  $alumno->devuelveAlumno($i);
+					  $cadena=sprintf($alumno->esteAlumno["divFotos"],$i,$i); 
+					  echo $cadena; 
+				  } 
+			?>
 	</div> <!-- &&&& FIN DEL CONTENEDOR-->	
 
 	<!-- ********************************************************** -->
