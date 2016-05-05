@@ -51,6 +51,7 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
   <!-- Linkar a hojas de estilo CSS -->
   <!-- ***************************** -->
   <?php include_once("./css/cargarestiloscss.php"); ?>
+  <link rel="stylesheet" href="./css/estiloListadoAlumnos.css"> <!-- Los pongo por separado para no recargar tanto -->
  
   <!-- *** Final del HEAD, antes los ficheros de enlace a CSS ******-->
 </head>
@@ -79,7 +80,7 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
      
 	<div id="test"> <!-- TESTER -->
 	    <p id="testear">
-				<?php echo $_SESSION['permisos']." - ".$_SESSION['tutor']." - ".$_SESSION['profesor']." - ".$_SESSION['idasignacion']; ?>
+				<?php // echo $_SESSION['permisos']." - ".$_SESSION['tutor']." - ".$_SESSION['profesor']." - ".$_SESSION['idasignacion']; ?>
 	    </p>
     </div>	<!-- TESTER -->
     
@@ -88,15 +89,29 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
     <!-- ********************************************************** --> 
     
     <div id="contents"> <!-- &&&& --> 
+		<div id="CabeceraListadoAlumnos">
+			<?php 
+			    $asignacion->listarAsignaciones($_SESSION['profesor']); 
+			    $clave=array_search($_SESSION['idasignacion'],$asignacion->listaDeAsignaciones['idasignacion']);
+			?>
+			<h1>
+				Tutoría de <?php echo $asignacion->listaDeAsignaciones['cursosAfectados'][$clave]?>
+			</h1>
+		</div>
+		<div id="ListadoAlumnos"> <!-- Zona de listado de alumnos --> 
 			<?php 
 				$alumnado = $asignacion->devuelveListadoAlumnosdeEstaAsignacion($_SESSION["idasignacion"],$_SESSION["profesor"]);
 				$alumnadoArray=explode("#",$alumnado); // devuelve un array con los números de alumnos...
+				  $norden = 0;
 				  foreach ($alumnadoArray as $clave => $i) {
+					  $norden++;
 					  $alumno->devuelveAlumno($i);
-					  $cadena=sprintf($alumno->esteAlumno["divFotos"],$i,$i); 
+					  $cadena=sprintf($alumno->esteAlumno["divFotos"],$i,$norden,$i); 
 					  echo $cadena; 
 				  } 
 			?>
+		</div> <!-- &&&& FIN DE LA ZONA DEL LISTADO DE ALUMNOS-->		
+	
 	</div> <!-- &&&& FIN DEL CONTENEDOR-->	
 
 	<!-- ********************************************************** -->
@@ -123,9 +138,9 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
   <!-- <script src="./htmlsuelto/js_menu.js"></script>   Incorpora al script los menús a la izquierda -->  
   <script type="text/javascript" src="./jquery/jqx/jqxcore.js"></script>
   <script type="text/javascript" src="./jquery/jqx/jqx-all.js"></script> 
-  <!-- Owl carousel --> 
+  <!-- Owl carousel
   <script type="text/javascript" src="./owl-carousel/owl.carousel.js"></script>
-  <!-- Editor de texto froala. Non commercial use -->
+  <!-- Editor de texto froala. Non commercial use
   <script src="./jquery/froala/js/froala_editor.min.js"></script>  
   <script src="./jquery/froala/js/langs/es.js"></script>  
   <script src="./jquery/froala/js/plugins/char_counter.min.js"></script>
@@ -136,8 +151,8 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
   <script src="./jquery/froala/js/plugins/font_family.min.js"></script>
   <script src="./jquery/froala/js/plugins/font_size.min.js"></script>
   <script src="./jquery/froala/js/plugins/block_styles.min.js"></script>
-  <script src="./jquery/froala/js/plugins/video.min.js"></script>
-  
+  <script src="./jquery/froala/js/plugins/video.min.js"></script> -->
+    
   <script>     
      
      $(document).ready(function() {  		 
@@ -155,7 +170,7 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 		console.log( jqxhr.status ); // 200
 		console.log( "Load was performed." );
 		}); 
-			
+		
 	 }); // fin del document ready
 	 
 	 // ******************************************************

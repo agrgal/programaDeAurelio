@@ -87,7 +87,7 @@ class misAlumnos
 					  <img src="./imagenes/iconos/chicochica.png">
 					</div>
 					<div id="texto">
-					<p>%s: '.retornaNombre($row["alumno"]).'</p>
+					<p>%s: '.retornaNombre($row["alumno"]).' (%s)</p>
 					</div>
 				    </div>'; 
 		} 

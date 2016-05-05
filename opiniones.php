@@ -254,7 +254,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
   <!-- <script src="./htmlsuelto/js_menu.js"></script>   Incorpora al script los menús a la izquierda -->  
   <script type="text/javascript" src="./jquery/jqx/jqxcore.js"></script>
   <script type="text/javascript" src="./jquery/jqx/jqx-all.js"></script> 
-  <!-- Owl carousel --> 
+  <!-- Owl carousel -->
   <script type="text/javascript" src="./owl-carousel/owl.carousel.js"></script>
   <!-- Editor de texto froala. Non commercial use -->
   <script src="./jquery/froala/js/froala_editor.min.js"></script>  
@@ -267,8 +267,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
   <script src="./jquery/froala/js/plugins/font_family.min.js"></script>
   <script src="./jquery/froala/js/plugins/font_size.min.js"></script>
   <script src="./jquery/froala/js/plugins/block_styles.min.js"></script>
-  <script src="./jquery/froala/js/plugins/video.min.js"></script>
-  
+  <script src="./jquery/froala/js/plugins/video.min.js"></script> 
   <script>     
      
      $(document).ready(function() {  		 
@@ -492,7 +491,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 			// paginationNumbers: true,	 
 			beforeInit: function (elemento) {
 				$(".divalumno").each(function(index){
-					$(this).addClass("divalumno2"); // cambia la clase del divalumno...
+					$(this).addClass("divalumnoOpiniones"); // cambia la clase del divalumno...
 					$(this).children("#image").css("background-size","90px 90px"); // tamaño imagen div
 			  		$(this).children("#image").css("width","200px"); // tamaño imagen div
 			        $(this).children("#image").css("height","125px"); // tamaño imagen div

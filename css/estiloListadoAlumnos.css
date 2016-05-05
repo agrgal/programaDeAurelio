@@ -1,0 +1,22 @@
+/* Zona Origen */
+/* =============================== */
+/* http://www.css3generator.in/text-shadow.html */
+
+#ListadoAlumnos {
+ background: url("../imagenes/patterns/science-background.png") repeat; 
+ border: 0px solid orange;
+ padding: 20px 4px;
+ overflow: hidden;
+ text-align: center;
+}
+
+#CabeceraListadoAlumnos {
+	text-align: center;
+}
+
+#CabeceraListadoAlumnos h1 {
+	font-size: 2em;
+    font-weight: bold;
+	text-shadow: 0 0 3px #004208, 0 0 5px #84C68C;
+}
+
