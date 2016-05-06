@@ -135,6 +135,10 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 			<h1>Sólo se puede subir una fotografía por alumno.</h1>
 		</div>
 		
+		<div id="notificacionBorrado">
+			<h1>Fotografía borrada</h1>
+		</div>
+		
 		<!-- * ==========================  DIALOGOS  Y NOTIFICACIONES =====================================   * --> 
 	
 	</div> <!-- &&&& FIN DEL CONTENEDOR-->	
@@ -188,7 +192,8 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 		// alert($().jquery);
 	    // alert($.ui.version);	
 	     
-	    // Variables globales       		 
+	    // Variables globales
+	    var respuesta = "";    		 
 
 		// 1a) Incorpora la funcionalidad del menú de la IZQUIERDA
 		$.getScript( "./htmlsuelto/js_menu.js", function( data, textStatus, jqxhr ) {
@@ -208,8 +213,8 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
             height: 600,
 			position: { my: "center center-100", at: "center center", of: "#container" },
 			// el "centro arriba" de mi cuadro de diálogo (my) , en el centro arriba (at) del contenedor (of)
-			hide: { effect: "fade", duration: 3000 }, //put the fade effect
-			show: { effect: "fade", duration: 3000 }, //put the fade effect
+			hide: { effect: "fade", duration: 2000 }, //put the fade effect
+			show: { effect: "fade", duration: 500 }, //put the fade effect
 			open: function(event, ui){  // Al abrir, reinicia el dropzone
 				Dropzone.forElement("#zonaDropzone").removeAllFiles(true);
 			},	
@@ -223,7 +228,7 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
                 autoOpen: false, animationOpenDelay: 300, autoClose: true, autoCloseDelay: 5000, template: "info"
          });
          
-         $("#notificacionError").jqxNotification({
+         $("#notificacionError, #notificacionBorrado").jqxNotification({
                 width: 500, position: "top-right", opacity: 1,
                 autoOpen: false, animationOpenDelay: 300, autoClose: true, autoCloseDelay: 5000, template: "error"
          });
@@ -239,12 +244,16 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 			   // incluye información...			   
 			   $("#dialog-fotos").dialog({
 					buttons : {
-						"Sí, Sube foto" : function() {
-						  // alert("dato grabado...");
-						  $(this).dialog("close");
-						  // asignaValores(); // activa la asignación de valores
-						  // insertarAsignacion(); // inserta la asignación. Implica recargar la página y cerrar el diálogo		      
-						},
+						"Borrar fotografía" : function() {
+							  $.when(borrarFotografia($('input[name="idAlFoto"]').val())).done(function(data){
+								 // borrado de fotografía existente...
+								 // alert(data); 
+								 $("#notificacionBorrado").html('<h1>'+data+'</h1>');
+								 $("#notificacionBorrado").jqxNotification("open");
+								 $("#dialog-fotos").dialog("close");
+							     setTimeout(location.reload(), 2000); // retraso de un par de segundos.
+							  });
+						  },
 						"No,no... Cancela" : function() {
 						  $(this).dialog("close"); // no recarga la página. Simplemente anula la operación y sigue				 
 						}
@@ -288,6 +297,7 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 					this.on("success", function(file, response){						
 						$("#notificacionGuardado").jqxNotification("open"); 
 						$("#dialog-fotos").dialog("close");
+						location.reload(); // Recargar la página
 						// this.removeAllFiles(true); // Resetea el div de dropzone
 					});				
 				}, // Fin del init
@@ -304,7 +314,31 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 	 // Funciones en la página *******************************
 	 // ******************************************************	 
 
-	  
+	 //************************** 
+	 // F1) Borrar Fotografia
+	 function borrarFotografia(idAlumno) {
+		     console.log("****************** Grabar Opinión *******************");
+		     console.log("alumno: "+idAlumno);
+		     // alert(idAlumno);
+			 return $.ajax({
+			      type: 'POST',
+			      dataType: 'text',
+			      url: "./tutorias/scripts/borrarFotografia.php", 
+			      data: { // Parece que las llamadas con ajax van mejor que con POST...
+				  lee: idAlumno,
+				  },					 		 
+		          success: function(data, textStatus, jqXHR){
+					  // alert(data);
+				      return data;
+			      },
+			      error: function (jqXHR , textStatus, errorThrown) {
+					  return "";
+				  }
+			  }); 
+			  
+	  } // Fin de la función borrar fotografía
+	 
+	 
  <!-- * =======================================================================================================   * --> 	
 
   </script>

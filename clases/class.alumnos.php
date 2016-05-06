@@ -59,6 +59,14 @@ class misAlumnos
 					<img src="./imagenes/iconos/chicochica.png" title="ID: '.$row["idalumno"].'.- Curso: '.$row["unidad"].'">
 					</td></tr>
 					</tbody></table></div>'; */
+					 if (file_exists("./upload/".$row["idalumno"].".png") || file_exists("../../upload/".$row["idalumno"].".png")) {
+						 $this->esteAlumno["foto"]="./upload/".$row["idalumno"].".png";	
+					 } else if (file_exists("./upload/".$row["idalumno"].".jpg") || file_exists("../../upload/".$row["idalumno"].".jpg")) {
+						 $this->esteAlumno["foto"]="./upload/".$row["idalumno"].".jpg";
+					 } else {
+						 $this->esteAlumno["foto"]="./imagenes/iconos/chicochica.png";
+					 } 
+				 
 				 // **************************************
 				 // Opción para asignaciones, opiniones...
 				 // ************************************** 
@@ -67,9 +75,9 @@ class misAlumnos
 					title="ID: '.$row["idalumno"].'.- Curso: '.$row["unidad"].' - '.cambiarnombre($row["alumno"])
 					.'" class="divalumno" orden="%s" unidad="'.$row["unidad"].'">
 					<div id="image"
-					style="background-image: url(./imagenes/iconos/chicochica.png); 
+					style="background-image: url('.$this->esteAlumno["foto"].'); 
 					background-size: 50px 50px; 
-					background-repeat: no-repeat; background-position: center center; opacity: 0.2;
+					background-repeat: no-repeat; background-position: center center; opacity: 0.5;
 					width: 127px; height: 75px; border: 0px solid black;">
 					</div>
 					<div id="texto" style="position: absolute; border: 0px solid black; bottom: 0px; left: 0px; width: 127px; height: auto;">
@@ -84,7 +92,7 @@ class misAlumnos
 					title="ID: '.$row["idalumno"].'.- Curso: '.$row["unidad"].' - '.cambiarnombre($row["alumno"])
 					.'" class="divalumno2" orden="%s" unidad="'.$row["unidad"].'">
 					<div id="image">
-					  <img src="./imagenes/iconos/chicochica.png">
+					  <img src="'.$this->esteAlumno["foto"].'">
 					</div>
 					<div id="texto">
 					<p>%s: '.retornaNombre($row["alumno"]).' (%s)</p>

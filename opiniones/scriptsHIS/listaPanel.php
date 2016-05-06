@@ -41,7 +41,9 @@ foreach($alumnado as $clave=>$valor) {
    // retahíla de datos
    $nombre = $alumno->esteAlumno["nombre2"];
    // Incluir foto, si existe
-   $foto = '<img src="./imagenes/iconos/chicochica.png" width="75" height="100" style="padding: 3px 3px;">';
+   // $foto = '<img src="./imagenes/iconos/chicochica.png" width="75" height="100" style="padding: 3px 3px;">';   
+   // $imagen = '<img src="'.buscarFoto($valor).'" width="75" height="100" style="padding: 3px 3px;">'; 
+   $imagen = '<img src="'.$alumno->esteAlumno["foto"].'" width="75" height="100" style="padding: 3px 3px;">';   
    $datos = json_decode($opiniones->divOpinionResumen($_POST["fecha"],$_SESSION["idasignacion"],$valor),true); // recupera los datos de ese alumno en esa fecha y esa asignacion
    // id de la opinion
    $idopinion=$datos["id"];
@@ -61,7 +63,7 @@ foreach($alumnado as $clave=>$valor) {
    
    if (!(is_null($opiniones->itemsElegidos($datos["items"])) && is_null($datos["observaciones"]))) {         
    $devuelve.='<table id="'.$idopinion.'" class="tablaOH" elegir="0" alumno="'.$valor.'" items="'.$datos["items"].'" observaciones="'.$observaciones2.'" >
-              <tr><td rowspan="3">'.$elegir.'</td><td id="'.$valor.'" rowspan="3">'.$foto.'</td><td class="nombreAlumno"><p>'.$nombre.'</p></td></tr>
+              <tr><td rowspan="3">'.$elegir.'</td><td id="'.$valor.'" rowspan="3">'.$imagen.'</td><td class="nombreAlumno"><p>'.$nombre.'</p></td></tr>
               <tr><td>'.$items.'</td></tr>
               <tr><td>'.$observaciones.'</td></tr>
               </table><hr class="separador">';
@@ -69,6 +71,19 @@ foreach($alumnado as $clave=>$valor) {
 }		
 		
 echo $devuelve;
+
+/* ANULADA. Puesto el reconocimiento de la foto en class.alumnos
+// Necesario para encontrar la fotografía.. Eso de los dos puntos y la ruta...
+function buscarFoto($id) {
+	 if (file_exists("../../upload/".$id.".png")) {
+		 $foto = "./upload/".$id.".png";	
+	 } else if (file_exists("../../upload/".$id.".jpg")) {
+		 $foto = "./upload/".$id.".jpg";
+	 } else {
+		$foto = "./imagenes/iconos/chicochica.png";
+	 } 
+	 return $foto;
+} */
   
 ?>
 
