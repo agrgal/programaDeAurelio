@@ -52,7 +52,8 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
   <!-- ***************************** -->
   <?php include_once("./css/cargarestiloscss.php"); ?>
   <link rel="stylesheet" href="./css/estiloListadoAlumnos.css"> <!-- Los pongo por separado para no recargar tanto -->
- 
+  <link href="./jquery/dropzone/dropzone.css" type="text/css" rel="stylesheet" /> <!-- Estilo de la zona de carga de fotos -->
+  
   <!-- *** Final del HEAD, antes los ficheros de enlace a CSS ******-->
 </head>
 
@@ -110,7 +111,31 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 					  echo $cadena; 
 				  } 
 			?>
-		</div> <!-- &&&& FIN DE LA ZONA DEL LISTADO DE ALUMNOS-->		
+		</div> <!-- &&&& FIN DE LA ZONA DEL LISTADO DE ALUMNOS-->	
+		
+		<!-- * ==========================  DIALOGOS  Y NOTIFICACIONES =====================================   * --> 			
+		
+		<!-- Dialogo de Subida de fotografías -->	
+		<div id="dialog-fotos" title="Subida de Fotografías. Limitado a 300KB máximo.">
+		   <p><span class="fa fa-camera-retro fa-2x" style="float:left; margin:0 7px 20px 0;">
+		   </span></p>
+		   <p id="idAlumnoFoto"></p>
+		   <form action="upload.php"
+			  class="dropzone"
+			  id="zonaDropzone">
+			  <input type="hidden" name="idAlFoto">
+		   </form>
+		</div>	
+		
+		<div id="notificacionGuardado">
+			<h1>Se ha guardado la fotografía.</h1>
+		</div>
+		
+		<div id="notificacionError">
+			<h1>Sólo se puede subir una fotografía por alumno.</h1>
+		</div>
+		
+		<!-- * ==========================  DIALOGOS  Y NOTIFICACIONES =====================================   * --> 
 	
 	</div> <!-- &&&& FIN DEL CONTENEDOR-->	
 
@@ -138,6 +163,8 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
   <!-- <script src="./htmlsuelto/js_menu.js"></script>   Incorpora al script los menús a la izquierda -->  
   <script type="text/javascript" src="./jquery/jqx/jqxcore.js"></script>
   <script type="text/javascript" src="./jquery/jqx/jqx-all.js"></script> 
+  <!-- Descargas con drop zone. Subida de fotos. Ver sección de CSS donde hay estilos para ello. -->
+  <script type="text/javascript" src="./jquery/dropzone/dropzone.js"></script> 
   <!-- Owl carousel
   <script type="text/javascript" src="./owl-carousel/owl.carousel.js"></script>
   <!-- Editor de texto froala. Non commercial use
@@ -170,6 +197,106 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 		console.log( jqxhr.status ); // 200
 		console.log( "Load was performed." );
 		}); 
+		
+		// 1c) Definición del diálogo de confirmación de grabar datos, borrar y modificar asignacion y confirmar que no hay datos
+		  $("#dialog-fotos").dialog({
+			autoOpen: false,
+			modal: true,
+			maxWidth:1000,
+            maxHeight: 600,
+            width: 1000,
+            height: 600,
+			position: { my: "center center-100", at: "center center", of: "#container" },
+			// el "centro arriba" de mi cuadro de diálogo (my) , en el centro arriba (at) del contenedor (of)
+			hide: { effect: "fade", duration: 3000 }, //put the fade effect
+			show: { effect: "fade", duration: 3000 }, //put the fade effect
+			open: function(event, ui){  // Al abrir, reinicia el dropzone
+				Dropzone.forElement("#zonaDropzone").removeAllFiles(true);
+			},	
+		 });
+		 
+		// ========================================================================================
+        // 1d) Defino diálogos y/o notificaciones
+        // ========================================================================================	
+		 $("#notificacionGuardado").jqxNotification({
+                width: 500, position: "top-right", opacity: 0.9,
+                autoOpen: false, animationOpenDelay: 300, autoClose: true, autoCloseDelay: 5000, template: "info"
+         });
+         
+         $("#notificacionError").jqxNotification({
+                width: 500, position: "top-right", opacity: 1,
+                autoOpen: false, animationOpenDelay: 300, autoClose: true, autoCloseDelay: 5000, template: "error"
+         });
+		 
+		 // 2) Al hacer click en un elemento se abre el cuadro de diálogo
+		 $(".divalumno2").click(function(event) {
+			   event.preventDefault();
+			   // identificación del alumno
+			   $("#idAlumnoFoto").html($(this).attr('title'));
+			   $("#notificacionGuardado").html("<h1>Se ha guardado la fotografía de "+$(this).attr('title')+"</h1>"); // Y en la notificación
+			   // Cambio el input que pasará al upload.php el identificador del alumno
+			   $('input[name="idAlFoto"]').val($(this).attr('id'));
+			   // incluye información...			   
+			   $("#dialog-fotos").dialog({
+					buttons : {
+						"Sí, Sube foto" : function() {
+						  // alert("dato grabado...");
+						  $(this).dialog("close");
+						  // asignaValores(); // activa la asignación de valores
+						  // insertarAsignacion(); // inserta la asignación. Implica recargar la página y cerrar el diálogo		      
+						},
+						"No,no... Cancela" : function() {
+						  $(this).dialog("close"); // no recarga la página. Simplemente anula la operación y sigue				 
+						}
+					} // fin del buttons
+				}); // fin del dialog
+			   
+				$("#dialog-fotos").dialog("open"); // si no, no lo abre
+				
+	     }); // Fin de subir foto.
+	     
+		 // 3) Opciones Dropzone. Se aplica a la zona de carga con zonaDropzone es el id.
+		 Dropzone.options.zonaDropzone = {
+				maxFiles: 1,
+				maxFilesize: 0.3, // Límite de 0.3M de tamaño de fotografías.
+				uploadMultiple: false, // Para no enviar múltiple ficheros en un sólo requerimiento
+				dictDefaultMessage: "<h1>Arrastra una fotografía o Pulsa aquí</h1>",
+				dictResponseError: 'Error subiendo el fichero',
+				acceptedFiles: "image/jpeg,image/png", // Tipos de ficheros de subida.
+				accept: function(file, done) {
+					console.log("Subido ya");
+					done();
+				},
+				init: function() {
+					this.on("maxfilesexceeded", function(file){
+						// Por si se pone más de una fotografía
+						$("#notificacionError").html("<h1>No se puede subir más de una fotografía</h1>");
+						$("#notificacionError").jqxNotification("open"); 
+						$("#dialog-fotos").dialog("close");
+						this.removeAllFiles(true); 
+					});
+				    
+				    this.on("error", function(file, message){
+						if (file.size > 0.3*1024*1024) { 
+							$("#dialog-fotos").dialog("close");
+							$("#notificacionError").html("<h1>Tamaño superior a 300KB.</h1>");
+							$("#notificacionError").jqxNotification("open");
+							this.removeFile(file);
+						}
+					});				    
+
+					this.on("success", function(file, response){						
+						$("#notificacionGuardado").jqxNotification("open"); 
+						$("#dialog-fotos").dialog("close");
+						// this.removeAllFiles(true); // Resetea el div de dropzone
+					});				
+				}, // Fin del init
+							  
+		 }; // Fin del Dropzone Options
+		 
+		 // ***********************************************************************************
+		 
+		 
 		
 	 }); // fin del document ready
 	 
