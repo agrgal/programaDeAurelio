@@ -11,8 +11,8 @@ include_once("./clases/class.profesores.php"); //clase que recupera datos de pro
 include_once("./clases/class.cursos.php"); //clase que recupera datos de cursos
 include_once("./clases/class.alumnos.php"); //clase que recupera datos de alumnos
 include_once("./clases/class.materias.php"); //clase que recupera datos de materias
-include_once("./clases/class.asignaciones.php"); //clase que recupera datos de materias
-include_once("./clases/class.opiniones.php"); //clase que recupera datos de opiniones
+include_once("./clases/class.asignaciones.php"); //clase que recupera datos de asignaciones
+// include_once("./clases/class.opiniones.php"); //clase que recupera datos de opiniones
 
 // incluyo las variables de esas clases
 $calendario = New micalendario(); // variable de calendario. Lo necesito para la cabecera
@@ -21,7 +21,7 @@ $profesorado = New profesores(); //variable de la clase profesores
 $curso = New misCursos(); // variable de la clase curso
 $alumno = New misAlumnos(); // variable de la clase alumnos
 $materia = New misMaterias(); // variable de la clase materia
-$opiniones = New misOpiniones(); // variable de la clase opiniones
+// $opiniones = New misOpiniones(); // variable de la clase opiniones
 $asignacion = New misAsignaciones($curso, $profesorado, $materia); // Uso el constructor para pasarle la clase curso, profesorado y materias a Asignaciones
 
 // Variables de sesión
@@ -98,7 +98,10 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 			<h1>
 				Tutoría de <?php echo $asignacion->listaDeAsignaciones['cursosAfectados'][$clave]?>
 			</h1>
-			<div id="printer" title="Imprime listado de los alumn@s" title="Imprime listado de los alumn@s" ><img src="./imagenes/iconos/printer_pdf.png"></div>
+			<!-- Dibujo de la impresora -->
+			<div id="printer" title="Imprime listado de los alumn@s" title="Imprime listado de los alumn@s" >
+				<a href="./pdf/scripts/listadoAlumnosPDF.php"><img src="./imagenes/iconos/printer_pdf.png"></a>
+			</div>
 		</div>
 		<div id="ListadoAlumnos"> <!-- Zona de listado de alumnos --> 
 			<?php 
@@ -309,6 +312,7 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 							  
 		 }; // Fin del Dropzone Options
 		 
+	 
 		 // ***********************************************************************************
 		 
 		 
@@ -341,8 +345,7 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 				  }
 			  }); 
 			  
-	  } // Fin de la función borrar fotografía
-	 
+	  } // Fin de la función borrar fotografía  	 
 	 
  <!-- * =======================================================================================================   * --> 	
 
