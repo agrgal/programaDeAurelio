@@ -24,6 +24,8 @@ HECHO 12º) Opiniones Generales. Modificar instrucciones.
 13º) Mejorar en listadoAlumnado.php el centrar foto actual en la ventana modal que pide el borrado o inclusión de foto.
 HECHO 14º) Las imágenes de las fotografías se almacenan en la carpeta UPLOAD
 HECHO 15º) En la carpeta PDF se generan temporalmente los pdf a descargar. Los scripts dentro de la carpeta scripts.
+16º) Repasar, en la listaAlumnosPDF.php, verprint.css la lista de alumnos. ¿La tabla de otra forma?
+
 
 
 Includes htmlsuelto

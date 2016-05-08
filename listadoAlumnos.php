@@ -102,6 +102,9 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 			<div id="printer" title="Imprime listado de los alumn@s" title="Imprime listado de los alumn@s" >
 				<a href="./pdf/scripts/listadoAlumnosPDF.php"><img src="./imagenes/iconos/printer_pdf.png"></a>
 			</div>
+			<div id="printerphoto" title="Imprime lista con fotos" title="Imprime lista con fotos" >
+				<a href="./pdf/scripts/listadoAlumnosFotosPDF.php"><img src="./imagenes/iconos/printer_photo.png"></a>
+			</div>
 		</div>
 		<div id="ListadoAlumnos"> <!-- Zona de listado de alumnos --> 
 			<?php 

@@ -84,6 +84,26 @@ h2 {
 .tg .tg-zmy4{text-align:right}
 
 /* ========================== */
+/* tabla listado alumno FOTOS */
+/* ========================== */
+
+.listadoAlumnoTABLEMain{
+  width: 95%;
+  border: 0px solid black;
+  margin: 1px 10px;
+  padding: 2px;
+}
+
+.listadoAlumnoTABLEMain td{
+ border: 2px solid black;
+ text-align: center;
+ vertical-align: middle;
+ margin: 2px 2px;
+}
+
+/* Resulta imposible que "lea" .listadoAlumnoTABLEMain td p  o bien .listadoAlumnoTABLEMain td img ¿¿??*/
+
+/* ========================== */
 /* Para las tablas de resumen */
 /* ========================== */
 

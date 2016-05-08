@@ -33,17 +33,21 @@
   height: auto;
 }
 
-#printer {
+#printer, #printerphoto {
   background: transparent; 
   border: 0px solid black;
   position: absolute;
   width: 100px;
   height: auto;
   top: 0px;
+  right: 150px;
+}
+
+#printerphoto {
   right: 50px;
 }
 
-#printer img {
+#printer img, #printerphoto img {
 	width: 75px;
 	height: auto;
 }
