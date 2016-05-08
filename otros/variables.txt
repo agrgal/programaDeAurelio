@@ -21,7 +21,9 @@ variable de sesión idAlumno. No la he usado en opiniones, aunque dejo la función
 HECHO 10º) En listaPanel.php, script de opiniones Histórico, incluir foto si existe...
 11º) En "Histórico de Opiniones", quizás mejorar un poco más el aspecto de los botones...
 HECHO 12º) Opiniones Generales. Modificar instrucciones. 
-13º) Mejorar en listadoAlumnado.php el centrar foto actual en la ventana modal que pide el boorado o inclusión de foto.
+13º) Mejorar en listadoAlumnado.php el centrar foto actual en la ventana modal que pide el borrado o inclusión de foto.
+HECHO 14º) Las imágenes de las fotografías se almacenan en la carpeta UPLOAD
+HECHO 15º) En la carpeta PDF se generan temporalmente los pdf a descargar. Los scripts dentro de la carpeta scripts.
 
 
 Includes htmlsuelto

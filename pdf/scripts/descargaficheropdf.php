@@ -1,4 +1,10 @@
 <?php
+/*
+A) Hay que enviar tres parámetros: el primero es el nombre del fichero "enlace"
+B) El segundo la ruta, tipo ../../pdf/ (sin comillas ni nada)
+C) El tercero el nombre, con la extensión, de cómo quiero que se guarde el fichero.
+Si no se quiere borrar el fichero original, comentar la última línea unlink.
+*/
 $enlace=$_GET['fichero'];
 $ruta=$_GET['ruta'];
 $nombre = $_GET['nombre'];
