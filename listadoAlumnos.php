@@ -98,6 +98,7 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 			<h1>
 				Tutoría de <?php echo $asignacion->listaDeAsignaciones['cursosAfectados'][$clave]?>
 			</h1>
+			<div id="printer" title="Imprime listado de los alumn@s" title="Imprime listado de los alumn@s" ><img src="./imagenes/iconos/printer_pdf.png"></div>
 		</div>
 		<div id="ListadoAlumnos"> <!-- Zona de listado de alumnos --> 
 			<?php 
@@ -125,6 +126,7 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 			  id="zonaDropzone">
 			  <input type="hidden" name="idAlFoto">
 		   </form>
+		   <h1 id="FotoActual">Fotografía actual:&nbsp;&nbsp;<img id="FotoActualImg" src="./imagenes/iconos/chicochica.png"></h1>
 		</div>	
 		
 		<div id="notificacionGuardado">
@@ -208,9 +210,9 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 			autoOpen: false,
 			modal: true,
 			maxWidth:1000,
-            maxHeight: 600,
+            maxHeight: 675,
             width: 1000,
-            height: 600,
+            height: 675,
 			position: { my: "center center-100", at: "center center", of: "#container" },
 			// el "centro arriba" de mi cuadro de diálogo (my) , en el centro arriba (at) del contenedor (of)
 			hide: { effect: "fade", duration: 2000 }, //put the fade effect
@@ -241,6 +243,9 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 			   $("#notificacionGuardado").html("<h1>Se ha guardado la fotografía de "+$(this).attr('title')+"</h1>"); // Y en la notificación
 			   // Cambio el input que pasará al upload.php el identificador del alumno
 			   $('input[name="idAlFoto"]').val($(this).attr('id'));
+			   // Poner la imagen de la fotografía
+			   // alert($(this).children('#image').children('img').attr('src'));
+			   $('#FotoActualImg').attr("src",$(this).children('#image').children('img').attr('src'));
 			   // incluye información...			   
 			   $("#dialog-fotos").dialog({
 					buttons : {

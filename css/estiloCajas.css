@@ -68,17 +68,23 @@
    min-width: 300px;
    width: 300px;
    height: 150px; /* Hay que establecer alto y ancho */
-   border: 3px solid #013034;
+   border: 0px solid #013034;
    margin: 10px 10px;
-   background: #84C68C;
-	box-shadow: 8px 8px 5px #84C68C;
+   background: transparent; 
+   background-image: url(../imagenes/iconos/pupitre.png);
+     background-size: 300px auto; 
+   background-repeat: no-repeat; background-position: center center; opacity: 1;
+   /* box-shadow: 8px 8px 5px #84C68C; */
    position: relative; /* Para centrar los children*/ /* http://vanseodesign.com/css/vertical-centering/ */
 }
 
 .divalumno2:hover {
-  background: #9DC1C4;
-  border: 3px solid #246268;
-   box-shadow: 8px 8px 5px #9DC1C4;
+  /* background: #9DC1C4; */
+  background-image: url(../imagenes/iconos/pupitreHover.png);
+    background-size: 300px auto; 
+  background-repeat: no-repeat; background-position: center center; opacity: 1;
+  border: 0px solid #246268;
+   /* box-shadow: 8px 8px 5px #9DC1C4; */
 }
 
 .divalumno2 #image {
@@ -90,7 +96,7 @@
     left: 25%;
     height: 95%;
     width: 40%;
-    margin: -20% 0 0 -25%;
+    margin: -12% 0 0 -25%;
     line-height: 100px; /* Para centrar la fotografía interior */
 
 }
@@ -98,8 +104,9 @@
 .divalumno2 #image img {
     width: 80px;
     height: auto;
-    border: 2px solid #9DC1C4;
-      box-shadow: 2px 2px 2px #246268;
+    max-height: 100px;
+    border: 0px solid #9DC1C4;
+     /* box-shadow: 2px 2px 2px #246268; */
     vertical-align: middle;
 }
 
@@ -112,18 +119,18 @@
     left: 25%;
     height: 95%;
     width: 60%;
-    margin: -20% 0 0 15%;
+    margin: -20% 0 0 12%;
 }
 
 .divalumno2 #texto p {
-  color: #004208;
-  font-size: 1em;
+  color: white;
+  font-size: 1.1em;
   font-weight: bold;
     word-wrap: break-word; /* permite romper palabras largas */
 }
 
 .divalumno2:hover #texto p { /* Cambia color del texto CUANDo se pasa sobre él. */
-  color: #070D1A;
+  color: #FEFBF6;
 }
 
 /* ============================ */
