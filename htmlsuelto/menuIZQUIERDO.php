@@ -36,6 +36,7 @@ session_start();
 		<h2 style="text-align: center; font-weight: bold;"> Menú del Tutor/a </h2>
 		<ul class="menuIZQul">
 			<li><a href="./listadoAlumnos.php">Listado de los alumnos/as de mi tutoría</a></li>
+			<li><a href="./obtenerDatosTutor.php">Datos en mi tutoría</a></li>
 		</ul>
 	    ';
 	} else {
