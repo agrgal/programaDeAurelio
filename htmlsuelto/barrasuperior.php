@@ -7,11 +7,13 @@
 			include_once("./clases/class.cursos.php"); //clase que recupera datos de cursos
 			include_once("./clases/class.materias.php"); //clase que recupera datos de materias
 			include_once("./clases/class.asignaciones.php"); //clase que recupera datos de materias
+			include_once("./clases/class.alumnos.php"); //clase que recupera datos de materias
 			
 			$profesorado2 = New profesores(); //variable de la clase profesores
 			$curso2 = New misCursos(); // variable de la clase curso
 			$materia2 = New misMaterias(); // variable de la clase materia
-			$asignacion2 = New misAsignaciones($curso2, $profesorado2, $materia2); // Uso el constructor para pasarle la clase curso, profesorado y materias a Asignaciones
+			$alumno2 = New misAlumnos(); // variable de la clase alumnos
+			$asignacion2 = New misAsignaciones($curso2, $profesorado2, $materia2, $alumno2); // Uso el constructor para pasarle la clase curso, profesorado y materias a Asignaciones
 			
 			if ($_SESSION["profesor"]>0 && isset($_SESSION["idasignacion"])) {
 			      $tutorAsignacion=$asignacion2->devuelveTutorAsignacion($_SESSION["idasignacion"],$_SESSION["profesor"]);

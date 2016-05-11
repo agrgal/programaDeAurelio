@@ -167,6 +167,7 @@ if (!isset($_SESSION['menuIZQ'])) { $_SESSION['menuIZQ']=0; }
 	 // F1) Llama al script y recupera informacion del profesor
 		function recuperaInformacionProfesor() {
 				 var id = $("#introducecontraseña").val();
+				 // alert(id);
 				 var posting = $.post( "./profesores/scripts/compruebacontrasenna.php", { 
 					  lee: id,
 				  });

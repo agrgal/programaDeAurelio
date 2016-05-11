@@ -60,6 +60,7 @@ class profesores
 	    // echo $Sql;
 	    $this->DNI = strtoupper($this->DNI); // convertirla en mayúsculas
 	    $Sql = sprintf($Sql, mysqli_real_escape_string($link,$this->DNI)); // Seguridad que evita los ataques SQL Injection
+        // echo $Sql;
         $result=mysqli_query($link,$Sql); // ejecuta la cadena sql y almacena el resultado el $result
 	    $row=mysqli_fetch_array($result);
 	    if (!is_null($row["idprofesor"]) or !empty($row["idprofesor"])) { // si no lo recupera, el valor por defecto)

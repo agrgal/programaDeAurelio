@@ -22,7 +22,7 @@ $curso = New misCursos(); // variable de la clase curso
 $alumno = New misAlumnos(); // variable de la clase alumnos
 $materia = New misMaterias(); // variable de la clase materia
 $opiniones = New misOpiniones(); // variable de la clase opiniones
-$asignacion = New misAsignaciones($curso, $profesorado, $materia); // Uso el constructor para pasarle la clase curso, profesorado y materias a Asignaciones
+$asignacion = New misAsignaciones($curso, $profesorado, $materia, $alumno); // Uso el constructor para pasarle la clase curso, profesorado, alumno y materias a Asignaciones
 
 // Variables de sesión
 session_start();
@@ -40,7 +40,7 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 <head profile="http://www.w3.org/2005/10/profile">
   <!-- *** Principio del HEAD *************************************-->	
   <meta content="text/html; charset=iso-8859-15" http-equiv="content-type">
-  <title>Plantilla</title>
+  <title>Obtengo los datos de tutoría</title>
   <link rel="icon" 
         type="image/png" 
         href="./imagenes/logoA.png">
@@ -51,7 +51,8 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
   <!-- Linkar a hojas de estilo CSS -->
   <!-- ***************************** -->
   <?php include_once("./css/cargarestiloscss.php"); ?>
- 
+  <link rel="stylesheet" href="./css/estiloobtenerDatosTutor.css"> <!-- Efectos aplicados a los DIVs -->
+  
   <!-- *** Final del HEAD, antes los ficheros de enlace a CSS ******-->
 </head>
 
@@ -94,9 +95,41 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 				<li><a href="#Datos">Datos</a></li>
 				<li><a href="#Instrucciones">Instrucciones</a></li>				
 			</ul> 
-			<div id="FiltrodeDatos"></div>
-			<div id="Datos"></div>
-			<div id="Instrucciones"></div>
+			<!-- ********************************************************** -->
+			<!-- Filtrado de datos -->
+			<!-- ********************************************************** --> 			
+			<div id="FiltrodeDatos">
+				<!-- Selección de datos -->
+				<div id="acordeon">
+					<h3>Por asignación</h3>
+						<div>
+							<p><?php echo $asignacion->devuelveAsignacionesDondeEstaUnAlumno(117); ?></p>
+						</div>
+					<h3>Por alumno</h3>
+						<div>Alumnado</div>
+					<h3>Por Fechas</h3>
+						<div>Fechas</div>
+					<h3>Por Item</h3>
+						<div>Items</div>
+				</div>
+				<!-- Escritura de cadena SQL -->
+				<div id="CadenaSQL">
+					<h1>Cadena SQL a aplicar...</h1>
+				</div>
+			</div>
+
+			<!-- ********************************************************** -->
+			<!-- Mostrar los datos que se han filtrado -->
+			<!-- ********************************************************** --> 	
+			<div id="Datos">
+			
+			</div>
+			<!-- ********************************************************** -->
+			<!-- Insertar instrucciones -->
+			<!-- ********************************************************** --> 
+			<div id="Instrucciones">
+			
+			</div>
 		</div>
 			
 	</div> <!-- &&&& FIN DEL CONTENEDOR-->	
@@ -108,6 +141,25 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
     <!-- HTML suelto: pie de página *******************************  -->
     <?php include_once("./htmlsuelto/pie.php"); ?> 
     <!-- ********************************************************** -->
+    
+    <!-- ********************************************************** -->
+	<!-- Notificaciones -->
+	<!-- ********************************************************** -->
+		
+		<!-- <div id="notificacionGuardado">
+			<div><h1>Se ha registrado el dato y guardado</h1></div>
+		</div> -->
+		
+	<!-- ********************************************************** -->
+	<!-- Diálogos -->
+	<!-- ********************************************************** -->
+    	
+    	<!-- <div id="dialog-confirm-nohaydatos" title="No hay datos">
+		   <p><span class="fa fa-exclamation-triangle fa-2x" style="float:left; margin:0 7px 20px 0;">
+		   </span>
+		   No se han seleccionado datos...<span class="hoverAsignacion"></span>
+		   </p>
+		</div> -->
     
 </div> <!-- FIN del CONTENEDOR PRINCIPAL -->
 
@@ -142,13 +194,67 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
   
   <script>     
      
-     $(document).ready(function() {  	
+     $(document).ready(function() { 
+
+		// 1a) Incorpora la funcionalidad del menú
+		$.getScript( "./htmlsuelto/js_menu.js", function( data, textStatus, jqxhr ) {
+			console.log( data ); // Data returned
+			console.log( textStatus ); // Success
+			console.log( jqxhr.status ); // 200
+			console.log( "Load was performed." );
+		}); 
+		
+		// 1b) Y del datepicker en español
+			$.getScript( "./htmlsuelto/js_datepicker_espannol.js", function( data, textStatus, jqxhr ) {
+			console.log( data ); // Data returned
+			console.log( textStatus ); // Success
+			console.log( jqxhr.status ); // 200
+			console.log( "Load was performed." );
+		}); 
+				 
+		// 1c) Activa los ToolTIP en el documento
+			$.getScript( "./htmlsuelto/js_tooltips.js", function( data, textStatus, jqxhr ) {
+			console.log( data ); // Data returned
+			console.log( textStatus ); // Success
+			console.log( jqxhr.status ); // 200
+			console.log( "Load was performed." );
+		});		 
+		
+		 // ========================================================================================
+		 // DEFINO tabs. LLAMO Pestañas. y también el acordeon
+		 // ========================================================================================
+		
+		$('#pestañas').tabs(); 
+		$('#acordeon').accordion({
+		 icons: { "header": "ui-icon-arrowthick-1-e", "activeHeader": "ui-icon-star" },
+		 animate: 800,
+		}); 
+		// $('#acordeon.ui-accordion').css({"width":"50%"}) // ancho del acordeón
+	 
+		// ========================================================================================
+		// Defino diálogos y/o notificaciones
+		// ========================================================================================	
+		
+		/* $("#notificacionGuardado, #notificacionModificar").jqxNotification({
+				width: 400, position: "top-right", opacity: 0.9,
+				autoOpen: false, animationOpenDelay: 300, autoClose: true, autoCloseDelay: 2000, template: "info"
+		 }); */
 		 
-	 // ========================================================================================
-     // DEFINO tabs. LLAMO Pestañas. 
-     // ========================================================================================
-	
-	 $('#pestañas').tabs(); 	 
+		 /* 1d) Definición del diálogo de confirmación de grabar datos, borrar y modificar asignacion y confirmar que no hay datos
+		  $("#dialog-confirm, #dialog-confirm-borrar, #dialog-confirm-nohaydatos").dialog({
+			autoOpen: false,
+			modal: true,
+			maxWidth:600,
+            maxHeight: 300,
+            width: 600,
+            height: 300,
+			position: { my: "center center-100", at: "center center", of: "#container" }
+			// el "centro arriba" de mi cuadro de diálogo (my) , en el centro arriba (at) del contenedor (of)
+		 }); */	
+
+		// ========================================================================================
+		// Defino 
+		// ========================================================================================	
 
 			
 	 }); // fin del document ready

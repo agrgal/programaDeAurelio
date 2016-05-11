@@ -27,15 +27,17 @@ class misAsignaciones
 
     private $clasecurso;
     private $claseprofesor;
+    private $clasealumno;
     private $clasemateria; // variables de clase que "paso" a variables privadas dentro de la clase asignacion
     var $estaAsignacion;
     var $listaDeAsignaciones;
     
-    public function __construct($classcurso, $classprofesor, $classmateria)
+    public function __construct($classcurso, $classprofesor, $classmateria, $classalumno)
     {
         $this->clasecurso = $classcurso;
         $this->claseprofesor = $classprofesor;
         $this->clasemateria = $classmateria;
+        $this->clasealumno = $classalumno;
     }
 
 		
@@ -124,6 +126,51 @@ class misAsignaciones
 		$clave=array_search($id,$this->listaDeAsignaciones['idasignacion']);
 		return $this->listaDeAsignaciones['alumnado'][$clave];
 	}
+	// **********************************************************
+	
+	// 5a) Función que, dada un alumno , retorna un listado de asignaciones a las que pertenece dicho alumno.
+	// Tiene que retornar una retahíla id1#id2#id3#.... de índices de ASIGNACIONES.
+	public function devuelveAsignacionesDondeEstaUnAlumno ($idal) {
+		// 1) Curso donde está el alumno. Nombre corto "1ESOE"
+		$this->clasealumno->devuelveAlumno($idal); // llama a los datos de este alumno. Los recupera en la variable esteAlumno
+		$cursoalumno = $this->clasecurso->devuelveCursoCortoPorUnidad($this->clasealumno->esteAlumno["unidad"]);
+		   // Le paso la unidad donde está el alumno y me devuelve el curso corto.
+		// 2) Tengo que encontrar las asignaciones en las que en "datos" encuentre el curso "1ESOE" o la id
+		$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
+	    $Sql='SELECT idasignacion FROM tb_asignaciones ';
+	    $Sql.="WHERE datos LIKE '%#".$idal."#%' OR datos LIKE '%".$idal."#' OR datos LIKE '".$idal."#%' OR datos LIKE '%".$cursoalumno."%' ";
+	    $Sql.='ORDER BY idasignacion';
+	    $ii=0; // contador 
+	    // NO PUEDO USARLO... $Sql = sprintf($Sql, mysqli_real_escape_string($link,"idasignacion")); // Seguridad que evita los ataques SQL Injection  	
+        $result=mysqli_query($link,$Sql);// ejecuta la cadena sql y almacena el resultado el $result
+	    $cadena = "";
+	    while ($row=mysqli_fetch_array($result)) {
+			$cadena.=$row["idasignacion"]."#";
+		} // fin del while
+		if (!is_null($cadena)) { // si no lo recupera, el valor por defecto)
+		    return substr($cadena, 0, -1);; //envia el valor dado
+		    } else {
+		    return NULL;
+	        }
+	   mysqli_free_result($result); 
+	   mysqli_close($link); 
+	}
+	
+	// ********************************************************** 
+	
+	// 5b) Función que, dada una lista de alumnos (id1#id2#id3...#idn) , retorna un listado de asignaciones a las que pertenecen dichos alumnos
+	public function devuelveAsignacionesDeUnaTutoria($id, $profesor) {
+		// A) Recibe la asignación. Recupera sus alumnos.
+		$alumnadoTutoria = 
+		// B) Por cada uno de los alumnos, haz una cadena con las asignaciones
+		
+		// C) Split de esa cadena y meterlo en un array.
+		
+		// D) quitar repetidos
+		
+		// E) ordenar
+	}
+	// ********************************************************** 
 }
 
 ?>

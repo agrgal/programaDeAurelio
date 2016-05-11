@@ -41,6 +41,7 @@ if ($ID>0) {
       // echo $datos_json;      
       
 } else {
-      // echo 'No tienes nada';
+      
+      echo 'No tienes nada';
 }
 ?>

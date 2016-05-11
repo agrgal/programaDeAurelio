@@ -95,6 +95,13 @@ class misCursos
         return array_search($nombreCorto,$this->listaDeCursos["corto"]);
 	}
 	
+	// 3c) Devuelve curso corto por nombre unidad. Doy 1 ESO E , y me devuelve 1ESOE
+	public function devuelveCursoCortoPorUnidad ($nombreUnidad) {
+		$this->listarNiveles(); // carga cursos y niveles.
+		$clave = array_search($nombreUnidad,$this->listaDeCursos["largo"]);
+        return $this->listaDeCursos["corto"][$clave];
+	}
+	
 	// *******************************************************
 	
 	

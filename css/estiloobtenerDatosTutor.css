@@ -1,0 +1,17 @@
+#acordeon.ui-accordion {
+	float: left;
+	width: 50%;
+	border: 0px solid red;
+}
+
+#CadenaSQL {
+    float: right;
+	width: 45%;
+	border: 2px solid green;
+	padding: 5px;
+	margin-right: -5px;
+}
+
+#FiltrodeDatos {
+	overflow: hidden;
+}

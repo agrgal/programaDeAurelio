@@ -22,7 +22,7 @@ $curso = New misCursos(); // variable de la clase curso
 $alumno = New misAlumnos(); // variable de la clase alumnos
 $materia = New misMaterias(); // variable de la clase materia
 $opiniones = New misOpiniones(); // variable de la clase opiniones
-$asignacion = New misAsignaciones($curso, $profesorado, $materia); // Uso el constructor para pasarle la clase curso, profesorado y materias a Asignaciones
+$asignacion = New misAsignaciones($curso, $profesorado, $materia, $alumno); // Uso el constructor para pasarle la clase curso, profesorado, alumno y materias a Asignaciones
 
 // Variables de sesión
 session_start();

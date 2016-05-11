@@ -104,6 +104,7 @@ Clase Cursos
 	function devuelveCurso ($cual) // devuelve, según la clave un curso - nivel -clase y un div.
 	function devuelveListaAlumnos ($curso) // dado un curso, devuelve la lista de alumnado separados por un #
 	function devuelveCursoCorto ($nombreCorto) // dado un nombre corto, devuelve la clave del array $ListaDeCursos...
+	function devuelveCursoCortoPorUnidad  ($nombreUnidad) // // 3c) Devuelve curso corto por nombre unidad. Doy 1 ESO E , y me devuelve 1ESOE
 	function devuelveAsignacionLarga ($asignacionCorta) //
 	         // Doy una asignacion del tipo 1ESOC#12#45 y devuelve una cadena tipo 1#2#...#12#45 con los índices del alumnado
 	         // sin repetir y ordenada.

@@ -22,7 +22,7 @@ $curso = New misCursos(); // variable de la clase curso
 $alumno = New misAlumnos(); // variable de la clase alumnos
 $materia = New misMaterias(); // variable de la clase materia
 // $opiniones = New misOpiniones(); // variable de la clase opiniones
-$asignacion = New misAsignaciones($curso, $profesorado, $materia); // Uso el constructor para pasarle la clase curso, profesorado y materias a Asignaciones
+$asignacion = New misAsignaciones($curso, $profesorado, $materia, $alumno); // Uso el constructor para pasarle la clase curso, profesorado, alumno y materias a Asignaciones
 
 // Variables de sesión
 session_start();
@@ -205,11 +205,19 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 
 		// 1a) Incorpora la funcionalidad del menú de la IZQUIERDA
 		$.getScript( "./htmlsuelto/js_menu.js", function( data, textStatus, jqxhr ) {
-		console.log( data ); // Data returned
-		console.log( textStatus ); // Success
-		console.log( jqxhr.status ); // 200
-		console.log( "Load was performed." );
+			console.log( data ); // Data returned
+			console.log( textStatus ); // Success
+			console.log( jqxhr.status ); // 200
+			console.log( "Load was performed." );
 		}); 
+		
+		// 1b) Activa los ToolTIP en el documento
+	    $.getScript( "./htmlsuelto/js_tooltips.js", function( data, textStatus, jqxhr ) {
+			console.log( data ); // Data returned
+			console.log( textStatus ); // Success
+			console.log( jqxhr.status ); // 200
+			console.log( "Load was performed." );
+		});	
 		
 		// 1c) Definición del diálogo de confirmación de grabar datos, borrar y modificar asignacion y confirmar que no hay datos
 		  $("#dialog-fotos").dialog({

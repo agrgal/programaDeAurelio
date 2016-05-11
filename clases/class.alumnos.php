@@ -103,6 +103,12 @@ class misAlumnos
 	    mysqli_close($link);
 	}	
 	// *******************************************************	
+	
+	// 2) Devuelve la unidad de un alumno
+	public function devuelveUnidadDeUnAlumno ($idal) {
+		$this->devuelveAlumno($idal);
+		return $this->esteAlumno["unidad"];
+	}
 
 }
 
