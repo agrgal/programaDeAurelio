@@ -146,8 +146,13 @@ Clase asignaciones
 	    // Funcion que retorna si es tutor o no
 	function devuelveListadoAlumnosdeEstaAsignacion ($id, $profesor) {	    
 	    // Función que retorna el listado de alumnos de una asignación
+	function devuelveAsignacionesDondeEstaUnAlumno ($idal)
+		// devuelve un listado de asignaciones que corresponden a un alumno
+	function devuelveAsignacionesDeUnaTutoria($id, $profesor)
+	    // Función que, dada una lista de alumnos (id1#id2#id3...#idn) , 
+	    // retorna un listado de asignaciones a las que pertenecen dichos alumnos
+	    // dado id y profesor
 	    
-    	    
 Clase opiniones
 ===============
 

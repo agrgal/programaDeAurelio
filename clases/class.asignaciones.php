@@ -148,7 +148,7 @@ class misAsignaciones
 			$cadena.=$row["idasignacion"]."#";
 		} // fin del while
 		if (!is_null($cadena)) { // si no lo recupera, el valor por defecto)
-		    return substr($cadena, 0, -1);; //envia el valor dado
+		    return substr($cadena, 0, -1); //envia el valor dado
 		    } else {
 		    return NULL;
 	        }
@@ -161,14 +161,46 @@ class misAsignaciones
 	// 5b) Función que, dada una lista de alumnos (id1#id2#id3...#idn) , retorna un listado de asignaciones a las que pertenecen dichos alumnos
 	public function devuelveAsignacionesDeUnaTutoria($id, $profesor) {
 		// A) Recibe la asignación. Recupera sus alumnos.
-		$alumnadoTutoria = 
+		$alumnadoTutoria = $this->devuelveListadoAlumnosdeEstaAsignacion ($id, $profesor);
+		$alumnadoTutoriaArray = explode("#",$alumnadoTutoria);
 		// B) Por cada uno de los alumnos, haz una cadena con las asignaciones
-		
+		$cadena="";
+		foreach ($alumnadoTutoriaArray as $idal) {
+			$cadena.=$this->devuelveAsignacionesDondeEstaUnAlumno($idal)."#";
+		}
+		$cadena = substr($cadena, 0, -1);
 		// C) Split de esa cadena y meterlo en un array.
-		
-		// D) quitar repetidos
-		
-		// E) ordenar
+		$asignacionesDeEstaTutoriaArray=explode("#",$cadena);
+		// D) quitar repetidos y ordenar
+		$asignacionesDeEstaTutoriaArray = array_unique($asignacionesDeEstaTutoriaArray);
+		asort($asignacionesDeEstaTutoriaArray);
+		// E) Mostrar (Normalmente comentado)
+		/* $cadena2 = "";
+		foreach ($asignacionesDeEstaTutoriaArray as $id) {
+			$cadena2.=$id."-";
+		} 
+		return $cadena2; */
+		// F) retorna el array
+		return $asignacionesDeEstaTutoriaArray;
+	}
+	// ********************************************************** 
+	
+	// 6) Dada una asignación, retorna su descripción
+	public function asignacionDescripcion($idasignacion) {
+		$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
+	    $Sql='SELECT descripcion FROM tb_asignaciones WHERE idasignacion="%s"';
+	    $Sql = sprintf($Sql, mysqli_real_escape_string($link,$idasignacion)); // Seguridad que evita los ataques SQL Injection  	
+        $result=mysqli_query($link,$Sql);// ejecuta la cadena sql y almacena el resultado el $result
+	    while ($row=mysqli_fetch_array($result)) {
+			$descripcion = $row["descripcion"];
+		}
+		if (!is_null($descripcion)) { // si no lo recupera, el valor por defecto)
+		    return $descripcion; //envia el valor dado
+		    } else {
+		    return NULL;
+	        }
+	   mysqli_free_result($result); 
+	   mysqli_close($link);
 	}
 	// ********************************************************** 
 }

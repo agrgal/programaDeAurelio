@@ -103,10 +103,34 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 				<div id="acordeon">
 					<h3>Por asignación</h3>
 						<div>
-							<p><?php echo $asignacion->devuelveAsignacionesDondeEstaUnAlumno(117); ?></p>
+							<?php // Select para seleccionar asignaciones
+							$asignacionesmiTutoria = $asignacion->devuelveAsignacionesDeUnaTutoria($_SESSION["idasignacion"],$_SESSION["profesor"]);
+							echo '<div id="asignaciones" title="Escoge la asignación de Filtrado">';
+							echo '<select name="EscogerAsignaciones" id="EscogerAsignacion" class="seleccionaidasignacion">';
+							echo '<option value="0">Todas las asignaciones</option>';
+							foreach($asignacionesmiTutoria as $clave => $valor) {
+								echo '<option value="'.$valor.'">'.$asignacion->asignacionDescripcion($valor).'</option>';
+							}
+							echo '</select>';
+							echo '</div>';
+							?>
 						</div>
 					<h3>Por alumno</h3>
-						<div>Alumnado</div>
+						<div>
+							<?php // Select para seleccionar alumnos
+							$alumnos = $asignacion->devuelveListadoAlumnosdeEstaAsignacion($_SESSION["idasignacion"],$_SESSION["profesor"]);
+							$alumnosArray = explode("#",$alumnos);
+							echo '<div id="alumnos" title="Escoge un alumno de tu tutoría">';
+							echo '<select name="EscogerAlumno" id="EscogerAlumno" class="seleccionaidalumno">';
+							echo '<option value="0">Todos los alumnos/as</option>';
+							foreach($alumnosArray as $clave => $valor) {
+								$alumno->devuelveAlumno($valor);
+								echo '<option value="'.$valor.'">'.$alumno->esteAlumno["nombre2"].'</option>';
+							}
+							echo '</select>';
+							echo '</div>';
+							?>
+						</div>
 					<h3>Por Fechas</h3>
 						<div>Fechas</div>
 					<h3>Por Item</h3>
@@ -256,6 +280,25 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 		// Defino 
 		// ========================================================================================	
 
+		//1) Definición del SELECT de asignaciones
+    	$( "#EscogerAsignacion" )
+			.selectmenu({
+				width:700, 
+				style: 'popup',
+			})			
+			.selectmenu("menuWidget")
+			   .addClass("overflow4"); // carga un estilo que está en /css/estiloSelectMenuOverflow.css
+
+		//2) Definición del SELECT de alumnos
+    	$( "#EscogerAlumno" )
+			.selectmenu({
+				width:700, 
+				style: 'popup',
+			})			
+			.selectmenu("menuWidget")
+			   .addClass("overflow5"); // carga un estilo que está en /css/estiloSelectMenuOverflow.css		   
+			   
+	   	// ******************************************************        
 			
 	 }); // fin del document ready
 	 
