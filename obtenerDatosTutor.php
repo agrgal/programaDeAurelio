@@ -13,6 +13,7 @@ include_once("./clases/class.alumnos.php"); //clase que recupera datos de alumno
 include_once("./clases/class.materias.php"); //clase que recupera datos de materias
 include_once("./clases/class.asignaciones.php"); //clase que recupera datos de materias
 include_once("./clases/class.opiniones.php"); //clase que recupera datos de opiniones
+include_once("./clases/class.evaluaciones.php"); //clase que recupera datos de evaluaciones
 
 // incluyo las variables de esas clases
 $calendario = New micalendario(); // variable de calendario. Lo necesito para la cabecera
@@ -23,6 +24,7 @@ $alumno = New misAlumnos(); // variable de la clase alumnos
 $materia = New misMaterias(); // variable de la clase materia
 $opiniones = New misOpiniones(); // variable de la clase opiniones
 $asignacion = New misAsignaciones($curso, $profesorado, $materia, $alumno); // Uso el constructor para pasarle la clase curso, profesorado, alumno y materias a Asignaciones
+$evaluacion = New misEvaluaciones(); // variable de la clase evaluaciones
 
 // Variables de sesión
 session_start();
@@ -132,13 +134,27 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 							?>
 						</div>
 					<h3>Por Fechas</h3>
-						<div>Fechas</div>
+						<div id="Fechas">
+							<div id="cualquierFecha"><div class="divNombreEval" style="padding: 10px;">Cualquier fecha</div></div>
+							<div id="fechaInicio">Fecha de Inicio</div>
+							<div id="fechaFinal">Fecha Final</div>
+							<div id="primerTrimestre"><?php echo $evaluacion->listadoDeEvaluaciones["div"][0]; ?></div>
+							<div id="segundoTrimestre"><?php echo $evaluacion->listadoDeEvaluaciones["div"][1]; ?></div>
+							<div id="tercerTrimestre"><?php echo $evaluacion->listadoDeEvaluaciones["div"][2]; ?></div>
+							<div id="quincedias"><div class="divNombreEval" style="padding: 10px;">Hace quince días</div></div>
+							<div id="haceunmes"><div class="divNombreEval" style="padding: 10px;">Hace un mes</div></div>
+							<div id="hacedosmeses"><div class="divNombreEval" style="padding: 10px;">Hace dos meses</div></div>
+							<p id="textoFecha">Cualquier Fecha</p>
+						</div>
 					<h3>Por Item</h3>
 						<div>Items</div>
 				</div>
 				<!-- Escritura de cadena SQL -->
 				<div id="CadenaSQL">
-					<h1>Cadena SQL a aplicar...</h1>
+					<h1>Condiciones</h1>
+					<p id="condiciones"></p>
+					<h1>Cadena SQL</h1>
+					<p id="SQL"></p>
 				</div>
 			</div>
 
@@ -219,6 +235,11 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
   <script>     
      
      $(document).ready(function() { 
+		 
+		 // Variables Generales
+		 var textoFecha = "Cualquier Fecha";
+		 var fechaINI = "#";
+		 var fechaFIN = "#";
 
 		// 1a) Incorpora la funcionalidad del menú
 		$.getScript( "./htmlsuelto/js_menu.js", function( data, textStatus, jqxhr ) {
@@ -298,7 +319,65 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 			.selectmenu("menuWidget")
 			   .addClass("overflow5"); // carga un estilo que está en /css/estiloSelectMenuOverflow.css		   
 			   
-	   	// ******************************************************        
+	   	// ******************************************************  
+	   	
+	   	$( "#EscogerAsignacion, #EscogerAlumno" ).selectmenu({
+			change: function(event,ui) {
+				rellenarCondiciones();
+			}
+		});  
+		
+		// Al pulsar sobre alguna de los botones de Fecha
+		$("#cualquierFecha").click(function(event,ui){
+			textoFecha = "Cualquier Fecha";
+			fechaINI = "#";
+			fechaFIN = "#";
+			rellenarCondiciones() ;
+		});   
+		
+		$("#primerTrimestre").click(function(event){
+			textoFecha = "Primera Evaluación";
+			fechaFIN = $(this).children().attr("fechafin"); // children porque es otro DIV dentro.
+			var fecFIN = new Date(fechaFIN);
+			fechaINI = fecFIN.getFullYear() + "-09-01" // Desde el 1 de Septiembre de ese año, seguro.
+			rellenarCondiciones() ;
+		});  
+		
+		$("#segundoTrimestre").click(function(event){
+			textoFecha = "Segunda Evaluación";
+			fechaFIN = $(this).children().attr("fechafin"); // children porque es otro DIV dentro.
+			var fecFIN = new Date($("#primerTrimestre").children().attr("fechafin"));
+			// alert(fecFIN);			
+			fecFIN.setDate(fecFIN.getDate()+1);
+			// alert(fecFIN);
+			fechaINI = fecFIN.getFullYear() + "-"+("0" + (fecFIN.getMonth()+1)).slice(-2)+"-"+("0" + fecFIN.getDate()).slice(-2);
+			rellenarCondiciones() ;
+		});    
+		
+		$("#tercerTrimestre").click(function(event){
+			textoFecha = "Tercera Evaluación";
+			fechaFIN = $(this).children().attr("fechafin"); // children porque es otro DIV dentro.
+			var fecFIN = new Date($("#segundoTrimestre").children().attr("fechafin"));
+			// alert(fecFIN);			
+			fecFIN.setDate(fecFIN.getDate()+1);
+			// alert(fecFIN);
+			fechaINI = fecFIN.getFullYear() + "-"+("0" + (fecFIN.getMonth()+1)).slice(-2)+"-"+("0" + fecFIN.getDate()).slice(-2);
+			rellenarCondiciones() ;
+		});   
+		
+		// Funciones dentro del document ready
+		function rellenarCondiciones() {
+			var escogerAsignacion = $( "#EscogerAsignacion option:selected").text();
+			var escogerAlumno = $( "#EscogerAlumno option:selected").text();
+			$("#condiciones").html(escogerAsignacion+", "+escogerAlumno+", "+textoFecha);
+			$("#SQL").html(fechaINI+" - "+fechaFIN);
+		};
+		
+		
+		// ***************************
+		// Tras cargarlo todo. Inicio.
+		// ***************************
+		rellenarCondiciones(); // al principio, con las opciones por defecto.
 			
 	 }); // fin del document ready
 	 
