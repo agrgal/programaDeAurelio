@@ -10,10 +10,21 @@
 	border: 2px solid green;
 	padding: 5px;
 	margin-right: -5px;
+	text-align: center;
 }
 
 #FiltrodeDatos {
 	overflow: hidden;
+}
+
+#Datos {
+	text-align: center;
+}
+
+#MostrarDatos {
+	overflow: hidden;
+	border: 2px solid orange;
+	margin: 4px auto;
 }
 
 /* CSS de los divs de Fechas */
@@ -23,32 +34,32 @@
 }
 
 #cualquierFecha {
- border: 1px solid black;
+ border: 0px solid black;
  width: 50%;
- margin: 2px auto;
+ margin: 5px auto;
  vertical-align: middle;
 }
 
 #fechaInicio {
- border: 1px solid black;
+ border: 0px solid black;
  width: 49%;
  float: left;
  display: inline-block;
   vertical-align: middle;
-   margin: 2px auto;
+   margin: 5px auto;
 }
 
 #fechaFinal {
- border: 1px solid black;
+ border: 0px solid black;
  width: 49%;
  display: inline-block;
   vertical-align: middle;
-   margin: 2px auto;
+   margin: 5px auto;
 }
 
 #primerTrimestre {
  width: 32%;
- border: 1px solid black;
+ border: 0px solid black;
  display: inline-block;
   vertical-align: middle;
    margin: 2px auto;
@@ -56,7 +67,7 @@
 
 #segundoTrimestre {
  width: 32%;
- border: 1px solid black;
+ border: 0px solid black;
  display: inline-block;
   vertical-align: middle;
    margin: 2px auto;
@@ -64,14 +75,14 @@
 
 #tercerTrimestre {
  width: 32%;
- border: 1px solid black;
+ border: 0px solid black;
  display: inline-block;
   vertical-align: middle;
    margin: 2px auto;
 }
 
 #quincedias {
- border: 1px solid black;
+ border: 0px solid black;
   width: 32%;
   display: inline-block;
    vertical-align: middle;
@@ -79,7 +90,7 @@
 }
 
 #haceunmes {
- border: 1px solid black;
+ border: 0px solid black;
   display: inline-block;
    width: 32%;
     vertical-align: middle;
@@ -87,8 +98,19 @@
 }
 
 #hacedosmeses {
- border: 1px solid black;
+ border: 0px solid black;
   display: inline-block;
    width: 32%;
     vertical-align: middle;
+}
+
+/* Campos de fechas */
+#fechaINI, #muestrafechaINI, #fechaFIN, #muestrafechaFIN { /* estilo de la caja de fechas */
+	font-size: 0.8em;
+	width: 140px;
+}
+
+/* Botón de mostrar los datos */
+#go {
+  margin: 10px auto;
 }

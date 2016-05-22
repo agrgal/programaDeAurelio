@@ -136,25 +136,37 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 					<h3>Por Fechas</h3>
 						<div id="Fechas">
 							<div id="cualquierFecha"><div class="divNombreEval" style="padding: 10px;">Cualquier fecha</div></div>
-							<div id="fechaInicio">Fecha de Inicio</div>
-							<div id="fechaFinal">Fecha Final</div>
+							<hr style="text-align: center; width: 80%;">
+							<div id="fechaInicio">
+								Inicial: 
+								<input id="fechaINI" READONLY alt="Pulsa para obtener o cambiar la fecha inicial del intervalo" title="Pulsa para obtener o cambiar la fecha inicial del intervalo">
+								<input id="muestrafechaINI" style="display:none ;">
+							</div>
+							<div id="fechaFinal">
+								Final: 
+								<input id="fechaFIN" READONLY alt="Pulsa para obtener o cambiar la fecha final del intervalo" title="Pulsa para obtener o cambiar la fecha final del intervalo">
+								<input id="muestrafechaFIN" style="display:none ;">
+							</div>
+							<hr style="text-align: center; width: 80%;">
 							<div id="primerTrimestre"><?php echo $evaluacion->listadoDeEvaluaciones["div"][0]; ?></div>
 							<div id="segundoTrimestre"><?php echo $evaluacion->listadoDeEvaluaciones["div"][1]; ?></div>
 							<div id="tercerTrimestre"><?php echo $evaluacion->listadoDeEvaluaciones["div"][2]; ?></div>
 							<div id="quincedias"><div class="divNombreEval" style="padding: 10px;">Hace quince días</div></div>
 							<div id="haceunmes"><div class="divNombreEval" style="padding: 10px;">Hace un mes</div></div>
 							<div id="hacedosmeses"><div class="divNombreEval" style="padding: 10px;">Hace dos meses</div></div>
-							<p id="textoFecha">Cualquier Fecha</p>
+							<p id="textoFecha" style="display:none ;">Cualquier Fecha</p>
+							<hr style="text-align: center; width: 80%;">
 						</div>
-					<h3>Por Item</h3>
-						<div>Items</div>
+					<!-- <h3>Por Item</h3>
+						<div>Items</div> NO SE SI PONER POR ITEMS --> 
 				</div>
 				<!-- Escritura de cadena SQL -->
 				<div id="CadenaSQL">
 					<h1>Condiciones</h1>
 					<p id="condiciones"></p>
-					<h1>Cadena SQL</h1>
-					<p id="SQL"></p>
+					<h1 style="display: none;">Cadena SQL</h1>
+					<p style="display: none;" id="SQL"></p>
+					<button id="go">Mostrar Datos</button>
 				</div>
 			</div>
 
@@ -162,7 +174,9 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 			<!-- Mostrar los datos que se han filtrado -->
 			<!-- ********************************************************** --> 	
 			<div id="Datos">
-			
+				<div id="MostrarDatos">
+				
+				</div>
 			</div>
 			<!-- ********************************************************** -->
 			<!-- Insertar instrucciones -->
@@ -240,6 +254,7 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 		 var textoFecha = "Cualquier Fecha";
 		 var fechaINI = "#";
 		 var fechaFIN = "#";
+		 var cadenaSQL = "SELECT * FROM `tb_opiniones` ";
 
 		// 1a) Incorpora la funcionalidad del menú
 		$.getScript( "./htmlsuelto/js_menu.js", function( data, textStatus, jqxhr ) {
@@ -266,7 +281,7 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 		});		 
 		
 		 // ========================================================================================
-		 // DEFINO tabs. LLAMO Pestañas. y también el acordeon
+		 // DEFINO tabs. LLAMO Pestañas. y también el acordeon, y los botones de fecha
 		 // ========================================================================================
 		
 		$('#pestañas').tabs(); 
@@ -275,6 +290,9 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 		 animate: 800,
 		}); 
 		// $('#acordeon.ui-accordion').css({"width":"50%"}) // ancho del acordeón
+	    $("#fechaINI, #fechaFIN, #go").button({
+			width: 'auto',
+		}); // para que lo reconozca como del tema sunny	
 	 
 		// ========================================================================================
 		// Defino diálogos y/o notificaciones
@@ -365,14 +383,116 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 			rellenarCondiciones() ;
 		});   
 		
+		$("#quincedias").click(function(event){
+			textoFecha = "Hace quince días";
+			var fecFIN = new Date();
+			var fecINI = new Date();
+			fechaFIN = fecFIN.toJSON().slice(0,10)
+			// alert(fecFIN);			
+			fecINI.setDate(fecFIN.getDate()-15);
+			// alert(fecFIN);
+			fechaINI = fecINI.getFullYear() + "-"+("0" + (fecINI.getMonth()+1)).slice(-2)+"-"+("0" + fecINI.getDate()).slice(-2);
+			rellenarCondiciones() ;
+		});  
+		
+		$("#haceunmes").click(function(event){
+			textoFecha = "Hace un mes";
+			var fecFIN = new Date();
+			var fecINI = new Date();
+			fechaFIN = fecFIN.toJSON().slice(0,10)
+			// alert(fecFIN);			
+			fecINI.setDate(fecFIN.getDate()-30);
+			// alert(fecFIN);
+			fechaINI = fecINI.getFullYear() + "-"+("0" + (fecINI.getMonth()+1)).slice(-2)+"-"+("0" + fecINI.getDate()).slice(-2);
+			rellenarCondiciones() ;
+		}); 
+		
+		$("#hacedosmeses").click(function(event){
+			textoFecha = "Hace dos meses";
+			var fecFIN = new Date();
+			var fecINI = new Date();
+			fechaFIN = fecFIN.toJSON().slice(0,10)
+			// alert(fecFIN);			
+			fecINI.setDate(fecFIN.getDate()-(30+31));
+			// alert(fecFIN);
+			fechaINI = fecINI.getFullYear() + "-"+("0" + (fecINI.getMonth()+1)).slice(-2)+"-"+("0" + fecINI.getDate()).slice(-2);
+			rellenarCondiciones() ;
+		}); 
+		
+		// *******************************************
+		// Fechas	
+		// ******************************************* 
+		 $("#fechaINI").datepicker({  			 
+				   dateFormat: 'dd-mm-yy',
+				   altField: "#muestrafechaINI", // campo relacionado con el data picker
+				   altFormat: 'yy-mm-dd', // Formato del campo relacionado. Tipo MySQL
+				   changeMonth: true,
+				   changeYear: true,
+				   theme: 'ui-sunny',
+				   beforeShow: function(event) { // Justo antes de mostrarlo, guarda lo de la fecha anterior...
+					   event.preventDefault;  					   
+				   },
+				   onSelect: function (event) {
+					   event.preventDefault;
+					   fechaINI = $("#muestrafechaINI").val(); // children porque es otro DIV dentro.
+					   var fecINI = new Date(fechaINI).toLocaleDateString();
+					   var fecFIN = new Date(fechaFIN).toLocaleDateString();
+					   if (fecFIN == "Invalid Date") { fecFIN = 'Fecha sin determinar'; };
+					   // alert(fechaINI+" - ");
+					   textoFecha = "Intervalo entre " + fecINI+ " y " +fecFIN;
+					   rellenarCondiciones() ;
+				   },					   
+		 }); 
+		 $("#fechaFIN").datepicker({  			 
+				   dateFormat: 'dd-mm-yy',
+				   altField: "#muestrafechaFIN", // campo relacionado con el data picker
+				   altFormat: 'yy-mm-dd', // Formato del campo relacionado. Tipo MySQL
+				   changeMonth: true,
+				   changeYear: true,
+				   theme: 'ui-sunny',
+				   beforeShow: function(event) { // Justo antes de mostrarlo, guarda lo de la fecha anterior...
+					   event.preventDefault;  					   
+				   },
+				   onSelect: function (event) {
+					   event.preventDefault;
+					   fechaFIN = $("#muestrafechaFIN").val(); // children porque es otro DIV dentro.
+					   var fecINI = new Date(fechaINI).toLocaleDateString();
+					   var fecFIN = new Date(fechaFIN).toLocaleDateString();
+					   if (fecINI == "Invalid Date") { fecINI = 'Fecha sin determinar'; };
+					   // alert(fechaINI+" - ");
+					   textoFecha = "Intervalo entre " + fecINI + " y " + fecFIN;
+					   rellenarCondiciones() ;
+				   },					   
+		 }); 
+ 
+		 $("#fechaINI").datepicker("setDate", fechaINI); // pone la fecha de hoy
+		 $("#fechaFIN").datepicker("setDate", fechaFIN); // pone la fecha de hoy
+		
+		
+		// *******************************************
 		// Funciones dentro del document ready
+		// *******************************************
 		function rellenarCondiciones() {
 			var escogerAsignacion = $( "#EscogerAsignacion option:selected").text();
 			var escogerAlumno = $( "#EscogerAlumno option:selected").text();
 			$("#condiciones").html(escogerAsignacion+", "+escogerAlumno+", "+textoFecha);
+			// Cadena SQL
+			escogerAsignacion = $( "#EscogerAsignacion option:selected").val();
+			escogerAlumno = $( "#EscogerAlumno option:selected").val(); // Redefino con los valores
+			cadenaSQL = "SELECT * FROM `tb_opiniones` ";
 			$("#SQL").html(fechaINI+" - "+fechaFIN);
-		};
-		
+			if (escogerAsignacion>0 || escogerAlumno>0 || fechaINI!="#" || fechaFIN!="#") {
+				cadenaSQL = cadenaSQL + "WHERE ";
+			} 			
+			if (escogerAsignacion>0) { cadenaSQL = cadenaSQL + '`asignacion` = '+escogerAsignacion+' AND ';	}
+			if (escogerAlumno>0) { cadenaSQL = cadenaSQL + '`alumno` = '+escogerAlumno+' AND ';	}
+			if (fechaINI!="#" && fechaFIN!="#") { cadenaSQL = cadenaSQL + "`fecha` BETWEEN '"+fechaINI+"' AND '"+fechaFIN+"' AND ";}
+			if (fechaINI!="#" && fechaFIN=="#") { cadenaSQL = cadenaSQL + "`fecha`> '"+fechaINI+"' AND ";}
+			if (fechaINI=="#" && fechaFIN!="#") { cadenaSQL = cadenaSQL + "`fecha`< '"+fechaFIN+"' AND ";}			
+			// SELECT * FROM `tb_opiniones` WHERE `fecha` BETWEEN '2015-03-15' AND '2016-05-11' AND `alumno` = 90 AND `asignacion` = 2 
+			if (cadenaSQL.slice(-5)==" AND ") { cadenaSQL = cadenaSQL.slice(0,-5);}
+			$("#SQL").html(cadenaSQL);
+		};		
 		
 		// ***************************
 		// Tras cargarlo todo. Inicio.
