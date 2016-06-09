@@ -53,7 +53,7 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
   <!-- Linkar a hojas de estilo CSS -->
   <!-- ***************************** -->
   <?php include_once("./css/cargarestiloscss.php"); ?>
-  <link rel="stylesheet" href="./css/estiloobtenerDatosTutor.css"> <!-- Efectos aplicados a los DIVs -->
+  <link rel="stylesheet" href="./css/estiloobtenerDatosTutor.css"> <!-- Efectos aplicados a esta hoja -->
   
   <!-- *** Final del HEAD, antes los ficheros de enlace a CSS ******-->
 </head>
@@ -157,6 +157,16 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 							<p id="textoFecha" style="display:none ;">Cualquier Fecha</p>
 							<hr style="text-align: center; width: 80%;">
 						</div>
+					<h3>Opciones</h3>
+						<div id="Opciones">
+						    <div id="fotoYN" title="Elige si quieres que en la lista a parezcan o no las fotografías"></div>
+						    <ul id="ordenable">
+								  <li dt="fecha ASC" id="OrdenFecha" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Ordenar por Fecha "las más antiguas primero"</li>
+								  <li dt="alumno ASC" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Ordenar por Nombre</li>
+								  <li dt="asignacion ASC" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Ordenar por Asignación</li>
+						    </ul>
+						    <p style="display: auto;" id="orden">ORDEN BY fecha ASC, alumno ASC, asignacion ASC</p>
+						</div> 
 					<!-- <h3>Por Item</h3>
 						<div>Items</div> NO SE SI PONER POR ITEMS --> 
 				</div>
@@ -164,8 +174,8 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 				<div id="CadenaSQL">
 					<h1>Condiciones</h1>
 					<p id="condiciones"></p>
-					<h1 style="display: none;">Cadena SQL</h1>
-					<p style="display: none;" id="SQL"></p>
+					<h1 style="display: auto;">Cadena SQL</h1>
+					<p style="display: auto;" id="SQL"></p> <!-- poner 'none' para ocultarlo -->
 					<button id="go">Mostrar Datos</button>
 				</div>
 			</div>
@@ -174,8 +184,7 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 			<!-- Mostrar los datos que se han filtrado -->
 			<!-- ********************************************************** --> 	
 			<div id="Datos">
-				<div id="MostrarDatos">
-				
+				<div id="MostrarDatos">	<!-- Aquí se inserta el HTML que muestra los datos -->			
 				</div>
 			</div>
 			<!-- ********************************************************** -->
@@ -278,11 +287,14 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 			console.log( textStatus ); // Success
 			console.log( jqxhr.status ); // 200
 			console.log( "Load was performed." );
-		});		 
+		});		
 		
-		 // ========================================================================================
-		 // DEFINO tabs. LLAMO Pestañas. y también el acordeon, y los botones de fecha
-		 // ========================================================================================
+		// 2) Botones de tutoría
+		$("#fotoYN").buttonset(); // escribo los inputs directamente 
+		
+		 // ===========================================================================================
+		 // DEFINO tabs. LLAMO Pestañas. y también el acordeon, y los botones de fecha. Lista ordenable
+		 // ===========================================================================================
 		
 		$('#pestañas').tabs(); 
 		$('#acordeon').accordion({
@@ -293,6 +305,35 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 	    $("#fechaINI, #fechaFIN, #go").button({
 			width: 'auto',
 		}); // para que lo reconozca como del tema sunny	
+		
+		// Lista que se ordena...
+        $("#ordenable").sortable({
+			stop: function( event, ui ) {
+				// alert("Cambio");
+				/* var cadena = "";
+				$("#ordenable li").each(function(i, elemento){
+					cadena = cadena + $(elemento).attr("dt")+", ";					
+				});
+				cadena = cadena.slice(0,-2); // Quitar el último elemento
+				$("#orden").html("ORDEN BY " + cadena); */
+				cadenaORDER();
+			},
+		});
+		$("#ordenable").disableSelection();	
+
+		// Al pulsar sobre un elemento de la lista, cambio de fechas ASC a DESC
+		$("#OrdenFecha").dblclick(function(ui){
+			// alert($(this).attr("dt"));
+			if ($(this).attr("dt")=="fecha ASC") {
+				$(this).attr("dt","fecha DESC");
+				// alert($(this).attr("dt"));
+				$(this).html('<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Ordenar por Fecha "las más actuales primero"');
+			} else if ($(this).attr("dt")=="fecha DESC") {
+				$(this).attr("dt","fecha ASC");
+				$(this).html('<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Ordenar por Fecha "las más antiguas primero"');
+			}
+			cadenaORDER();
+		});
 	 
 		// ========================================================================================
 		// Defino diálogos y/o notificaciones
@@ -467,7 +508,35 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
  
 		 $("#fechaINI").datepicker("setDate", fechaINI); // pone la fecha de hoy
 		 $("#fechaFIN").datepicker("setDate", fechaFIN); // pone la fecha de hoy
+
+		// *******************************************
+		// Opciones	
+		// ******************************************* 		
+		//1) Botón para el SwitchButton de fotos
+            $('#fotoYN').jqxSwitchButton({ 
+				height: 90, 
+				width: 250,  
+				checked: false, 
+				theme:'ui-sunny',
+				onLabel:'Con fotos',
+				offLabel:'Sin fotos',
+				// rtl: true, // de derecha a izquierda
+				// orientation: 'vertical'
+			});
 		
+		// ************************************
+		// Pulso el botón de obtención de datos
+		// ************************************
+		$("#go").click(function(event,ui){
+			$.when(obtenerDatos()).done(function(datos){
+				try { // se reciben en formato de div
+				   $("#MostrarDatos").html('<h1>'+$("#condiciones").html()+'</h1>'+datos);
+				   // alert(datos);
+				} catch(err) {
+				   console.log(err.message);
+				}	
+			});
+		});  
 		
 		// *******************************************
 		// Funciones dentro del document ready
@@ -494,6 +563,16 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 			$("#SQL").html(cadenaSQL);
 		};		
 		
+		// 2) Obtener cadena ordenada
+		function cadenaORDER() {
+			// alert("Cambio");
+			var cadena = "";
+			$("#ordenable li").each(function(i, elemento){
+				cadena = cadena + $(elemento).attr("dt")+", ";					
+			});
+			cadena = cadena.slice(0,-2); // Quitar el último elemento
+			$("#orden").html("ORDEN BY " + cadena);
+		}
 		// ***************************
 		// Tras cargarlo todo. Inicio.
 		// ***************************
@@ -505,6 +584,31 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 	 // Funciones en la página *******************************
 	 // ******************************************************	 
 
+	 //************************************
+	 // F1) Obtener datos del filtro
+	 function obtenerDatos() {
+		 if ($("#fotoYN").jqxSwitchButton('checked')) { var fotoSN = 1; } else { var fotoSN=0; }
+		 alert(fotoSN);
+		 console.log("****************** Obtiene SQL *******************");
+		 console.log("SQL: "+$("#SQL").text());
+		 console.log("Fotos: ");
+		 return $.ajax({
+			  type: 'POST',
+			  dataType: 'text',	
+		      url: "./tutorias/scripts/obtenerDatos.php", // En el script se construye la tabla...
+		      data: { 
+			  SQL: $("#SQL").text(), // La variable de sesión de la asignación se consigue en el script.	
+			  foto: fotoSN,		  
+		      },
+		      success: function(data, textStatus, jqXHR){ 			  
+				// alert(data);
+				return data;
+		      },
+		  });
+	  } // Fin de la función Obtener fechas de un alumno - asignación
+	  
+
+	  
 	  
  <!-- * =======================================================================================================   * --> 	
 

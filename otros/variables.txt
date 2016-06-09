@@ -152,6 +152,7 @@ Clase asignaciones
 	    // Función que, dada una lista de alumnos (id1#id2#id3...#idn) , 
 	    // retorna un listado de asignaciones a las que pertenecen dichos alumnos
 	    // dado id y profesor
+	function asignacionDescripcion($idasignacion) // devuelve la descripción dando su id simplemente
 	    
 Clase opiniones
 ===============
@@ -167,6 +168,7 @@ Clase opiniones
         // devuelve un array codificado en JSON  con los valores de items y observaciones 
      function retornaItem ($id) // dado un identificador de item, id, recupera un json con el valor de ese identificador
      function itemsElegidos ($cadena) // dada una cadena del tipo 9#14#.. devuelve los items separados por punto y coma.
+     function retornaValores($cadenaSQL) // Doy una cadena SQL y retorna un array con los datos obtenidos
      
 Clase evaluaciones
 ==================

@@ -554,6 +554,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 			  fecha: fechaDada, // La variable de sesión de la asignación se consigue en el script.
 			  });
 		  posting.done(function(data,status) { 
+			  // alert(data);
 			  $(lista).html(data);
 			  // $(lista).refresh();
 			  // location.reload();

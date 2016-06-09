@@ -232,6 +232,38 @@ class misOpiniones
 	   return $cadenaReturn;
 	   // return $cadena;
 	}
+	
+	// ***********************************************************
+	// 8) Función que acepta una cadena SQL
+	// Retorna un array con la información
+	public function retornaValores($cadenaSQL) {
+		$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
+	    // $Sql ='SELECT id, items, observaciones FROM tb_opiniones WHERE fecha="'.$fecha.'" AND alumno="'.$alumno.'" AND asignacion="'.$asignacion.'"';
+	    // $Sql = sprintf($Sql, mysqli_real_escape_string($link,$fecha)); // Seguridad que evita los ataques SQL Injection  	
+	    $result=mysqli_query($link,$cadenaSQL); // ejecuta la cadena sql y almacena el resultado el $result
+        $row=mysqli_fetch_array($result);
+        $ii=0;
+        $datos=array();
+        while ($row=mysqli_fetch_array($result)) {
+			if (!is_null($row["id"]) or !empty($row["id"])) { // si no lo recupera, el valor por defecto)
+				  	$datos[$ii]=array("id"=>$row["id"],"items"=>$row["items"],"asignacion"=>$row["asignacion"],"alumno"=>$row["alumno"]
+	                   ,"observaciones"=>html_entity_decode($row["observaciones"]),"fecha"=>$row["fecha"]);
+	                   // ,"observaciones"=>$row["observaciones"],"fecha"=>$row["fecha"]);
+	        }
+	        $ii++;
+		}
+		mysqli_free_result($result); 
+	    mysqli_close($link); 
+	    // Guardado todo en datos...        
+		
+		$datos_json=json_encode($datos); // codifica como json...
+		
+		if (!is_null($datos_json) or !empty($datos_json)) {
+			return $datos_json; //envia el valor dado como JSON... Obtener valores como $valor->{"id"}
+		} else {
+			return NULL;
+		}
+	}
 
 }
 
