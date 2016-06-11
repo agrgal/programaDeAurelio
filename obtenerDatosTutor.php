@@ -159,13 +159,16 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 						</div>
 					<h3>Opciones</h3>
 						<div id="Opciones">
+							<div id="QuieroFotoSN"><h3>Elige si quieres los resultados con o sin fotografías</h3></div>
 						    <div id="fotoYN" title="Elige si quieres que en la lista a parezcan o no las fotografías"></div>
-						    <ul id="ordenable">
-								  <li dt="fecha ASC" id="OrdenFecha" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Ordenar por Fecha "las más antiguas primero"</li>
-								  <li dt="alumno ASC" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Ordenar por Nombre</li>
-								  <li dt="asignacion ASC" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Ordenar por Asignación</li>
-						    </ul>
-						    <p style="display: auto;" id="orden">ORDEN BY fecha ASC, alumno ASC, asignacion ASC</p>
+						    <div id="ListaDeOpciones">
+								<ul id="ordenable">
+									  <li dt="fecha ASC" id="OrdenFecha" class="ui-state-default" title="Docle Click si quieres cambiar el orden de las fechas"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Ordenar por Fecha "las más antiguas primero"</li>
+									  <li dt="alumno ASC" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Ordenar por Nombre</li>
+									  <li dt="asignacion ASC" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Ordenar por Asignación</li>
+								</ul>
+								<p style="display: none;" id="orden">ORDER BY fecha ASC, alumno ASC, asignacion ASC</p> <!-- None para ocultarlo -->
+						    </div>
 						</div> 
 					<!-- <h3>Por Item</h3>
 						<div>Items</div> NO SE SI PONER POR ITEMS --> 
@@ -174,8 +177,8 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 				<div id="CadenaSQL">
 					<h1>Condiciones</h1>
 					<p id="condiciones"></p>
-					<h1 style="display: auto;">Cadena SQL</h1>
-					<p style="display: auto;" id="SQL"></p> <!-- poner 'none' para ocultarlo -->
+					<h1 style="display: text;">Cadena SQL</h1>
+					<p style="display: text;" id="SQL"></p> <!-- poner 'none' para ocultarlo -->
 					<button id="go">Mostrar Datos</button>
 				</div>
 			</div>
@@ -260,7 +263,7 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
      $(document).ready(function() { 
 		 
 		 // Variables Generales
-		 var textoFecha = "Cualquier Fecha";
+		 var textoFecha = "cualquier Fecha";
 		 var fechaINI = "#";
 		 var fechaFIN = "#";
 		 var cadenaSQL = "SELECT * FROM `tb_opiniones` ";
@@ -296,7 +299,18 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 		 // DEFINO tabs. LLAMO Pestañas. y también el acordeon, y los botones de fecha. Lista ordenable
 		 // ===========================================================================================
 		
-		$('#pestañas').tabs(); 
+		$('#pestañas').tabs({
+			active: 0,
+			create: function(event,ui) {
+				$("#pestañas").tabs("disable", 1); // desactiva la pestaña 1
+			},
+			activate: function(event, ui){ //detecta la pestaña pulsada...
+				if(ui.newTab.index()=='0') { // Si se pulsa la pestaña 0... Filtro de Datos
+					$("#pestañas").tabs("disable", 1); // desactiva la pestaña 1
+				}
+			},
+		}); 
+		
 		$('#acordeon').accordion({
 		 icons: { "header": "ui-icon-arrowthick-1-e", "activeHeader": "ui-icon-star" },
 		 animate: 800,
@@ -309,14 +323,8 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 		// Lista que se ordena...
         $("#ordenable").sortable({
 			stop: function( event, ui ) {
-				// alert("Cambio");
-				/* var cadena = "";
-				$("#ordenable li").each(function(i, elemento){
-					cadena = cadena + $(elemento).attr("dt")+", ";					
-				});
-				cadena = cadena.slice(0,-2); // Quitar el último elemento
-				$("#orden").html("ORDEN BY " + cadena); */
 				cadenaORDER();
+				rellenarCondiciones();
 			},
 		});
 		$("#ordenable").disableSelection();	
@@ -333,6 +341,7 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 				$(this).html('<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Ordenar por Fecha "las más antiguas primero"');
 			}
 			cadenaORDER();
+			rellenarCondiciones();
 		});
 	 
 		// ========================================================================================
@@ -388,7 +397,7 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 		
 		// Al pulsar sobre alguna de los botones de Fecha
 		$("#cualquierFecha").click(function(event,ui){
-			textoFecha = "Cualquier Fecha";
+			textoFecha = "cualquier Fecha";
 			fechaINI = "#";
 			fechaFIN = "#";
 			rellenarCondiciones() ;
@@ -514,8 +523,8 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 		// ******************************************* 		
 		//1) Botón para el SwitchButton de fotos
             $('#fotoYN').jqxSwitchButton({ 
-				height: 90, 
-				width: 250,  
+				height: 100, 
+				width: 290,  
 				checked: false, 
 				theme:'ui-sunny',
 				onLabel:'Con fotos',
@@ -530,7 +539,9 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 		$("#go").click(function(event,ui){
 			$.when(obtenerDatos()).done(function(datos){
 				try { // se reciben en formato de div
-				   $("#MostrarDatos").html('<h1>'+$("#condiciones").html()+'</h1>'+datos);
+				   $("#pestañas").tabs("enable", 1); // activa la pestaña 1
+				   $("#MostrarDatos").html('<h1>'+$("#condiciones").html()+'</h1>'+datos); // coloca los datos...
+				   $('#pestañas a[href="#Datos"]').trigger('click'); // simula el click en la pestaña 1
 				   // alert(datos);
 				} catch(err) {
 				   console.log(err.message);
@@ -543,8 +554,15 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 		// *******************************************
 		function rellenarCondiciones() {
 			var escogerAsignacion = $( "#EscogerAsignacion option:selected").text();
-			var escogerAlumno = $( "#EscogerAlumno option:selected").text();
-			$("#condiciones").html(escogerAsignacion+", "+escogerAlumno+", "+textoFecha);
+			var escogerAlumno = $("#EscogerAlumno option:selected").text();	
+			if (escogerAlumno=="Todos los alumnos/as") { escogerAlumno = escogerAlumno.toLowerCase();}
+			var ordenado = $("#orden").text();
+			ordenado = ordenado.replace("ORDER BY","Ordenado por");
+			ordenado = ordenado.replace("fecha ASC","fecha más antiguas primero");
+			ordenado = ordenado.replace("fecha DESC","fecha más actuales primero");
+			ordenado = ordenado.replace("alumno ASC","alumno");
+			ordenado = ordenado.replace("asignacion ASC","asignación"); // modifica la cadena ORDER BY para hacerla leíble.
+			$("#condiciones").html(escogerAsignacion+", "+escogerAlumno+", "+ textoFecha.toLowerCase()+". " + ordenado); // muestra texto
 			// Cadena SQL
 			escogerAsignacion = $( "#EscogerAsignacion option:selected").val();
 			escogerAlumno = $( "#EscogerAlumno option:selected").val(); // Redefino con los valores
@@ -555,12 +573,20 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 			} 			
 			if (escogerAsignacion>0) { cadenaSQL = cadenaSQL + '`asignacion` = '+escogerAsignacion+' AND ';	}
 			if (escogerAlumno>0) { cadenaSQL = cadenaSQL + '`alumno` = '+escogerAlumno+' AND ';	}
+			// Comprueba se fechaINI > fechaFIN. Si lo es, dar la vuelta
+			if (fechaINI!="#" && fechaFIN!="#" && fechaINI>fechaFIN) {
+					// alert("doy la vuelta"); LANZAR UN MENSAJE
+					// aprovecho la variable ordenado que ya no sirve, para hacer el intercambio.
+					ordenado = fechaINI; fechaINI = fechaFIN; fechaFIN = ordenado;
+			}
+			// Coloca fecha en cadena SQL.			
 			if (fechaINI!="#" && fechaFIN!="#") { cadenaSQL = cadenaSQL + "`fecha` BETWEEN '"+fechaINI+"' AND '"+fechaFIN+"' AND ";}
 			if (fechaINI!="#" && fechaFIN=="#") { cadenaSQL = cadenaSQL + "`fecha`> '"+fechaINI+"' AND ";}
 			if (fechaINI=="#" && fechaFIN!="#") { cadenaSQL = cadenaSQL + "`fecha`< '"+fechaFIN+"' AND ";}			
 			// SELECT * FROM `tb_opiniones` WHERE `fecha` BETWEEN '2015-03-15' AND '2016-05-11' AND `alumno` = 90 AND `asignacion` = 2 
 			if (cadenaSQL.slice(-5)==" AND ") { cadenaSQL = cadenaSQL.slice(0,-5);}
-			$("#SQL").html(cadenaSQL);
+			// $("#SQL").html(cadenaSQL); // Hasta aquí la claúsula WHERE
+			$("#SQL").html(cadenaSQL+" "+$("#orden").html());
 		};		
 		
 		// 2) Obtener cadena ordenada
@@ -571,7 +597,7 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 				cadena = cadena + $(elemento).attr("dt")+", ";					
 			});
 			cadena = cadena.slice(0,-2); // Quitar el último elemento
-			$("#orden").html("ORDEN BY " + cadena);
+			$("#orden").html("ORDER BY " + cadena);
 		}
 		// ***************************
 		// Tras cargarlo todo. Inicio.
@@ -588,7 +614,7 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 	 // F1) Obtener datos del filtro
 	 function obtenerDatos() {
 		 if ($("#fotoYN").jqxSwitchButton('checked')) { var fotoSN = 1; } else { var fotoSN=0; }
-		 alert(fotoSN);
+		 // alert(fotoSN);
 		 console.log("****************** Obtiene SQL *******************");
 		 console.log("SQL: "+$("#SQL").text());
 		 console.log("Fotos: ");

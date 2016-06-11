@@ -68,7 +68,7 @@ if ($_POST["SQL"]) {
 	}	
 } // Fin del IF
 
-echo $devuelve;
+if ($devuelve=="") { echo "<h1>No hay datos que mostrar</h1>"; } else {echo $devuelve;}
   
 ?>
 
