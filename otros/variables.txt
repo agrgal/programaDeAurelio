@@ -25,6 +25,7 @@ HECHO 12º) Opiniones Generales. Modificar instrucciones.
 HECHO 14º) Las imágenes de las fotografías se almacenan en la carpeta UPLOAD
 HECHO 15º) En la carpeta PDF se generan temporalmente los pdf a descargar. Los scripts dentro de la carpeta scripts.
 16º) Repasar, en la listaAlumnosPDF.php, verprint.css la lista de alumnos. ¿La tabla de otra forma?
+17º) Terminada la presentación de datos. 
 
 
 
@@ -168,7 +169,7 @@ Clase opiniones
         // devuelve un array codificado en JSON  con los valores de items y observaciones 
      function retornaItem ($id) // dado un identificador de item, id, recupera un json con el valor de ese identificador
      function itemsElegidos ($cadena) // dada una cadena del tipo 9#14#.. devuelve los items separados por punto y coma.
-     function retornaValores($cadenaSQL) // Doy una cadena SQL y retorna un array con los datos obtenidos
+     function retornaValores($cadenaSQL) // Doy una cadena SQL y retorna un array con los datos obtenidos. // ARREGLADA 12-06-2016
      
 Clase evaluaciones
 ==================

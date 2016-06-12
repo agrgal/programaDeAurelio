@@ -103,6 +103,17 @@ function fechaMySQL2DatePicker($fec) {
 }
 
 /* ********************************************************************************************
+Cambiar fecha MySQL a formato largo
+***********************************************************************************************/
+function fechaMySQL2Larga($fec) {
+	// Mejor así, por si el servidor no tiene SETLOCALE activado...	
+	$dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
+	$meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+	return $dias[date('w',strtotime($fec))].", ".date('d',strtotime($fec))." de ".$meses[date('n',strtotime($fec))-1]. " del ".date('Y',strtotime($fec)) ;
+    // return date("l, d \d\e M \d\e Y", strtotime($fec));
+}
+
+/* ********************************************************************************************
 Cambiar fecha MySQL a formato todo junto
 ***********************************************************************************************/
 function fechaMySQL2together($fec) {

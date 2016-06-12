@@ -40,8 +40,9 @@ if ($_POST["SQL"]) {
 		if ($_POST["foto"]==1) { $imagen = '<img src="'.$alumnos->esteAlumno["foto"].'" >';  }
 		// Obtiene el nombre de la asignacion
 		$descripcion = $asignaciones->asignacionDescripcion($valor->{"asignacion"});
-		// Obtiene la fecha
-		$fecha = fechaMySQL2DatePicker($valor->{"fecha"});
+		// Obtiene la fecha		
+		// $fecha = fechaMySQL2DatePicker($valor->{"fecha"});
+		$fecha = fechaMySQL2Larga($valor->{"fecha"}); // fecha en formato largo...
 		// Obtiene los items
 		$retahila=$opiniones->itemsElegidos($valor->{"items"});
 		// Obtiene las observaciones		
