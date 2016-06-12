@@ -25,7 +25,9 @@ $opiniones = New misOpiniones(); // variable de la clase opiniones
 // session_start(); //activo variables de sesion
 
 $devuelve="No hay datos que mostrar";
-	
+
+/* echo $_POST["conNombreAlumno"]." - ".$_POST["conNombreAsignacion"] */
+
 if ($_POST["SQL"]) {
 	$datos = json_decode($opiniones->retornaValores($_POST["SQL"]));
 	$devuelve="";
@@ -51,8 +53,11 @@ if ($_POST["SQL"]) {
 			$devuelve.='<table id="'.$valor->{"id"}.'" class="tablaDATOS" elegir="0" alumno="'.$valor->{"alumno"}.'" items="'.$valor->{"items"}.'" observaciones="'.$observaciones.'" >
 			  <tr>';
 			  if ($_POST["foto"]==1) { $devuelve.='<td id="'.$valor->{"id"}.'" rowspan="3" class="TDimagen" >'.$imagen.'</td>'; }
-			  $devuelve.='<td class="TDnombreAlumno"><p>'.$nombreAlumno.'</p></td></tr>
-			  <tr><td><b>ASIGNADO A:&nbsp;</b>'.$descripcion.'&nbsp;<b>EN FECHA:&nbsp;</b>'.$fecha.'</td></tr>
+			  // Las variables conNombreAlumno y conNombreAsignacion se pasan como texto.
+			  if ($_POST["conNombreAlumno"]=="true") {$devuelve.='<td class="TDnombreAlumno"><h2>'.$nombreAlumno.'</h2></td></tr>'; }
+			  $devuelve.='<tr><td>';
+			  if ($_POST["conNombreAsignacion"]=="true") {$devuelve.='<b>ASIGNADO A:&nbsp;</b>'.$descripcion.'&nbsp;'; }  			  
+			  $devuelve.='<b>EN FECHA:&nbsp;</b>'.$fecha.'</td></tr>
 			  <tr><td>'.$textoPresentar.'</td></tr>
 			  </table><hr class="separador">';
 		} // Fin del if comprueba nulidad
@@ -66,9 +71,15 @@ if ($_POST["SQL"]) {
 			'.$observaciones.'
 			</div>'; */
 	}	
-} // Fin del IF
+} // Fin del IF 
 
-if ($devuelve=="") { echo "<h1>No hay datos que mostrar</h1>"; } else {echo $devuelve;}
+
+if ($devuelve=="") { 
+	echo '<h1>No hay datos que mostrar&nbsp;&nbsp;<img src="./imagenes/iconos/ohoh.png" style="vertical-align:middle; width:75px; height:auto;"></h1>'; 	
+} else {
+	// echo htmlspecialchars($devuelve,ENT_QUOTES);
+	echo $devuelve;
+} 
   
 ?>
 

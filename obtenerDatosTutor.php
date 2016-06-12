@@ -33,6 +33,8 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 	echo header("Location: ./index.php");
 }
 
+if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } // Si eres administrador puedes ver cierto contenido...
+
 // Las variables de sesión se establecen en los scripts AJAX en 
 
 ?>
@@ -140,12 +142,12 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 							<div id="fechaInicio">
 								Inicial: 
 								<input id="fechaINI" READONLY alt="Pulsa para obtener o cambiar la fecha inicial del intervalo" title="Pulsa para obtener o cambiar la fecha inicial del intervalo">
-								<input id="muestrafechaINI" style="display:none ;">
+								<input id="muestrafechaINI" style="display: <?php echo $mostrar; ?> ;">
 							</div>
 							<div id="fechaFinal">
 								Final: 
 								<input id="fechaFIN" READONLY alt="Pulsa para obtener o cambiar la fecha final del intervalo" title="Pulsa para obtener o cambiar la fecha final del intervalo">
-								<input id="muestrafechaFIN" style="display:none ;">
+								<input id="muestrafechaFIN" style="display: <?php echo $mostrar; ?>  ;">
 							</div>
 							<hr style="text-align: center; width: 80%;">
 							<div id="primerTrimestre"><?php echo $evaluacion->listadoDeEvaluaciones["div"][0]; ?></div>
@@ -154,20 +156,21 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 							<div id="quincedias"><div class="divNombreEval" style="padding: 10px;">Hace quince días</div></div>
 							<div id="haceunmes"><div class="divNombreEval" style="padding: 10px;">Hace un mes</div></div>
 							<div id="hacedosmeses"><div class="divNombreEval" style="padding: 10px;">Hace dos meses</div></div>
-							<p id="textoFecha" style="display:none ;">Cualquier Fecha</p>
+							<p id="textoFecha" style="display: <?php echo $mostrar; ?>  ;">Cualquier Fecha</p>
 							<hr style="text-align: center; width: 80%;">
 						</div>
 					<h3>Opciones</h3>
 						<div id="Opciones">
 							<div id="QuieroFotoSN"><h3>Elige si quieres los resultados con o sin fotografías</h3></div>
 						    <div id="fotoYN" title="Elige si quieres que en la lista a parezcan o no las fotografías"></div>
+						    <div id="TituloListaDeOpciones"><h3>Arrastra los items y colócalos en el orden en el que se mostrarán los datos.</h3></div>
 						    <div id="ListaDeOpciones">
 								<ul id="ordenable">
 									  <li dt="fecha ASC" id="OrdenFecha" class="ui-state-default" title="Docle Click si quieres cambiar el orden de las fechas"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Ordenar por Fecha "las más antiguas primero"</li>
 									  <li dt="alumno ASC" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Ordenar por Nombre</li>
 									  <li dt="asignacion ASC" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Ordenar por Asignación</li>
 								</ul>
-								<p style="display: none;" id="orden">ORDER BY fecha ASC, alumno ASC, asignacion ASC</p> <!-- None para ocultarlo -->
+								<p style="display: <?php echo $mostrar; ?> ;" id="orden">ORDER BY fecha ASC, alumno ASC, asignacion ASC</p> <!-- None para ocultarlo -->
 						    </div>
 						</div> 
 					<!-- <h3>Por Item</h3>
@@ -177,8 +180,8 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 				<div id="CadenaSQL">
 					<h1>Condiciones</h1>
 					<p id="condiciones"></p>
-					<h1 style="display: text;">Cadena SQL</h1>
-					<p style="display: text;" id="SQL"></p> <!-- poner 'none' para ocultarlo -->
+					<h1 style="display: <?php echo $mostrar; ?> ;">Cadena SQL</h1>
+					<p style="display: <?php echo $mostrar; ?> ;" id="SQL"></p> <!-- poner 'none' para ocultarlo -->
 					<button id="go">Mostrar Datos</button>
 				</div>
 			</div>
@@ -187,6 +190,15 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 			<!-- Mostrar los datos que se han filtrado -->
 			<!-- ********************************************************** --> 	
 			<div id="Datos">
+				<!-- Dibujo de la impresora -->
+				<div id="printer" title="Imprime resultados" title="Imprime resultados" >
+					<!-- <a id="imprimir" href="./pdf/scripts/listadoResultadosPDF.php" ><img src="./imagenes/iconos/printer_pdf.png"></a> -->
+					<form action="./pdf/scripts/listadoResultadosPDF.php" method="POST">
+						<input id="sendCabecera" name="sendCabecera" type="text" style="display: none;" value="">
+						<input id="sendContenido" name="sendContenido" type="text" style="display: none;" value="">
+						<button type="submit"><img src="./imagenes/iconos/printer_pdf.png"></button>
+					</form>
+				</div>
 				<div id="MostrarDatos">	<!-- Aquí se inserta el HTML que muestra los datos -->			
 				</div>
 			</div>
@@ -267,6 +279,8 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 		 var fechaINI = "#";
 		 var fechaFIN = "#";
 		 var cadenaSQL = "SELECT * FROM `tb_opiniones` ";
+		 var conNombreAsignacion = true; // Quitar o no el nombre de la asignación en los resultados.
+		 var conNombreAlumno = true; // Quitar o no el nombre del alumno en los resultados.
 
 		// 1a) Incorpora la funcionalidad del menú
 		$.getScript( "./htmlsuelto/js_menu.js", function( data, textStatus, jqxhr ) {
@@ -537,17 +551,29 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 		// Pulso el botón de obtención de datos
 		// ************************************
 		$("#go").click(function(event,ui){
-			$.when(obtenerDatos()).done(function(datos){
+			$.when(obtenerDatos(conNombreAlumno,conNombreAsignacion)).done(function(datos){
 				try { // se reciben en formato de div
+				   // alert(datos);
 				   $("#pestañas").tabs("enable", 1); // activa la pestaña 1
 				   $("#MostrarDatos").html('<h1>'+$("#condiciones").html()+'</h1>'+datos); // coloca los datos...
-				   $('#pestañas a[href="#Datos"]').trigger('click'); // simula el click en la pestaña 1
-				   // alert(datos);
+				   $("#sendCabecera").val($("#condiciones").html());
+				   // $("#sendContenido").val(datos);
+				   $("#sendContenido").val( $("#MostrarDatos").html());
+				   $('#pestañas a[href="#Datos"]').trigger('click'); // simula el click en la pestaña 1				   
 				} catch(err) {
 				   console.log(err.message);
 				}	
 			});
 		});  
+		
+		// ************************************
+		// Al hacer click en el icono impresora
+		// ************************************
+
+		$("#imprimir").click(function(event,ui){
+
+		}); 
+		
 		
 		// *******************************************
 		// Funciones dentro del document ready
@@ -555,7 +581,11 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 		function rellenarCondiciones() {
 			var escogerAsignacion = $( "#EscogerAsignacion option:selected").text();
 			var escogerAlumno = $("#EscogerAlumno option:selected").text();	
-			if (escogerAlumno=="Todos los alumnos/as") { escogerAlumno = escogerAlumno.toLowerCase();}
+			if (escogerAlumno=="Todos los alumnos/as") 
+			  { escogerAlumno = escogerAlumno.toLowerCase(); conNombreAlumno = true; } 
+			  else { conNombreAlumno = false;}
+			if (escogerAsignacion=="Todas las asignaciones") 
+			  { conNombreAsignacion = true; } else { conNombreAsignacion = false; }
 			var ordenado = $("#orden").text();
 			ordenado = ordenado.replace("ORDER BY","Ordenado por");
 			ordenado = ordenado.replace("fecha ASC","fecha más antiguas primero");
@@ -612,9 +642,11 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 
 	 //************************************
 	 // F1) Obtener datos del filtro
-	 function obtenerDatos() {
+	 function obtenerDatos(conNombreAlumno,conNombreAsignacion) {
 		 if ($("#fotoYN").jqxSwitchButton('checked')) { var fotoSN = 1; } else { var fotoSN=0; }
 		 // alert(fotoSN);
+		 // alert(conNombreAlumno);
+		 // alert(conNombreAsignacion);
 		 console.log("****************** Obtiene SQL *******************");
 		 console.log("SQL: "+$("#SQL").text());
 		 console.log("Fotos: ");
@@ -624,17 +656,17 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 		      url: "./tutorias/scripts/obtenerDatos.php", // En el script se construye la tabla...
 		      data: { 
 			  SQL: $("#SQL").text(), // La variable de sesión de la asignación se consigue en el script.	
-			  foto: fotoSN,		  
+			  foto: fotoSN,		
+			  conNombreAlumno: conNombreAlumno,
+			  conNombreAsignacion: conNombreAsignacion,  
 		      },
 		      success: function(data, textStatus, jqXHR){ 			  
 				// alert(data);
 				return data;
 		      },
 		  });
-	  } // Fin de la función Obtener fechas de un alumno - asignación
-	  
+	  } // Fin de la función Obtener datos del filtro  
 
-	  
 	  
  <!-- * =======================================================================================================   * --> 	
 
