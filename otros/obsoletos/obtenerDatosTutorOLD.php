@@ -104,15 +104,9 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			<!-- ********************************************************** --> 			
 			<div id="FiltrodeDatos">
 				<!-- Selección de datos -->
-				<div id="contienepestannas2">
-				<div id="pestañas2">
-					<ul>
-					<li><a href="#PorAsignacion">Por asignación</a></li>
-				    <li><a href="#PorAlumno">Por Alumno</a></li>
-					<li><a href="#Fechas">Por Fecha</a></li>	
-					<li><a href="#Opciones">Opciones</a></li>	
-					</ul>
-						<div id="PorAsignacion">
+				<div id="acordeon">
+					<h3>Por asignación</h3>
+						<div>
 							<?php // Select para seleccionar asignaciones
 							$asignacionesmiTutoria = $asignacion->devuelveAsignacionesDeUnaTutoria($_SESSION["idasignacion"],$_SESSION["profesor"]);
 							echo '<div id="asignaciones" title="Escoge la asignación de Filtrado">';
@@ -125,7 +119,8 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 							echo '</div>';
 							?>
 						</div>
-						<div id="PorAlumno">
+					<h3>Por alumno</h3>
+						<div>
 							<?php // Select para seleccionar alumnos
 							$alumnos = $asignacion->devuelveListadoAlumnosdeEstaAsignacion($_SESSION["idasignacion"],$_SESSION["profesor"]);
 							$alumnosArray = explode("#",$alumnos);
@@ -140,6 +135,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 							echo '</div>';
 							?>
 						</div>
+					<h3>Por Fechas</h3>
 						<div id="Fechas">
 							<div id="cualquierFecha"><div class="divNombreEval" style="padding: 10px;">Cualquier fecha</div></div>
 							<hr style="text-align: center; width: 80%;">
@@ -163,6 +159,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 							<p id="textoFecha" style="display: <?php echo $mostrar; ?>  ;">Cualquier Fecha</p>
 							<hr style="text-align: center; width: 80%;">
 						</div>
+					<h3>Opciones</h3>
 						<div id="Opciones">
 							<div id="QuieroFotoSN"><h3>Elige si quieres los resultados con o sin fotografías</h3></div>
 						    <div id="fotoYN" title="Elige si quieres que en la lista a parezcan o no las fotografías"></div>
@@ -178,8 +175,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 						</div> 
 					<!-- <h3>Por Item</h3>
 						<div>Items</div> NO SE SI PONER POR ITEMS --> 
-				</div> <!-- Fin de pestañas2 -->
-				</div> <!-- Contiene pestañas2 -->
+				</div>
 				<!-- Escritura de cadena SQL -->
 				<div id="CadenaSQL">
 					<h1>Condiciones</h1>
@@ -229,9 +225,9 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 	<!-- Notificaciones -->
 	<!-- ********************************************************** -->
 		
-		<div id="notificacionObtenido">
-			<div><h1>Se han obtenido los datos requeridos</h1></div>
-		</div>
+		<!-- <div id="notificacionGuardado">
+			<div><h1>Se ha registrado el dato y guardado</h1></div>
+		</div> -->
 		
 	<!-- ********************************************************** -->
 	<!-- Diálogos -->
@@ -330,10 +326,11 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			},
 		}); 
 		
-		$('#pestañas2').tabs({
-			active: 0,
+		$('#acordeon').accordion({
+		 icons: { "header": "ui-icon-arrowthick-1-e", "activeHeader": "ui-icon-star" },
+		 animate: 800,
 		}); 
-
+		// $('#acordeon.ui-accordion').css({"width":"50%"}) // ancho del acordeón
 	    $("#fechaINI, #fechaFIN, #go").button({
 			width: 'auto',
 		}); // para que lo reconozca como del tema sunny	
@@ -366,10 +363,10 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		// Defino diálogos y/o notificaciones
 		// ========================================================================================	
 		
-		 $("#notificacionObtenido").jqxNotification({
-                width: 500, position: "top-right", opacity: 0.9,
-                autoOpen: false, animationOpenDelay: 300, autoClose: true, autoCloseDelay: 2000, template: "info"
-         });
+		/* $("#notificacionGuardado, #notificacionModificar").jqxNotification({
+				width: 400, position: "top-right", opacity: 0.9,
+				autoOpen: false, animationOpenDelay: 300, autoClose: true, autoCloseDelay: 2000, template: "info"
+		 }); */
 		 
 		 /* 1d) Definición del diálogo de confirmación de grabar datos, borrar y modificar asignacion y confirmar que no hay datos
 		  $("#dialog-confirm, #dialog-confirm-borrar, #dialog-confirm-nohaydatos").dialog({
@@ -566,8 +563,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				   var sContenido = datos;
 				   // sContenido = sContenido.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 				   $("#sendContenido").val(sContenido);
-				   $('#pestañas a[href="#Datos"]').trigger('click'); // simula el click en la pestaña 1	
-				   $("#notificacionObtenido").jqxNotification("open"); 			   
+				   $('#pestañas a[href="#Datos"]').trigger('click'); // simula el click en la pestaña 1				   
 				} catch(err) {
 				   console.log(err.message);
 				}	
@@ -605,13 +601,13 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			// Cadena SQL
 			escogerAsignacion = $( "#EscogerAsignacion option:selected").val();
 			escogerAlumno = $( "#EscogerAlumno option:selected").val(); // Redefino con los valores
-			cadenaSQL = 'SELECT * FROM tb_opiniones ';
+			cadenaSQL = "SELECT * FROM `tb_opiniones` ";
 			$("#SQL").html(fechaINI+" - "+fechaFIN);
 			if (escogerAsignacion>0 || escogerAlumno>0 || fechaINI!="#" || fechaFIN!="#") {
 				cadenaSQL = cadenaSQL + "WHERE ";
 			} 			
-			if (escogerAsignacion>0) { cadenaSQL = cadenaSQL + 'asignacion = "'+escogerAsignacion+'" AND ';	}
-			if (escogerAlumno>0) { cadenaSQL = cadenaSQL + 'alumno = "'+escogerAlumno+'" AND ';	}
+			if (escogerAsignacion>0) { cadenaSQL = cadenaSQL + '`asignacion` = '+escogerAsignacion+' AND ';	}
+			if (escogerAlumno>0) { cadenaSQL = cadenaSQL + '`alumno` = '+escogerAlumno+' AND ';	}
 			// Comprueba se fechaINI > fechaFIN. Si lo es, dar la vuelta
 			if (fechaINI!="#" && fechaFIN!="#" && fechaINI>fechaFIN) {
 					// alert("doy la vuelta"); LANZAR UN MENSAJE
@@ -619,9 +615,9 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 					ordenado = fechaINI; fechaINI = fechaFIN; fechaFIN = ordenado;
 			}
 			// Coloca fecha en cadena SQL.			
-			if (fechaINI!="#" && fechaFIN!="#") { cadenaSQL = cadenaSQL + "fecha BETWEEN '"+fechaINI+"' AND '"+fechaFIN+"' AND ";}
-			if (fechaINI!="#" && fechaFIN=="#") { cadenaSQL = cadenaSQL + "fecha> '"+fechaINI+"' AND ";}
-			if (fechaINI=="#" && fechaFIN!="#") { cadenaSQL = cadenaSQL + "fecha< '"+fechaFIN+"' AND ";}			
+			if (fechaINI!="#" && fechaFIN!="#") { cadenaSQL = cadenaSQL + "`fecha` BETWEEN '"+fechaINI+"' AND '"+fechaFIN+"' AND ";}
+			if (fechaINI!="#" && fechaFIN=="#") { cadenaSQL = cadenaSQL + "`fecha`> '"+fechaINI+"' AND ";}
+			if (fechaINI=="#" && fechaFIN!="#") { cadenaSQL = cadenaSQL + "`fecha`< '"+fechaFIN+"' AND ";}			
 			// SELECT * FROM `tb_opiniones` WHERE `fecha` BETWEEN '2015-03-15' AND '2016-05-11' AND `alumno` = 90 AND `asignacion` = 2 
 			if (cadenaSQL.slice(-5)==" AND ") { cadenaSQL = cadenaSQL.slice(0,-5);}
 			// $("#SQL").html(cadenaSQL); // Hasta aquí la claúsula WHERE

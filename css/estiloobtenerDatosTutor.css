@@ -1,7 +1,17 @@
-#acordeon.ui-accordion {
+/* #acordeon.ui-accordion {
 	float: left;
 	width: 50%;
 	border: 0px solid red;
+} */
+
+.ui-tabs .ui-tabs-nav li a { /* ¿Cómo se cambia a solo una set de pestañas? */
+  font-size:0.7em !important;
+}
+ 
+#contienepestannas2 {
+    width: 50%;
+    float: left;
+    border: 0px solid red;
 }
 
 #CadenaSQL {
@@ -183,6 +193,10 @@
 }
 
 /* Estilo de las opciones */
+
+#Opciones {
+	overflow:hidden;
+}
 
 #QuieroFotoSN {
     border: 0px solid black;

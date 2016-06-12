@@ -37,6 +37,8 @@ session_start();
 		<ul class="menuIZQul">
 			<li><a href="./listadoAlumnos.php">Listado de los alumnos/as de mi tutoría</a></li>
 			<li><a href="./obtenerDatosTutor.php">Datos en mi tutoría</a></li>
+			<li><a href="./obtenerDatosGenerales.php">Datos Generales</a></li>
+			<li><a href="./obtenerEstadisticas.php">Datos estadísticos</a></li>
 		</ul>
 	    ';
 	} else {

@@ -1,6 +1,6 @@
 <?php
-header('Content-Type: text/html; charset=UTF-8'); // importante; especifica el charset de caracteres.
-// header('Content-Type: text/html; charset=ISO-8859-15'); // importante; especifica el charset de caracteres.
+//header('Content-Type: text/html; charset=UTF-8'); // importante; especifica el charset de caracteres.
+header('Content-Type: text/html; charset=ISO-8859-15'); // importante; especifica el charset de caracteres.
 
 // importante incluir al principio de cada una, lo de las funciones
 include_once("../../configuracion/config.php"); // funciones de configuración
@@ -43,7 +43,7 @@ $clave=array_search($_SESSION['idasignacion'],$asignacion->listaDeAsignaciones['
 
 // Empiezo el pdf
 // Declaro variables
-$title1 = 'Tutoría de '.$asignacion->listaDeAsignaciones['cursosAfectados'][$clave];
+$title1 = 'Datos obtenidos para la tutoría de '.$asignacion->listaDeAsignaciones['cursosAfectados'][$clave];
 $title2= utf8_encode($_POST["sendCabecera"]);
 $horafecha='Fecha: '.$calendario->fechaformateada($calendario->fechadehoy());
 $horafecha.=' - Hora: '.$calendario->horactual();
@@ -59,6 +59,7 @@ $cabecera.='<tr><td style="width: 80%; text-align: center;"><h1 class="subtitulo
 
 // Contenido central html
 $html = utf8_encode($_POST["sendContenido"]);
+$html = iconv("UTF-8","ISO-8859-15",$html); // No sé por qué, pero funciona mejor así,y sin embargo, $title2 no se le puede poner ¿¿??
 $html = str_replace("./upload", "../../upload", $html);
 $html = str_replace('src="./imagenes/', 'style="width: 75px; height:auto; margin-right: 10px;" src="../../imagenes/', $html);
 // $html = htmlspecialchars($html, ENT_QUOTES);

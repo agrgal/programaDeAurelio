@@ -30,7 +30,9 @@ $devuelve="No hay datos que mostrar";
 
 if ($_POST["SQL"]) {
 	$datos = json_decode($opiniones->retornaValores($_POST["SQL"]));
-	$devuelve="";
+	$total=count($datos);
+	if ($total>0) { $apostilla = "<h2>Se han obtenido un total de ".$total." registros</h2>"; }
+	$devuelve="";	
 	foreach ($datos as $clave => $valor) {
 		// Obtiene el nombre del alumno
 		$alumnos->devuelveAlumno($valor->{"alumno"});
@@ -70,7 +72,7 @@ if ($_POST["SQL"]) {
 			<p>'.$retahila.'</p>
 			'.$observaciones.'
 			</div>'; */
-	}	
+	} // Fin del foreach	
 } // Fin del IF 
 
 
@@ -78,7 +80,7 @@ if ($devuelve=="") {
 	echo '<h1>No hay datos que mostrar&nbsp;&nbsp;<img src="./imagenes/iconos/ohoh.png" style="vertical-align:middle; width:75px; height:auto;"></h1>'; 	
 } else {
 	// echo htmlspecialchars($devuelve,ENT_QUOTES);
-	echo $devuelve;
+	echo $devuelve.$apostilla;
 } 
   
 ?>

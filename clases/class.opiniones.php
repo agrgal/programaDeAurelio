@@ -241,7 +241,6 @@ class misOpiniones
 	    // $Sql ='SELECT id, items, observaciones FROM tb_opiniones WHERE fecha="'.$fecha.'" AND alumno="'.$alumno.'" AND asignacion="'.$asignacion.'"';
 	    // $Sql = sprintf($Sql, mysqli_real_escape_string($link,$fecha)); // Seguridad que evita los ataques SQL Injection  	
 	    $result=mysqli_query($link,$cadenaSQL); // ejecuta la cadena sql y almacena el resultado el $result
-        $row=mysqli_fetch_array($result);
         $ii=0;
         $datos=array();
         while ($row=mysqli_fetch_array($result)) {
