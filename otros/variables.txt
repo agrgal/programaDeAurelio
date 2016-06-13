@@ -26,7 +26,7 @@ HECHO 14º) Las imágenes de las fotografías se almacenan en la carpeta UPLOAD
 HECHO 15º) En la carpeta PDF se generan temporalmente los pdf a descargar. Los scripts dentro de la carpeta scripts.
 16º) Repasar, en la listaAlumnosPDF.php, verprint.css la lista de alumnos. ¿La tabla de otra forma?
 17º) Terminada la presentación de datos. 
-
+18º) ¿QUÉ OCURRE SI BORRO UNA ASIGNACIÓN? ¿BORRO LOS DATOS, O NO?
 
 
 Includes htmlsuelto

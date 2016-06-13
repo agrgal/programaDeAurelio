@@ -88,6 +88,13 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 	    </p>
 	    <input id="idevaluacion" value="<?php echo $evaluacion->calculaFecha($fechadehoy,true); ?>" style="display: text;"> 
 	    <input id="fechaevaluacion" value="<?php echo $evaluacion->calculaFecha($fechadehoy,false); ?>" style="display: text;"> 
+	    <?php
+	    $asignacionesmiTutoria = $asignacion->devuelveAsignacionesDeUnaTutoria($_SESSION["idasignacion"],$_SESSION["profesor"]);
+	    $asig="";
+		foreach($asignacionesmiTutoria as $clave => $valor) {$asig.=$valor."#";}
+		$asig = substr($asig,0,-1); // Cadena con las asignaciones de mi Tutoría...
+		echo '<input id="asignaciones" value="'.$asig.'" style="display: text;">' 
+		?>
     </div>	<!-- TESTER -->
     
     <!-- ********************************************************** -->
@@ -222,8 +229,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		 var textoFecha = "cualquier Fecha";
 		 var cadenaSQL = "SELECT * FROM `tb_opiniones` ";
 		 var conNombreAsignacion = true; // Quitar o no el nombre de la asignación en los resultados.
-		 var conNombreAlumno = true; // Quitar o no el nombre del alumno en los resultados.
-		 var evalPulsada = $('#idevaluacion').val(); // define la evaluación por defecto. 
+		 var conNombreAlumno = true; // Quitar o no el nombre del alumno en los resultados.		 
 		 
 		// 1a) Incorpora la funcionalidad del menú
 		$.getScript( "./htmlsuelto/js_menu.js", function( data, textStatus, jqxhr ) {
@@ -302,41 +308,14 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		 // Evaluación pulsada por defecto al INICIAR LA APLICACIÓN 
 		 // ========================================================================================
 		 // Depende del valor INICIAL de evalPulsada
-			 if (evalPulsada>0) {	 // Si existe la evaluación pulsada y es mayor que cero 	 
-				 $('.divNombreEval2').each(function(e) {
-					$(this).removeClass("divNombreEvalSeleccionado2"); // Las quita por defecto.
-					// Comprueba cual es y ya lo selecciona...	
-					if ($(this).attr("id")==evalPulsada) {
-						$(this).addClass("divNombreEvalSeleccionado2");
-						// obop(); // llama a esa función
-					}
-				 });		 
-			 } else { // caso que sea cero o negativo
-				 $("#notificacionFuera").jqxNotification("open"); 
-			 }
-		
-		 // ========================================================================================
-		 // Al pulsar sobre una de las evaluaciones
-		 // ========================================================================================
-		 $('.divNombreEval2').click(function(e) { 
-			 // alert($(this).attr("name"));
-			 $('.divNombreEval2').each(function(e) {
-				$(this).removeClass("divNombreEvalSeleccionado2"); // se la quita a las demás
-			 });
-			 $(this).addClass("divNombreEvalSeleccionado2"); // se la añade a la que se ha hecho click.
-			 evalPulsada = $(this).attr("id"); // seleccionada la evaluación dada...
-			 // recupera datos si los tuviese
-			 // obop(); // llama a esa función
-		 }); 
-		
+	
 		// ************************************
 		// Pulso el botón de obtención de datos
 		// ************************************
 		$("#go").click(function(event,ui){
-			$.when(obtenerDatos(conNombreAlumno,conNombreAsignacion)).done(function(datos){
+			$.when(obtenerDatos()).done(function(datos){
 				try { // se reciben en formato de div
-				   // alert(datos);
-				   /*
+				   alert(datos);
 				   $("#pestañas").tabs("enable", 1); // activa la pestaña 1
 				   $("#MostrarDatos").html('<h1>'+$("#condiciones").html()+'</h1>'+datos); // coloca los datos...
 				   var sCabecera =  $("#condiciones").html();
@@ -346,7 +325,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				   // sContenido = sContenido.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 				   $("#sendContenido").val(sContenido);
 				   $('#pestañas a[href="#Datos"]').trigger('click'); // simula el click en la pestaña 1	
-				   $("#notificacionObtenido").jqxNotification("open"); */			   
+				   $("#notificacionObtenido").jqxNotification("open"); 		   
 				} catch(err) {
 				   console.log(err.message);
 				}	
@@ -366,87 +345,73 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		// *******************************************
 		// Funciones dentro del document ready
 		// *******************************************
-		function rellenarCondiciones() {
-			var escogerAsignacion = $( "#EscogerAsignacion option:selected").text();
-			var escogerAlumno = $("#EscogerAlumno option:selected").text();	
-			if (escogerAlumno=="Todos los alumnos/as") 
-			  { escogerAlumno = escogerAlumno.toLowerCase(); conNombreAlumno = true; } 
-			  else { conNombreAlumno = false;}
-			if (escogerAsignacion=="Todas las asignaciones") 
-			  { conNombreAsignacion = true; } else { conNombreAsignacion = false; }
-			var ordenado = $("#orden").text();
-			ordenado = ordenado.replace("ORDER BY","Ordenado por");
-			ordenado = ordenado.replace("fecha ASC","fecha más antiguas primero");
-			ordenado = ordenado.replace("fecha DESC","fecha más actuales primero");
-			ordenado = ordenado.replace("alumno ASC","alumno");
-			ordenado = ordenado.replace("asignacion ASC","asignación"); // modifica la cadena ORDER BY para hacerla leíble.
-			$("#condiciones").html(escogerAsignacion+", "+escogerAlumno+", "+ textoFecha.toLowerCase()+". " + ordenado); // muestra texto
-			// Cadena SQL
-			escogerAsignacion = $( "#EscogerAsignacion option:selected").val();
-			escogerAlumno = $( "#EscogerAlumno option:selected").val(); // Redefino con los valores
-			cadenaSQL = 'SELECT * FROM tb_opiniones ';
-			$("#SQL").html(fechaINI+" - "+fechaFIN);
-			if (escogerAsignacion>0 || escogerAlumno>0 || fechaINI!="#" || fechaFIN!="#") {
-				cadenaSQL = cadenaSQL + "WHERE ";
-			} 			
-			if (escogerAsignacion>0) { cadenaSQL = cadenaSQL + 'asignacion = "'+escogerAsignacion+'" AND ';	}
-			if (escogerAlumno>0) { cadenaSQL = cadenaSQL + 'alumno = "'+escogerAlumno+'" AND ';	}
-			// Comprueba se fechaINI > fechaFIN. Si lo es, dar la vuelta
-			if (fechaINI!="#" && fechaFIN!="#" && fechaINI>fechaFIN) {
-					// alert("doy la vuelta"); LANZAR UN MENSAJE
-					// aprovecho la variable ordenado que ya no sirve, para hacer el intercambio.
-					ordenado = fechaINI; fechaINI = fechaFIN; fechaFIN = ordenado;
-			}
-			// Coloca fecha en cadena SQL.			
-			if (fechaINI!="#" && fechaFIN!="#") { cadenaSQL = cadenaSQL + "fecha BETWEEN '"+fechaINI+"' AND '"+fechaFIN+"' AND ";}
-			if (fechaINI!="#" && fechaFIN=="#") { cadenaSQL = cadenaSQL + "fecha> '"+fechaINI+"' AND ";}
-			if (fechaINI=="#" && fechaFIN!="#") { cadenaSQL = cadenaSQL + "fecha< '"+fechaFIN+"' AND ";}			
-			// SELECT * FROM `tb_opiniones` WHERE `fecha` BETWEEN '2015-03-15' AND '2016-05-11' AND `alumno` = 90 AND `asignacion` = 2 
-			if (cadenaSQL.slice(-5)==" AND ") { cadenaSQL = cadenaSQL.slice(0,-5);}
-			// $("#SQL").html(cadenaSQL); // Hasta aquí la claúsula WHERE
-			$("#SQL").html(cadenaSQL+" "+$("#orden").html());
-		};		
+	
 		
-		// 2) Obtener cadena ordenada
-		function cadenaORDER() {
-			// alert("Cambio");
-			var cadena = "";
-			$("#ordenable li").each(function(i, elemento){
-				cadena = cadena + $(elemento).attr("dt")+", ";					
-			});
-			cadena = cadena.slice(0,-2); // Quitar el último elemento
-			$("#orden").html("ORDER BY " + cadena);
-		}
 		// ***************************
 		// Tras cargarlo todo. Inicio.
 		// ***************************
 		rellenarCondiciones(); // al principio, con las opciones por defecto.
 			
 	 }); // fin del document ready
+	 // *********************************************************************************************************
 	 
+	 // Variable fuera del document ready
+	 var evalPulsada = $('#idevaluacion').val(); // define la evaluación por defecto. 
+	 
+	 // ******************************************************
+	 // Eventos que se cargan tras cargar la página **********
+	 // ******************************************************	
+	 $(document).on('click','.divNombreEval2',function(event){
+		 evalPulsada = $(this).attr("id"); // seleccionada la evaluación dada...
+		 rellenarCondiciones();
+	 });
+	 
+	 // Función que rellena el apartado condiciones...
+	 function rellenarCondiciones() {
+		 console.log("EvalPulsada: "+evalPulsada);
+		 if (evalPulsada>0) {	 // Si existe la evaluación pulsada y es mayor que cero 	 
+			 $('.divNombreEval2').each(function(e) {
+				$(this).removeClass("divNombreEvalSeleccionado2"); // Las quita por defecto.
+				// Comprueba cual es y ya lo selecciona...	
+				if ($(this).attr("id")==evalPulsada) {
+					$(this).addClass("divNombreEvalSeleccionado2");
+					console.log($(this).attr("alt"));
+					$("#condiciones").html($(this).attr("alt")); // muestra el texto del alt... ¿No funciona con title?
+					var cadenaSQL = 'SELECT * FROM tb_opiniongeneral WHERE ';
+					// Construyo cadena SQL...
+					var itemsAsignaciones = ($("#asignaciones").val()).split("#");
+					if (itemsAsignaciones.length>0) {
+						cadenaSQL = cadenaSQL + "(";
+						$(itemsAsignaciones).each(function(i,el){
+							cadenaSQL = cadenaSQL + 'asignacion="'+el+'" OR ';
+						});
+						cadenaSQL = cadenaSQL.slice(0,-4)+") "; // Quitar el último OR y añade paréntesis
+						cadenaSQL = cadenaSQL + ' AND '; // Poner el AND
+					}
+					cadenaSQL = cadenaSQL+'eval="'+$(this).attr("id")+'" ORDER BY asignacion ASC';
+					$("#SQL").html(cadenaSQL);
+				}
+			 });		 
+		 } else { // caso que sea cero o negativo
+			 $("#notificacionFuera").jqxNotification("open"); 
+		 }
+	 };	
+		
 	 // ******************************************************
 	 // Funciones en la página *******************************
 	 // ******************************************************	 
 
 	 //************************************
 	 // F1) Obtener datos del filtro
-	 function obtenerDatos(conNombreAlumno,conNombreAsignacion) {
-		 if ($("#fotoYN").jqxSwitchButton('checked')) { var fotoSN = 1; } else { var fotoSN=0; }
-		 // alert(fotoSN);
-		 // alert(conNombreAlumno);
-		 // alert(conNombreAsignacion);
+	 function obtenerDatos() {
 		 console.log("****************** Obtiene SQL *******************");
 		 console.log("SQL: "+$("#SQL").text());
-		 console.log("Fotos: ");
 		 return $.ajax({
 			  type: 'POST',
 			  dataType: 'text',	
-		      url: "./tutorias/scripts/obtenerDatos.php", // En el script se construye la tabla...
+		      url: "./tutorias/scripts/obtenerDatosGeneralesCadenaSQL.php", // En el script se construye la tabla...
 		      data: { 
-			  SQL: $("#SQL").text(), // La variable de sesión de la asignación se consigue en el script.	
-			  foto: fotoSN,		
-			  conNombreAlumno: conNombreAlumno,
-			  conNombreAsignacion: conNombreAsignacion,  
+			  SQL: $("#SQL").text(), // La variable de sesión de la asignación se consigue en el script.	 
 		      },
 		      success: function(data, textStatus, jqXHR){ 			  
 				// alert(data);

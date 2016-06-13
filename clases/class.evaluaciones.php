@@ -54,7 +54,7 @@ class misEvaluaciones
 				$this->listadoDeEvaluaciones["div"][$ii]=
 					'<div id="'.$row["ideval"].'" name="'.$row["nombreeval"].'" fechafin="'.$row["fechafin"]
 					.'" class="divNombreEval" title="'.$row["nombreeval"]
-					.$annadetitulo.'" alt="'.$row["nombreeval"].'">
+					.$annadetitulo.'" alt="'.$row["nombreeval"].$annadetitulo.'">
 					<p>'
 					.$row["nombreeval"].'</p>
 					</div>';

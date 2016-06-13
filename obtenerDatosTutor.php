@@ -606,7 +606,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			// Cadena SQL
 			escogerAsignacion = $( "#EscogerAsignacion option:selected").val();
 			escogerAlumno = $( "#EscogerAlumno option:selected").val(); // Redefino con los valores
-			alert(escogerAsignacion);
+			// alert(escogerAsignacion);
 			cadenaSQL = 'SELECT * FROM tb_opiniones ';
 			$("#SQL").html(fechaINI+" - "+fechaFIN);
 			if (escogerAsignacion>=0 || escogerAlumno>=0 || fechaINI!="#" || fechaFIN!="#") {
