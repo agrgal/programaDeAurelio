@@ -317,7 +317,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				try { // se reciben en formato de div
 				   alert(datos);
 				   $("#pestañas").tabs("enable", 1); // activa la pestaña 1
-				   $("#MostrarDatos").html('<h1>'+$("#condiciones").html()+'</h1>'+datos); // coloca los datos...
+				   $("#MostrarDatos").html('<h1>'+$("#condiciones").html()+'</h1></br>'+datos); // coloca los datos...
 				   var sCabecera =  $("#condiciones").html();
 				   // sCabecera = sCabecera.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 				   $("#sendCabecera").val(sCabecera);

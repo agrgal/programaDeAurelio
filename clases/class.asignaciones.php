@@ -158,7 +158,7 @@ class misAsignaciones
 	
 	// ********************************************************** 
 	
-	// 5b) Función que, dada una lista de alumnos (id1#id2#id3...#idn) , retorna un listado de asignaciones a las que pertenecen dichos alumnos
+	// 5b) Función que, dado un id y el valor del profesor, retorna las asignaciones de esa tutoría
 	public function devuelveAsignacionesDeUnaTutoria($id, $profesor) {
 		// A) Recibe la asignación. Recupera sus alumnos.
 		$alumnadoTutoria = $this->devuelveListadoAlumnosdeEstaAsignacion ($id, $profesor);
@@ -196,6 +196,63 @@ class misAsignaciones
 		}
 		if (!is_null($descripcion)) { // si no lo recupera, el valor por defecto)
 		    return $descripcion; //envia el valor dado
+		    } else {
+		    return NULL;
+	        }
+	   mysqli_free_result($result); 
+	   mysqli_close($link);
+	}
+	// ********************************************************** 
+	
+	// 7) Dada una asignación, retorna el nombre de su profesor
+	// Cual -->0 el idprofesor, Si Cual -> 1, el nombre
+	public function asignacionProfesor($idasignacion, $cual) {
+		$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
+	    $Sql='SELECT profesor FROM tb_asignaciones WHERE idasignacion="%s"';
+	    $Sql = sprintf($Sql, mysqli_real_escape_string($link,$idasignacion)); // Seguridad que evita los ataques SQL Injection  	
+        $result=mysqli_query($link,$Sql);// ejecuta la cadena sql y almacena el resultado el $result
+	    while ($row=mysqli_fetch_array($result)) {
+			$profesor = $row["profesor"];
+		}
+		mysqli_free_result($result); 
+	    
+	    $Sql='SELECT Empleado FROM tb_profesores WHERE idprofesor="%s"';
+	    $Sql = sprintf($Sql, mysqli_real_escape_string($link,$profesor)); // Seguridad que evita los ataques SQL Injection  	
+        $result=mysqli_query($link,$Sql);// ejecuta la cadena sql y almacena el resultado el $result
+	    while ($row=mysqli_fetch_array($result)) {
+			$nombreProfesor = $row["Empleado"];
+		}
+		mysqli_free_result($result); 
+	    mysqli_close($link); // Cierro el enlace...	    
+
+		if (!is_null($nombreProfesor)) { // si no lo recupera, el valor por defecto)
+		    if ($cual>=1) { return cambiarnombre($nombreProfesor); }
+		    if ($cual==0) { return $profesor; }
+		     //envia el valor dado
+		    } else {
+		    return NULL;
+	        } 
+	    // return $Sql;
+	}
+	// ********************************************************** 
+	
+	// 8) Dada una asignación, retorna el nombre de la materia
+	// Cual -->0 el idmateria, Si Cual -> 1, el nombre
+	public function asignacionMateria($idasignacion, $cual) {
+		$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
+	    $Sql='SELECT materia FROM tb_asignaciones WHERE idasignacion="%s"';
+	    $Sql = sprintf($Sql, mysqli_real_escape_string($link,$idasignacion)); // Seguridad que evita los ataques SQL Injection  	
+        $result=mysqli_query($link,$Sql);// ejecuta la cadena sql y almacena el resultado el $result
+	    while ($row=mysqli_fetch_array($result)) {
+			$materia = $row["materia"];
+		}		
+		// llama a la clase claseprofesor para recuperar el nombre de empleado
+		$this->clasemateria->devuelveMateria($materia); // en esa clase, establezco la id de la materia
+		$nombreMateria = $this->clasemateria->estaMateria["materia"];
+		if (!is_null($nombreMateria)) { // si no lo recupera, el valor por defecto)
+		    if ($cual>=1) { return $nombreMateria; }
+		    if ($cual==0) { return $materia; }
+		     //envia el valor dado
 		    } else {
 		    return NULL;
 	        }
