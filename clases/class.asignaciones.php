@@ -215,15 +215,11 @@ class misAsignaciones
 			$profesor = $row["profesor"];
 		}
 		mysqli_free_result($result); 
+	    mysqli_close($link); // Cierro el enlace...	
 	    
-	    $Sql='SELECT Empleado FROM tb_profesores WHERE idprofesor="%s"';
-	    $Sql = sprintf($Sql, mysqli_real_escape_string($link,$profesor)); // Seguridad que evita los ataques SQL Injection  	
-        $result=mysqli_query($link,$Sql);// ejecuta la cadena sql y almacena el resultado el $result
-	    while ($row=mysqli_fetch_array($result)) {
-			$nombreProfesor = $row["Empleado"];
-		}
-		mysqli_free_result($result); 
-	    mysqli_close($link); // Cierro el enlace...	    
+	    $this->claseprofesor->idprofesor=$profesor; // en esa clase, establezco la id del profesor
+		$this->claseprofesor->nombreEmpleado(); // Llamo a la función nombre de Empleado
+		$nombreProfesor=$this->claseprofesor->Empleado;    
 
 		if (!is_null($nombreProfesor)) { // si no lo recupera, el valor por defecto)
 		    if ($cual>=1) { return cambiarnombre($nombreProfesor); }

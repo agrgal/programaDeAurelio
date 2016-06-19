@@ -36,9 +36,9 @@ if ($_POST["SQL"]) {
 	$firmar="";
 	foreach ($datos as $clave => $valor) {
 		// Obtiene los resultados
-		$opinion=iconv("UTF-8","ISO-8859-15",strip_tags($valor->{"opinion"}));
-		$actuaciones=iconv("UTF-8","ISO-8859-15",strip_tags($valor->{"actuaciones"}));
-		$mejora=iconv("UTF-8","ISO-8859-15",strip_tags($valor->{"mejora"}));
+		$opinion=trim(iconv("UTF-8","ISO-8859-15",strip_tags($valor->{"opinion"})));
+		$actuaciones=trim(iconv("UTF-8","ISO-8859-15",strip_tags($valor->{"actuaciones"})));
+		$mejora=trim(iconv("UTF-8","ISO-8859-15",strip_tags($valor->{"mejora"})));
 		// EMPAQUETAR
 		$nombreProfesor = $asignaciones->asignacionProfesor($valor->{"asignacion"},1);
 		$nombreMateria = $asignaciones->asignacionMateria($valor->{"asignacion"},1);
@@ -50,13 +50,12 @@ if ($_POST["SQL"]) {
 						<tbody>
 						<tr style="background-color: lightsteelblue;"><th style="vertical-align: middle; text-align: center;" colspan="3">
 						<h2><span style="color: navy;"><b>Profesor/a:&nbsp;</b>'.$nombreProfesor.'</br><b>Asignatura:&nbsp;</b>'.$nombreMateria.'</span></h2>
-						</th></tr>
-						<tr><td style="width: 100%; text-align: center;"><b>Opiniones:&nbsp;</b>'.$opinion.'</td></tr>
-						<tr></tr><td style="width: 33%; text-align: center;"><b>Actuaciones:&nbsp;</b>'.$actuaciones.'</td></tr>
-						<tr></tr><td style="width: 33%; text-align: center;"><b>Mejoras:&nbsp;</b>'.$mejoras.'</td></tr>
-						</tbody>
-						</table></br>';
-			$firmar.='<div id="'.$nombreProfesor.'" style="display: inline-block; width: 30%; height: 40px; border: 2px solid black;"><p>'.$nombreProfesor.'</p></div>';
+						</th></tr>';
+						if ($opinion) { $devuelve.='<tr><td style="width: 100%; text-align: justify;"><b>Opiniones:&nbsp;</b>'.$opinion.'</td></tr>'; }
+						if ($actuaciones) {$devuelve.='<tr></tr><td style="width: 100%; text-align: justify;"><b>Actuaciones:&nbsp;</b>'.$actuaciones.'</td></tr>';}
+						if ($mejora) { $devuelve.='<tr></tr><td style="width: 100%; text-align: justify;"><b>Mejoras:&nbsp;</b>'.$mejora.'</td></tr>';}
+			$devuelve.='</tbody>
+						</table></br>';			
 		} // Fin del if comprueba nulidad
 	} // Fin del foreach	
 } // Fin del IF 
@@ -66,7 +65,7 @@ if ($devuelve=="") {
 	echo '<h1>No hay datos que mostrar&nbsp;&nbsp;<img src="./imagenes/iconos/ohoh.png" style="vertical-align:middle; width:75px; height:auto;"></h1>'; 	
 } else {
 	// echo htmlspecialchars($devuelve,ENT_QUOTES);
-	echo $devuelve.$firmar.$apostilla;
+	echo $devuelve.$apostilla;
 } 
   
 ?>

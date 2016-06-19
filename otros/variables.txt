@@ -154,6 +154,10 @@ Clase asignaciones
 	    // retorna un listado de asignaciones a las que pertenecen dichos alumnos
 	    // dado id y profesor
 	function asignacionDescripcion($idasignacion) // devuelve la descripción dando su id simplemente
+	function asignacionProfesor($idasignacion, $cual) //devuelve el Nombre del profesor de una asignacion. 
+	    // Cual -->0 el idprofesor, Si Cual -> 1, el nombre
+	function asignacionMateria($idasignacion, $cual) // Dada una asignación, retorna el nombre de la materia
+	    // Cual -->0 el idmateria, Si Cual -> 1, el nombre
 	    
 Clase opiniones
 ===============

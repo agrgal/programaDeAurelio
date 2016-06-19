@@ -86,14 +86,14 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 	<div id="test"> <!-- TESTER -->
 	    <p id="testear">
 	    </p>
-	    <input id="idevaluacion" value="<?php echo $evaluacion->calculaFecha($fechadehoy,true); ?>" style="display: text;"> 
-	    <input id="fechaevaluacion" value="<?php echo $evaluacion->calculaFecha($fechadehoy,false); ?>" style="display: text;"> 
+	    <input id="idevaluacion" value="<?php echo $evaluacion->calculaFecha($fechadehoy,true); ?>" style="display: none;"> 
+	    <input id="fechaevaluacion" value="<?php echo $evaluacion->calculaFecha($fechadehoy,false); ?>" style="display: none;"> 
 	    <?php
 	    $asignacionesmiTutoria = $asignacion->devuelveAsignacionesDeUnaTutoria($_SESSION["idasignacion"],$_SESSION["profesor"]);
 	    $asig="";
 		foreach($asignacionesmiTutoria as $clave => $valor) {$asig.=$valor."#";}
 		$asig = substr($asig,0,-1); // Cadena con las asignaciones de mi Tutoría...
-		echo '<input id="asignaciones" value="'.$asig.'" style="display: text;">' 
+		echo '<input id="asignaciones" value="'.$asig.'" style="display: none;">' 
 		?>
     </div>	<!-- TESTER -->
     
@@ -139,9 +139,9 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				<!-- Dibujo de la impresora -->
 				<div id="printer" title="Imprime resultados" title="Imprime resultados" >
 					<!-- <a id="imprimir" href="./pdf/scripts/listadoResultadosPDF.php" ><img src="./imagenes/iconos/printer_pdf.png"></a> -->
-					<form id="formularioImprimir" action="./pdf/scripts/listadoResultadosPDF.php" method="POST">
+					<form id="formularioImprimir" action="./pdf/scripts/listadoResultadosOpinionesGeneralesPDF.php" method="POST">
 						<input id="sendCabecera" name="sendCabecera" type="text" style="display: none;" value="">
-						<input id="sendContenido" name="sendContenido" type="text" style="display: none;" value="">
+						<input id="sendSQL" name="sendSQL" type="text" style="display: none;" value="">
 						<!-- <button type="submit"><img src="./imagenes/iconos/printer_pdf.png"></button> -->
 						<a id="imprimir" ><img src="./imagenes/iconos/printer_pdf.png"></a>
 					</form>
@@ -321,9 +321,11 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				   var sCabecera =  $("#condiciones").html();
 				   // sCabecera = sCabecera.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 				   $("#sendCabecera").val(sCabecera);
-				   var sContenido = datos;
+				   // var sContenido = datos;
+				   var sSQL = $("#SQL").html();
 				   // sContenido = sContenido.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
-				   $("#sendContenido").val(sContenido);
+				   // $("#sendContenido").val(sContenido);
+				   $("#sendSQL").val(sSQL);
 				   $('#pestañas a[href="#Datos"]').trigger('click'); // simula el click en la pestaña 1	
 				   $("#notificacionObtenido").jqxNotification("open"); 		   
 				} catch(err) {

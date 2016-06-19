@@ -1,0 +1,121 @@
+body {
+  text-align: center;
+}
+
+p {
+  font-size:10px;
+}
+
+h1 {
+  font-size: 14px;
+  font-weight: bold;
+  text-align:center;
+}
+
+h2 {
+  font-size: 12px;
+  font-weight: bold;
+  text-align:center;
+}
+
+.titulo, .alaizquierda {
+  text-align: center;
+  font-size: 3.5em;
+  margin: 2px;
+  word-wrap: break-word;
+}
+
+.subtitulo {
+  text-align: center;
+  font-size: 1.2em;
+  margin: 1px;
+  word-wrap: break-word;
+}
+
+.footer {
+  text-align: center;
+  border: 0px solid black;
+}
+
+.footer p {
+  font-size: 20px;
+  font-weight: bold; 
+  color: darkgrey;
+}
+
+.cabecera {
+  text-align: left;
+  font-size: 13px;
+  background-color: #eeeeee;
+  border: 1px solid black;
+  padding: 3px 5px;
+}
+
+.cabecerados {
+  text-align: left;
+  font-size: 13px;
+  border-left: 1px solid black;
+  border-bottom: 1px solid black;
+  padding: 3px 5px;
+}
+
+.textonormal {
+  font-size: 12px;
+  text-align: justify;
+}
+
+.alaizquierda {
+  text-align: justify;
+}
+
+
+/* .textogirado {
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+} */
+
+/* ========================== */
+/* tabla listado              */
+/* ========================== */
+
+.listadoAlumnoTABLEMain {
+  width: 95%;
+  border: 0px solid black;
+  margin: 2px auto;
+}
+
+.listadoAlumnoTABLEMain td{
+ font-size: 0.9em;
+ border-bottom: 0px solid black;
+ text-align: justify;
+ vertical-align: middle;
+ margin: 2px 2px;
+ padding: 10px;
+ padding-left: 30px;
+}
+
+.listadoAlumnoTABLEMain th{ 
+ font-size: 1.1em;
+ border: 1px solid navy;
+ background-color: LightSteelBlue;
+ color: navy;
+ text-align: center;
+ vertical-align: middle;
+ margin: 2px 20px;
+ margin-top: 0px;
+ padding: 10px;
+}
+
+.separador {
+ margin: 2em 0px;
+ width: auto;
+ height: 30px;
+}
+
+.firmas {
+ display: inline;
+ margin-right: 20px;
+ width: 30%;
+ border: 1px solid black;
+}
+
