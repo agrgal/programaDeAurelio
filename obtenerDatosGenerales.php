@@ -315,7 +315,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		$("#go").click(function(event,ui){
 			$.when(obtenerDatos()).done(function(datos){
 				try { // se reciben en formato de div
-				   alert(datos);
+				   // alert(datos);
 				   $("#pestañas").tabs("enable", 1); // activa la pestaña 1
 				   $("#MostrarDatos").html('<h1>'+$("#condiciones").html()+'</h1></br>'+datos); // coloca los datos...
 				   var sCabecera =  $("#condiciones").html();

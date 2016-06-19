@@ -189,6 +189,17 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 						?>
 						
 					</div> <!-- *** FIN DEL CONTENEDOR OPINIONES*** -->
+					
+					<!-- Imprimir los resultados -->
+					<div id="printer" title="Imprime informe para el profesor/a" title="Imprime informe para el profesor/a" >
+						<!-- <a id="imprimir" href="./pdf/scripts/listadoResultadosPDF.php" ><img src="./imagenes/iconos/printer_pdf.png"></a> -->
+						<form id="formularioImprimir" action="./pdf/scripts/listadoInformeProfesor.php" method="POST">
+							<input id="sendFecha" name="sendFecha" type="text" style="display: none;" value="">
+							<!-- <button type="submit"><img src="./imagenes/iconos/printer_pdf.png"></button> -->
+							<a id="imprimir" ><img src="./imagenes/iconos/printer_pdf.png"></a>
+						</form>
+					</div>
+				
 	<!-- ********************************************************** -->
 				</div> <!-- *** FIN DEL CONTENEDOR OPINION UN ALUMNO *** -->
 				
@@ -346,6 +357,15 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
                 width: 500, position: "top-right", opacity: 0.9,
                 autoOpen: false, animationOpenDelay: 500, autoClose: true, autoCloseDelay: 4000, template: "warning"
          });
+         
+        // ************************************
+		// Al hacer click en el icono impresora
+		// ************************************
+
+		$("#imprimir").click(function(event,ui){
+			// alert("Imprime...");
+			document.getElementById("formularioImprimir").submit();
+		}); 
 
 		// ========================================================================================
         // DEFINO tabs. LLAMO Pestañas. Defino editor en zonaEscribir. Defino fecha
@@ -390,6 +410,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 					   $("#editor").editable("setHTML", "", true); // campo texto lo pone a cero
 					   inicializaItems(); // Pone en pantalla el primer grupo de items...					   
 					   fechaDada = $("#muestrafecha").val();
+					   $("#sendFecha").val(fechaDada); // SENDFECHA
 					   fechaTrabajo = convertirFecha(fechaDada); //???
 					   $.when(obtenerOpinion(indexAlumno,fechaDada)).done(function(data2){
 							try {
@@ -414,7 +435,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 			    if (RefrescaSelectMenuFechas) { // Permite o no refrescar datos según esta variable...
 					
 				var fechaNueva = $("#listaFechas option:selected").attr("mysql"); // fecha en formato mysql
-				// alert("Estoy en select menu... Dada: "+fechaDada+" Nueva: "+fechaNueva);
+				// alert("Estoy en select menu... Dada: "+fechaDada+" Nueva: "+fechaNueva);				
 				
 				$.when(insertarOpinion(indexAlumno,fechaDada,getItemsElegidos()),
 			           obtenerOpinion(indexAlumno,fechaNueva)).done(function(data1,data2,data3){
@@ -448,7 +469,8 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 						// alert(data3[0]);
 						fechaTrabajo = $("#listaFechas option:selected").val();
 						$("#fecha").datepicker("setDate",fechaTrabajo);
-						fechaDada = $("#muestrafecha").val();		
+						fechaDada = $("#muestrafecha").val();	
+						$("#sendFecha").val(fechaDada); // SENDFECHA
 					}); // Fin del when	
 					
 				    } // Fin del IF RefrescaSelectMenuFechas				    
@@ -457,7 +479,6 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 			})
 			.selectmenu("menuWidget")
 			   .addClass("overflow3"); // carga un estilo que está en /css/estiloSelectMenuOverflow.css
-
             
 		// ========================================================================================
         // DEFINO EL MENÚ DE LOS GRUPOS
@@ -826,6 +847,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 		 // Al inicio elige una opción del grupo Items
          inicializaItems();
          var fechaDada = $("#muestrafecha").val(); // inicializa la variable fechaDada
+         $("#sendFecha").val(fechaDada); // SENDFECHA
          // alert(fechaDada);
 			
 	 }); // fin del document ready

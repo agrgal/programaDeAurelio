@@ -14,17 +14,17 @@ include_once("../../clases/class.cursos.php"); //clase que recupera datos de cur
 include_once("../../clases/class.alumnos.php"); //clase que recupera datos de alumnos
 include_once("../../clases/class.materias.php"); //clase que recupera datos de materias
 include_once("../../clases/class.asignaciones.php"); //clase que recupera datos de asignaciones
-include_once("../../clases/class.opiniones.php"); //clase que recupera datos de opiniones
+include_once("../../clases/class.opiniones.php"); //clase que recupera datos de opiniones Generales
 
 // incluyo las variables de esas clases
 $calendario = New micalendario(); // variable de calendario. Lo necesito para la cabecera
 $profesorado = New profesores(); //variable de la clase profesores
 // $formulario = New formulario(); // variable de la clase formulario
 $curso = New misCursos(); // variable de la clase curso
-$alumno = New misAlumnos(); // variable de la clase alumnos
+$alumnos = New misAlumnos(); // variable de la clase alumnos
 $materia = New misMaterias(); // variable de la clase materia
-$opiniones = New misOpiniones(); // variable de la clase opiniones
-$asignacion = New misAsignaciones($curso, $profesorado, $materia, $alumno); // Uso el constructor para pasarle la clase curso, profesorado, alumno y materias a Asignaciones
+$opiniones = New misOpiniones(); // variable de la clase opiniones Generales
+$asignacion = New misAsignaciones($curso, $profesorado, $materia, $alumnos); // Uso el constructor para pasarle la clase curso, profesorado, alumno y materias a Asignaciones
 
 // Incluir biblioteca mpdf
 
@@ -37,14 +37,10 @@ session_start();
 // Construcción del html
 // *********************
 
-$asignacion->listarAsignaciones($_SESSION['profesor']); 
-$clave=array_search($_SESSION['idasignacion'],$asignacion->listaDeAsignaciones['idasignacion']);  
-				
-
 // Empiezo el pdf
 // Declaro variables
-$title1 = 'Datos obtenidos para la tutoría de '.$asignacion->listaDeAsignaciones['cursosAfectados'][$clave];
-$title2= utf8_encode($_POST["sendCabecera"]);
+$title1 = "Descripción de la asignación: ".utf8_encode($asignacion->devuelveDescripcionAsignacion($_SESSION['idasignacion'],$_SESSION['profesor']));
+$title2= utf8_encode(fechaMySQL2Larga($_POST["sendFecha"]));
 $horafecha='Fecha: '.$calendario->fechaformateada($calendario->fechadehoy());
 $horafecha.=' - Hora: '.$calendario->horactual();
 $h=$horafecha;
@@ -57,10 +53,51 @@ $cabecera.='<td style="width: 80%; text-align: center;"><h1 class="titulo" style
 $cabecera.='<tr><td style="width: 80%; text-align: center;"><h1 class="subtitulo" style="font-size:13px;">'.$title2.'</h1></td></tr></tr></table>';
 // $cabecera.='<h2 class="subtitulo" style="font-size:14px;">'.$alumno['unidad'][$_SESSION['contador']].'</h2></td></tr></table>';
 
-// Contenido central html
-$html = utf8_encode($_POST["sendContenido"]);
+// *****************************************************************************************************
+
+$SQL='SELECT * FROM tb_opiniones WHERE fecha="'.$_POST["sendFecha"].'" AND asignacion="'.$_SESSION['idasignacion'].'" ORDER BY alumno ASC';
+
+if ($SQL) {
+	$datos = json_decode($opiniones->retornaValores($SQL));
+	$total=count($datos);
+	if ($total>0) { $apostilla = "<h2>Se han obtenido un total de ".$total." registros</h2>"; }
+	$devuelve="";	
+	foreach ($datos as $clave => $valor) {
+
+		// Obtiene el nombre del alumno
+		$alumnos->devuelveAlumno($valor->{"alumno"});
+		$nombreAlumno = $alumnos->esteAlumno["nombre2"];
+		$imagen = '<img src="'.$alumnos->esteAlumno["foto"].'" >';  		
+		// Obtiene el nombre de la asignacion
+		$descripcion = $asignacion->asignacionDescripcion($valor->{"asignacion"});
+		// Obtiene la fecha		
+		// $fecha = fechaMySQL2DatePicker($valor->{"fecha"});
+		$fecha = fechaMySQL2Larga($valor->{"fecha"}); // fecha en formato largo...
+		// Obtiene los items
+		$retahila=$opiniones->itemsElegidos($valor->{"items"});
+		// Obtiene las observaciones		
+		$observaciones=iconv("UTF-8","ISO-8859-15",strip_tags($valor->{"observaciones"}));
+		// EMPAQUETAR
+		$textoPresentar="";
+    	if ($retahila) { $textoPresentar.='<b>ITEMS:&nbsp;</b>'.$retahila." // "; }
+		if ($observaciones) { $textoPresentar.='<b>OBSERVACIONES:&nbsp;</b>'.$observaciones." // "; }
+		if ($textoPresentar) { $textoPresentar=substr($textoPresentar,0,-4); }		
+		if ($textoPresentar) {         
+			$devuelve.='<table id="'.$valor->{"id"}.'" class="tablaDATOS" elegir="0" alumno="'.$valor->{"alumno"}.'" items="'.$valor->{"items"}.'" observaciones="'.$observaciones.'" >
+			  <tr>';
+			  $devuelve.='<td id="'.$valor->{"id"}.'" rowspan="3" class="TDimagen" >'.$imagen.'</td>'; 
+			  // Las variables conNombreAlumno y conNombreAsignacion se pasan como texto.
+			  $devuelve.='<td class="TDnombreAlumno"><h2>'.$nombreAlumno.'</h2></td></tr>'; 
+			  $devuelve.='<tr><td>		  
+			  <tr><td>'.$textoPresentar.'</td></tr>
+			  </table><hr class="separador">';
+		} // Fin del if comprueba nulidad		
+	} // Fin del foreach 
+} // Fin del IF 
+
+
+$html = utf8_encode($devuelve.$apostilla);
 $html = iconv("UTF-8","ISO-8859-15",$html); // No sé por qué, pero funciona mejor así,y sin embargo, $title2 no se le puede poner ¿¿??
-// $html = str_replace("./upload", "../../upload", $html);
 $html = str_replace('src="./imagenes/', 'style="width: 75px; height:auto; max-width: 75px; max-height: 125px; margin-right: 10px;" src="../../imagenes/', $html);
 $html = str_replace('src="./upload/', 'style="width: 75px; height:auto; max-width: 75px; max-height: 125px; margin-right: 10px;" src="../../upload/', $html);
 // $html = htmlspecialchars($html, ENT_QUOTES);
@@ -68,7 +105,7 @@ $html = str_replace('src="./upload/', 'style="width: 75px; height:auto; max-widt
 
 // $html = "<h1>".$_SESSION['permisos']." - ".$_SESSION['tutor']." - ".$_SESSION['profesor']." - ".$_SESSION['idasignacion']."</h1>";
 
-// *********************
+// *****************************************************************************************************
 
 // *********************
 // Generar PDF
@@ -95,8 +132,8 @@ include_once('watermark.php'); // Incluye la marca de agua
 
 $mpdf->WriteHTML($html); // Aquí se pone el contenido...
 // $mpdf->WriteHTML(utf8_encode($html));
-$mpdf->Output('../../pdf/listadoDeResultados.pdf','F');
-header("Location: ../../pdf/scripts/descargaficheropdf.php?fichero=listadoDeResultados.pdf&ruta=../../pdf/&nombre=".$title1.".pdf");	
+$mpdf->Output('../../pdf/listadoInformeParaProfesor.pdf','F');
+header("Location: ../../pdf/scripts/descargaficheropdf.php?fichero=listadoInformeParaProfesor.pdf&ruta=../../pdf/&nombre=".$title1.".pdf");	
 exit;
 ?>
 

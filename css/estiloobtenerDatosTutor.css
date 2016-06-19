@@ -99,8 +99,11 @@
 
 .tablaDATOS td.TDimagen img {
   margin: 0px auto;
+  max-width: 100px;
   width: 85%;
+  /* width: 50px; */
   height: auto;
+  max-height: 125px;
 }
 
 

@@ -109,7 +109,7 @@ function fechaMySQL2Larga($fec) {
 	// Mejor así, por si el servidor no tiene SETLOCALE activado...	
 	$dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
 	$meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
-	return $dias[date('w',strtotime($fec))].", ".date('d',strtotime($fec))." de ".$meses[date('n',strtotime($fec))-1]. " del ".date('Y',strtotime($fec)) ;
+	return $dias[date('w',strtotime($fec))].", ".date('d',strtotime($fec))." de ".$meses[date('n',strtotime($fec))-1]. " de ".date('Y',strtotime($fec)) ;
     // return date("l, d \d\e M \d\e Y", strtotime($fec));
 }
 

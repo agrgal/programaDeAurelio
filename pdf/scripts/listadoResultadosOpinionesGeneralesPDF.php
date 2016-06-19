@@ -58,6 +58,8 @@ $cabecera.='<tr><td style="width: 80%; text-align: center;"><h1 class="subtitulo
 
 // *****************************************************************************************************
 
+$profesor = array(); // array de profesores...
+
 // Contenido central html
 if ($_POST["sendSQL"]) {
 	// $datos = $opiniones->retornaValores($_POST["sendSQL"]);
@@ -73,22 +75,46 @@ if ($_POST["sendSQL"]) {
 		$mejora=trim(iconv("UTF-8","ISO-8859-15",strip_tags($valor->{"mejora"})));
 		// EMPAQUETAR
 		$nombreProfesor = $asignacion->asignacionProfesor($valor->{"asignacion"},1);
+		$profesor[]=$asignacion->asignacionProfesor($valor->{"asignacion"},0); // pero como número...
 		$nombreMateria = $asignacion->asignacionMateria($valor->{"asignacion"},1);
 		if (($mejora) || ($actuaciones) || ($opinion)) {         
 			$html.='<table class="listadoAlumnoTABLEMain">
-						<tbody>
-						<tr><th><b>Profesor/a:&nbsp;</b>'.$nombreProfesor.'</th><th><b>Asignatura:&nbsp;</b>'.$nombreMateria.'</th></tr>';
+						<thead>
+						<tr><th><b>Profesor/a:&nbsp;</b>'.$nombreProfesor.'</th><th><b>Asignatura:&nbsp;</b>'.$nombreMateria.'</th></tr>
+						</thead><tbody>';
 						if ($opinion) { $html.='<tr><td colspan="2"><b>Opiniones:&nbsp;</b>'.$opinion.'</td></tr>'; }
 						if ($actuaciones) {$html.='<tr><td colspan="2"><b>Actuaciones:&nbsp;</b>'.$actuaciones.'</td></tr>';}
 						if ($mejora) { $html.='<tr><td colspan="2"><b>Mejoras:&nbsp;</b>'.$mejora.'</td></tr>';}
-			$html.='</tbody>
-						</table></br><img src="../../imagenes/iconos/divider1.png" class="separador"></br>';	
-			$firmar.='<div class="firmas">'.$nombreProfesor.'</div>';
+			$html.='</tbody></table></br><img src="../../imagenes/iconos/divider1.png" class="separador"></br>';	
 		} // Fin del if comprueba nulidad
 	} // Fin del foreach 
 } // Fin del IF 
 
-$html = utf8_encode($html.$firmar);
+// ***********************************************************************************
+// de nuevo para las firmas. COPIADO de la versión anterior...
+// Al final, en versión impresión, tengo que maquetar con tablas. Es como mejor sale... No acepta display: inline los pdf.
+$profesor=array_unique($profesor);
+asort($profesor); //quita duplicados y ordena
+$jj = count($profesor);
+$j=0;
+$ancho=3;
+if ($jj<$ancho) {$ancho=$jj; } // si hay menos que el ancho entonces que sea ese núnero
+$escribe.='<table style="margin:2px auto; height: auto; text-align: center; width: 100%;" border="0" cellpadding="5" cellspacing="5">';
+$escribe.='<thead><tr><th colspan="'.$ancho.'" style="background-color: #dddddd;"><h2 class="subtitulo">Firma de los profesores/as del equipo educativo</h2></th></thead></tr><tr cellpadding="5" cellspacing="5">';
+foreach ($profesor as $valor) {
+     $columna=$j % ($ancho+1);
+     $escribe.='<td style="border: 1px solid black; padding-bottom: 3em;">';
+     $profesorado->idprofesor=$valor; // en esa clase, establezco la id del profesor
+	 $profesorado->nombreEmpleado(); // Llamo a la función nombre de Empleado  
+     $escribe.=cambiarnombre($profesorado->Empleado); // Así los consigo ordenados alfabéticamente POR APELLIDOS...
+     $escribe.='</td>';
+     if($columna==$ancho-1) {$escribe.='</tr><tr cellpadding="5" cellspacing="5">'; }  
+     $j++;
+} // fin del foreach de profesores
+$escribe.='</tr></table>';   // fin de la tabla 
+// **************************************************************************************
+
+$html = utf8_encode($html.$escribe);
 $html = iconv("UTF-8","ISO-8859-15",$html); // No sé por qué, pero funciona mejor así,y sin embargo, $title2 no se le puede poner ¿¿??
 // $html = str_replace("./upload", "../../upload", $html);
 // $html = str_replace('src="./imagenes/', 'style="width: 75px; height:auto; margin-right: 10px;" src="../../imagenes/', $html);
