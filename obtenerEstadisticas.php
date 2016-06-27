@@ -96,6 +96,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		<div id="pestañas">
             <ul>
 				<li><a href="#FiltrodeDatos">Filtro de Datos</a></li>
+				<li><a href="#Datos">Datos</a></li>
 				<li><a href="#Instrucciones">Instrucciones</a></li>				
 			</ul> 
 			<!-- ********************************************************** -->
@@ -149,7 +150,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 						</div>
 						<div id="Opciones">
 							<div id="QuieroPosNegSN"><h3>Elige si quieres los resultados de Items Positivos-Negativos o los otros</h3></div>
-						    <div id="PosNeg" title="Elige si quieres que en la lista a parezcan o no las fotografías"></div>						   
+						    <div id="PosNeg" title="Elige si quieres en la estadística items positivos-negativos o de otro tipo"></div>						   
 						</div> 
 					<!-- <h3>Por Item</h3>
 						<div>Items</div> NO SE SI PONER POR ITEMS --> 
@@ -180,13 +181,14 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 					</form>
 				</div>
 				<div id="MostrarDatos">	<!-- Aquí se inserta el HTML que muestra los datos -->			
+					<canvas id="Grafica" width="400" height="200"></canvas> <!-- Gráfica con las estadísticas -->
 				</div>
 			</div>
 			<!-- ********************************************************** -->
 			<!-- Insertar instrucciones -->
 			<!-- ********************************************************** --> 
 			<div id="Instrucciones">
-			
+				
 			</div>
 		</div>
 			
@@ -235,6 +237,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
   <!-- <script src="./htmlsuelto/js_menu.js"></script>   Incorpora al script los menús a la izquierda -->  
   <script type="text/javascript" src="./jquery/jqx/jqxcore.js"></script>
   <script type="text/javascript" src="./jquery/jqx/jqx-all.js"></script> 
+  <script type="text/javascript" src="./jquery/chart/Chart.js"></script>
   <!-- Owl carousel 
   <script type="text/javascript" src="./owl-carousel/owl.carousel.js"></script>
   <!-- Editor de texto froala. Non commercial use 
@@ -259,7 +262,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		 var fechaINI = "#";
 		 var fechaFIN = "#";
 		 var cadenaSQL = "SELECT * FROM `tb_opiniones` ";
-
+		 
 		// 1a) Incorpora la funcionalidad del menú
 		$.getScript( "./htmlsuelto/js_menu.js", function( data, textStatus, jqxhr ) {
 			console.log( data ); // Data returned
@@ -486,8 +489,8 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				width: 290,  
 				checked: false, 
 				theme:'ui-sunny',
-				onLabel:'Índices +/-',
-				offLabel:'Otros índices',
+				onLabel:'Items +/-',
+				offLabel:'Otros items',
 				// rtl: true, // de derecha a izquierda
 				// orientation: 'vertical'
 			});
@@ -498,24 +501,64 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		$("#go").click(function(event,ui){
 			$.when(obtenerDatos()).done(function(datos){
 				try { // se reciben en formato de div
-				   // alert(datos);
-				   /*
+				   alert(datos);
 				   $("#pestañas").tabs("enable", 1); // activa la pestaña 1
-				   $("#MostrarDatos").html('<h1>'+$("#condiciones").html()+'</h1>'+datos); // coloca los datos...
-				   var sCabecera =  $("#condiciones").html();
+				   // $("#MostrarDatos").html('<h1>'+$("#condiciones").html()+'</h1>'+datos); // coloca los datos...
+				   // var sCabecera =  $("#condiciones").html();
 				   // sCabecera = sCabecera.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
-				   $("#sendCabecera").val(sCabecera);
-				   var sContenido = datos;
+				   // $("#sendCabecera").val(sCabecera);
+				   // var sContenido = datos;
 				   // sContenido = sContenido.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
-				   $("#sendContenido").val(sContenido);
-				   $('#pestañas a[href="#Datos"]').trigger('click'); // simula el click en la pestaña 1	
-				   $("#notificacionObtenido").jqxNotification("open"); */	   
+				   // $("#sendContenido").val(sContenido);
+				   $('#pestañas a[href="#Datos"]').trigger('click'); // simula el click en la pestaña 1
+				   
+				   var miGrafica = new Chart($("#Grafica"),{
+						type: 'doughnut',
+						data: {
+							labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange","otro"],
+							datasets: [{
+								label: '# of Votes',
+								data: [1, Math.floor((Math.random() * 10) + 1), 3, Math.floor((Math.random() * 10) + 1),Math.floor((Math.random() * 10) + 1), 2, Math.floor((Math.random() * 10) + 1)],
+								backgroundColor: [
+									'rgba(255, 99, 132, 0.2)',
+									'rgba(54, 162, 235, 0.2)',
+									'rgba(255, 206, 86, 0.2)',
+									'rgba(75, 192, 192, 0.2)',
+									'rgba(153, 102, 255, 0.2)',
+									'rgba(255, 159, 64, 0.2)',
+									'rgba(255, 159, 64, 0.2)'
+								],
+								borderColor: [
+									'rgba(255,99,132,1)',
+									'rgba(54, 162, 235, 1)',
+									'rgba(255, 206, 86, 1)',
+									'rgba(75, 192, 192, 1)',
+									'rgba(153, 102, 255, 1)',
+									'rgba(255, 159, 64, 1)',
+									'rgba(255, 159, 64, 0.2)'
+								],
+								borderWidth: 1
+							}]
+						},
+						options: {
+							scales: {
+								yAxes: [{
+									ticks: {
+										beginAtZero:true
+									}
+								}]
+							}
+						}
+					});
+				   	
+				   $("#notificacionObtenido").jqxNotification("open"); 	   
 				} catch(err) {
 				   console.log(err.message);
 				}	
 			});
 		});  
 		
+	
 		// ************************************
 		// Al hacer click en el icono impresora
 		// ************************************
@@ -535,6 +578,34 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			// Cadena SQL
 			escogerAsignacion = $( "#EscogerAsignacion option:selected").val();			
 			$("#SQL").html(escogerAsignacion);
+			cadenaSQL = 'SELECT items FROM tb_opiniones ';
+			$("#SQL").html(fechaINI+" - "+fechaFIN);
+			if (escogerAsignacion>=0 || fechaINI!="#" || fechaFIN!="#") {
+				cadenaSQL = cadenaSQL + "WHERE ";
+			} 			
+			if (escogerAsignacion>0) { cadenaSQL = cadenaSQL + 'asignacion = "'+escogerAsignacion+'" AND ';	}
+			if (escogerAsignacion==0) { // Permite elegir TODAS las asignaciones PERO de mi tutoría....
+				cadenaSQL = cadenaSQL + "(";
+				$("#EscogerAsignacion option").each(function(){
+					if ($(this).val()>0) {cadenaSQL = cadenaSQL + 'asignacion = "'+$(this).val()+'" OR ';}
+				});
+				cadenaSQL = cadenaSQL.slice(0,-4)+") "; // Quitar el último OR y añade paréntesis
+				cadenaSQL = cadenaSQL + ' AND '; // Poner el AND
+			} // Fin del IF de "Todas las asignaciones"
+			// Comprueba se fechaINI > fechaFIN. Si lo es, dar la vuelta
+			if (fechaINI!="#" && fechaFIN!="#" && fechaINI>fechaFIN) {
+					// alert("doy la vuelta"); LANZAR UN MENSAJE
+					// aprovecho la variable ordenado que ya no sirve, para hacer el intercambio.
+					ordenado = fechaINI; fechaINI = fechaFIN; fechaFIN = ordenado;
+			}
+			// Coloca fecha en cadena SQL.			
+			if (fechaINI!="#" && fechaFIN!="#") { cadenaSQL = cadenaSQL + "fecha BETWEEN '"+fechaINI+"' AND '"+fechaFIN+"' AND ";}
+			if (fechaINI!="#" && fechaFIN=="#") { cadenaSQL = cadenaSQL + "fecha> '"+fechaINI+"' AND ";}
+			if (fechaINI=="#" && fechaFIN!="#") { cadenaSQL = cadenaSQL + "fecha< '"+fechaFIN+"' AND ";}			
+			// SELECT * FROM `tb_opiniones` WHERE `fecha` BETWEEN '2015-03-15' AND '2016-05-11' AND `alumno` = 90 AND `asignacion` = 2 
+			if (cadenaSQL.slice(-5)==" AND ") { cadenaSQL = cadenaSQL.slice(0,-5);}
+			// $("#SQL").html(cadenaSQL); // Hasta aquí la claúsula WHERE
+			$("#SQL").html(cadenaSQL);
 		};		
 		
 		// ***************************
@@ -552,7 +623,8 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 	 // F1) Obtener datos del filtro
 	 function obtenerDatos() {
 		 if ($("#PosNeg").jqxSwitchButton('checked')) { var PosNegSN = 1; } else { var PosNegSN=0; }
-		 alert(PosNegSN);
+		 // alert(PosNegSN);
+		 // alert($("#SQL").text());
 		 console.log("****************** Obtiene SQL *******************");
 		 console.log("SQL: "+$("#SQL").text());
 		 console.log("Fotos: ");
@@ -561,13 +633,11 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			  dataType: 'text',	
 		      url: "./tutorias/scripts/obtenerDatosEstadisticos.php", // En el script se construye la tabla...
 		      data: { 
-			  fechaINI: $("#fechaINI").val(),
-			  fechaFIN: $("#fechaFIN").val(),
-			  asignacion:	$("#EscogerAsignacion option:selected").val(),
+			  SQL: $("#SQL").text(),
 			  posneg: PosNegSN,
 		      },
 		      success: function(data, textStatus, jqXHR){ 			  
-				alert(data);
+				// alert(data);
 				return data;
 		      },
 		  });

@@ -262,7 +262,30 @@ class misOpiniones
 		} else {
 			return NULL;
 		}
-	}
+	} // Fin del 8
+	
+	// ***********************************************************
+	// 9) Función que acepta una cadena SQL
+	// Y retorna información estadistica del resultado: del tipo ITEM es la key y el valor la frecuencia que aparece.
+	public function itemsEstadistica($cadenaSQL) {
+		$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
+	    $result=mysqli_query($link,$cadenaSQL); // ejecuta la cadena sql y almacena el resultado el $result
+        $cadenaReturn="";
+        while ($row=mysqli_fetch_array($result)) {
+			if (strlen($row["items"])>0) { // si no lo recupera, el valor por defecto)
+				  	$cadenaReturn.=$row["items"]."#";
+			}
+		}
+		mysqli_free_result($result); 
+	    mysqli_close($link); 	    
+	    $cadenaReturn=substr($cadenaReturn,0,strlen($cadenaReturn)-1);
+	    // return $cadenaReturn;
+	    $datos= explode("#",$cadenaReturn); // convierte la cadena en array
+	    asort($datos);
+	    // $datosOrdNoRepetidos = array_unique($datos,SORT_NUMERIC);	    
+	    $datosOrdNoRepetidos=array_count_values($datos);	    
+	    return $datosOrdNoRepetidos; 
+	} // Fin del 9
 
 }
 

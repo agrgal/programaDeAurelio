@@ -199,26 +199,25 @@
 
 #Opciones {
 	overflow:hidden;
-}
-
-#QuieroFotoSN {
-    border: 0px solid black;
-    margin: 2px 10px;
-	float:left;
-	width: 50%;
 	text-align: center;
-	clear: both;
 }
 
-#QuieroFotoSN h3 {
+#QuieroPosNegSN {
+    border: 0px solid black;
+    margin: 2px auto;
+	float:left;
+	width: 56%;
+}
+
+#QuieroPosNegSN h3 {
 	font-size: 0.9em;
 }
 
-#FotoYN {
-	border: 2px solid black;
-	float:left;
+#PosNeg {
+	border: 0px solid black;
+	margin: 2px auto;
+	float: right;
 	width: 40%;
-	clear:both;
 }
 
 #TituloListaDeOpciones {
