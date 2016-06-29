@@ -181,8 +181,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 					</form>
 				</div>
 				<div id="MostrarDatos">	<!-- Aquí se inserta el HTML que muestra los datos -->			
-					<!-- <canvas id="Grafica" width="400" height="200"></canvas> <!-- Gráfica con las estadísticas -->
-					<div id="Grafica"></div>
+					<canvas id="Grafica" width="400" height="200"></canvas> <!-- Gráfica con las estadísticas -->
 				</div>
 			</div>
 			<!-- ********************************************************** -->
@@ -242,12 +241,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
   <!-- <script src="./htmlsuelto/js_menu.js"></script>   Incorpora al script los menús a la izquierda -->  
   <script type="text/javascript" src="./jquery/jqx/jqxcore.js"></script>
   <script type="text/javascript" src="./jquery/jqx/jqx-all.js"></script> 
-  <script type="text/javascript" src="./jquery/fusioncharts/js/fusioncharts.js"></script>
-  <script type="text/javascript" src="./jquery/fusioncharts/js/fusioncharts.js"></script>
-  <script type="text/javascript" src="./jquery/fusioncharts/js/fusioncharts.charts.js"></script>
-  <script type="text/javascript" src="./jquery/fusioncharts/js/themes/fusioncharts.theme.ocean.js"></script>
-    
-  <!-- <script type="text/javascript" src="./jquery/chart/Chart.js"></script> -->
+  <script type="text/javascript" src="./jquery/chart/Chart.js"></script>
   <!-- Owl carousel 
   <script type="text/javascript" src="./owl-carousel/owl.carousel.js"></script>
   <!-- Editor de texto froala. Non commercial use 
@@ -520,8 +514,8 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				   // alert(data);
 			   
 				   // Redibujo un canvas dinámicamente, para poder refrescar datos. No me funciona mejor otra forma...
-				   // $("#Grafica").remove();
-				   // $('#MostrarDatos').append('<canvas id="Grafica" width="400" height="200"></canvas>');	
+				   $("#Grafica").remove();
+				   $('#MostrarDatos').append('<canvas id="Grafica" width="400" height="200"></canvas>');	
 				   
 				   var recupera = jQuery.parseJSON(data);
 				   var etiquetas = recupera.items;
@@ -547,74 +541,51 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 
 				   $.each(posneg, function( index, value ) {
 						// alert( index + ": " + value );
-						if (value==0) { colores.push("FF4040"); }
-						if (value==1) { colores.push("40FF40"); }
-						if (value==2) { colores.push("4D648D"); }
-				   });
-				   
-				   datosJSON=[];
-				   $.each(etiquetas, function( index, value ) {
-						item = {}
-						item ["label"] = value;
-						item ["value"] = datos[index];
-						item ["color"] = colores[index];
-						datosJSON.push(item);
-				   });
-				   
-				   
-				   /* ================================================================================= */
-				   FusionCharts.printManager.enabled(true); // Permite que se habilite la impresión
-  
-				   /* Empieza la gráfica FUSION */
-						var revenueChart = new FusionCharts({
-							"type": "bar2d",
-							"renderAt": "Grafica",
-							"width": "95%",
-							"height": "700px",
-							"dataFormat": "json",
-							"dataSource":  {
-							  "chart": {
-								"baseFontSize": 28, "baseFont":"Times New Roman", // Tamaño de todos los componentes por defecto
-								"bgColor":"#0D504D","bgAlpha":10, // Colores de fondo
-								"canvasBgColor":"#0D504D","canvasBgAlpha":15, // Colores de fondo
-								// "usePlotGradientColor":"1","plotGradientColor":"#ffffff", // Colores de gradientes -> ¿NO FUNCIONA?
-								"caption": $('#condiciones').text(), "captionFontSize": 28,
-								"alignCaptionWithCanvas": 0, // 0-> Alinea con todo el area, no con la gráfica
-								"subCaption": 'Tutoría de la asignación: '+$('#descripcion').attr("title"), // Se carga en barra superior
-								"subcaptionFontSize": 24,
-								"xAxisName": "", "yAxisName": "",
-								"valueFontSize": 24, "valueFontBold":1, "valueFontColor": "202080", // Para los valores dentro de las barras
-								"labelDisplay": "wrap", // "labelFontSize": 24,
-								// "divLineColor":"000000", "divLineThickness":20, "divLineAlpha":100,
-								"showBorder":1, "borderColor":"202080", "borderThickness":3,
-								"plotGradientColor": "",
-								"exportAtClientSide": "1", "exportEnabled": "1",
-								"toolbarButtonWidth":60, "toolbarButtonHeight":60, // , 'toolbarButtonColor'.
-								"toolbarX": "85%", 
-								"exportFileName":"Grafica", "exportShowMenuItem":"1",
-								"exportFormats": "PNG=Imagen de Calidad PNG|PDF=Exportar como PDF|JPG=Imagen JPG",
-								"exportTargetWindow": "_self",
-
-								"theme": "ocean"
-							 },
-							 "data": datosJSON,
-						  }
-
-					  });
-					revenueChart.render();
-					
-					FusionCharts.addEventListener ( 
-						FusionChartsEvents.PrintReadyStateChange , 
-							function (identifier, parameter) {
-								if(parameter.ready){ 
-								alert("Gráfica lista para imprimir");
-								document.getElementById('printButton').disabled = false;
-							}
+						if (value==0) { colores.push("rgba(255,25,25,1)"); }
+						if (value==1) { colores.push("rgba(25,255,25,1)"); }
+						if (value==2) { colores.push("purple"); }
 					});
-
-					/* Termina la gráfica FUSION */
-					/* =================================================================================== */
-
+  
+				   // Datos de la gráfica
+					var tempData = {
+					labels: etiquetas,
+					datasets: [{
+						label: $("#condiciones").html(),
+						backgroundColor: colores,
+						borderColor: colores,
+						borderWidth: 1,
+						hoverBackgroundColor: "black",
+						hoverBorderColor: "white",
+						data: datos,
+						}]
+					};
+					
+					// Opciones de la gráfica
+					var opciones = {
+						scaleFontColor: "rgba(20,255,21,1)",
+						scaleFontSize: 16,
+						title: {
+							display: true,
+							text: 'Gráfica de barra horizontal'
+						},
+						scales: {
+							yAxes: [{stacked: true, categoryPercentage: 0.4, barPercentage: 0.4, position:"left"}],
+							xAxes: [{stacked: true}]
+						}
+					}				   
+			   
+				   		   
+		       
+				   // Activo la gráfica	
+				   Chart.defaults.global.defaultFontSize = 24;
+				   Chart.defaults.global.defaultFontColor = "rgba(20,20,255,1)";
+				   miGrafica = new Chart($("#Grafica"),{
+					   	type: 'horizontalBar',
+					    data: tempData,
+					    options: opciones,
+					});
+					
+					miGrafica.update();
 				   	
 				    // Activar notificación
 				    $("#notificacionObtenido").jqxNotification("open");				   

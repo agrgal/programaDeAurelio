@@ -30,7 +30,25 @@ $opiniones = New misOpiniones(); // variable de la clase opiniones
 
 if ($_POST["SQL"]) {
 	$arrayResultados = $opiniones->itemsEstadistica($_POST["SQL"]);	
-	echo json_encode($arrayResultados);
+	$items=[]; $frecuencias=[]; $posneg=[]; $data=[];
+	foreach ($arrayResultados as $clave=>$valor) {			
+		$retorna = json_decode($opiniones->retornaItem($clave)); 
+		if ($_POST["posneg"]==1 and $retorna->{"positivo"}>=2) {
+			$items[]=$retorna->{"item"}." (".$retorna->{"grupo"}.")";
+			$frecuencias[]=$valor;
+			$posneg[]=2; // color de las barras 
+		} else if ($_POST["posneg"]==0 and $retorna->{"positivo"}<=1) {
+			$items[]=$retorna->{"item"}." (".$retorna->{"grupo"}.")";
+			$frecuencias[]=$valor;
+			if ($retorna->{"positivo"}==0) {$posneg[]=0;} // color de las barras 
+			if ($retorna->{"positivo"}==1) {$posneg[]=1;} // color de las barras 
+		}
+	}
+	$data["items"]=$items;
+	$data["frecuencias"]=$frecuencias;
+	$data["posneg"]=$posneg;
+	echo json_encode($data);
+	// echo json_encode($arrayResultados);
 } // Fin del $_POST...
   
 ?>
