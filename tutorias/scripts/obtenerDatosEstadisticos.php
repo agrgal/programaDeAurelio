@@ -28,9 +28,12 @@ $opiniones = New misOpiniones(); // variable de la clase opiniones
 
 // echo $_POST["SQL"]." - ".$_POST["posneg"];
 
+$data=[];
+$data["tipo"]=0; // por defecto, para que retorne algo, aunque sea tipo cero
+
 if ($_POST["SQL"]) {
 	$arrayResultados = $opiniones->itemsEstadistica($_POST["SQL"]);	
-	$items=[]; $itemspositivos=[]; $itemsnegativos=[]; $frecuencias=[]; $posneg=[]; $data=[]; $negativos=[]; $positivos=[];
+	$items=[]; $itemspositivos=[]; $itemsnegativos=[]; $frecuencias=[]; $posneg=[];  $negativos=[]; $positivos=[];
 	foreach ($arrayResultados as $clave=>$valor) {			
 		$retorna = json_decode($opiniones->retornaItem($clave)); 
 		if ($_POST["posneg"]==1 and $retorna->{"positivo"}>=2) {
@@ -68,12 +71,13 @@ if ($_POST["SQL"]) {
 		$data["promedioNEG"]=round(mediaArray($negativos),2); // definido en FUNCIONES
 		$data["desestandardNEG"]=round(desviaciontipicaArray($negativos),2);
 		$data["varianzaNEG"]=round(varianzaArray($negativos),2);
-	}
-		
-	echo json_encode($data);
+	}	
+
 	// echo json_encode($arrayResultados);
 } // Fin del $_POST...
-  
+
+	echo json_encode($data);
+	
 ?>
 
 

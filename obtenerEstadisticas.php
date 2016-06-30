@@ -522,15 +522,13 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				   // Redibujo un canvas dinámicamente, para poder refrescar datos. No me funciona mejor otra forma...
 				   // $("#Grafica").remove();
 				   // $('#MostrarDatos').append('<canvas id="Grafica" width="400" height="200"></canvas>');	
-				   
 				   var recupera = jQuery.parseJSON(data);
-				   var etiquetas = recupera.items;
 				   
-				   if (etiquetas.length === 0) { // Si no hay resultados
+				   if (recupera.tipo == 0) { // Si no hay resultados
 					   $("#notificacionNoObtenido").jqxNotification("open");	
 					   return; 
 				   }
-				   
+				   				   
 				   $("#pestañas").tabs("enable", 1); // activa la pestaña 1
 				   // $("#MostrarDatos").html('<h1>'+$("#condiciones").html()+'</h1>'+datos); // coloca los datos...
 				   // var sCabecera =  $("#condiciones").html();
@@ -541,6 +539,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				   // $("#sendContenido").val(sContenido);
 				   $('#pestañas a[href="#Datos"]').trigger('click'); // simula el click en la pestaña 1
 				   
+				   var etiquetas = recupera.items;  		   
 				   var datos = recupera.frecuencias;
 				   var posneg = recupera.posneg; 
 				   var colores = [];
@@ -561,10 +560,13 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 						datosJSON.push(item);
 				   });
 				   
-				   /* Estadísticas... Media, etc... */
+				   /* Estadísticas... Media, Desviacion Estándar etc... */
 				   var tipo = recupera.tipo;
 				   if (tipo==1) { // positivo y negativo
-					   
+					   item={}; item["label"]="MEDIA POSITIVOS: "; item["color"]="2D1E6E"; item["value"]=recupera.promedioPOS; datosJSON.push(item);
+					   item={}; item["label"]="DESVIACIÓN ESTÁNDARD POSITIVOS: "; item["color"]="2D1E6E"; item["value"]=recupera.desestandardPOS; datosJSON.push(item);
+					   item={}; item["label"]="MEDIA NEGATIVOS: "; item["color"]="2D1E6E"; item["value"]=recupera.promedioNEG; datosJSON.push(item);
+					   item={}; item["label"]="DESVIACIÓN ESTÁNDARD NEGATIVOS: "; item["color"]="2D1E6E"; item["value"]=recupera.desestandardNEG; datosJSON.push(item);
 				   } else if (tipo==2) { // neutro
 					   item={}; item["label"]="MEDIA:"; item["color"]="2D1E6E"; item["value"]=recupera.promedio; datosJSON.push(item);
 					   item={}; item["label"]="DESVIACIÓN ESTÁNDARD:"; 
@@ -573,14 +575,13 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				   
 				   
 				   /* ================================================================================= */
-				   // FusionCharts.printManager.enabled(true); // Permite que se habilite la impresión
   
 				   /* Empieza la gráfica FUSION */
 						var revenueChart = new FusionCharts({
 							"type": "bar2d",
 							"renderAt": "Grafica",
 							"width": "95%",
-							"height": "700px",
+							"height": "600px",
 							"dataFormat": "json",
 							"dataSource":  {
 							  "chart": {
@@ -602,32 +603,52 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 								"plotGradientColor": "",
 								"exportAtClientSide": "1", "exportEnabled": "1",
 								"toolbarButtonWidth":60, "toolbarButtonHeight":60, // , 'toolbarButtonColor'.
-								"toolbarHAlign":"right", // "toolbarX": "85%", 
+								"toolbarHAlign":"left", // "toolbarX": "85%", 
 								"exportFileName":"Grafica", "exportShowMenuItem":"1",
-								"exportFormats": "PNG=Imagen HQ PNG|PDF=Exportar como PDF|JPG=Imagen JPG",
+								"exportFormats": "PNG=Imagen HQ PNG|PDF=Exportar PDF|JPG=Imagen JPG",
 								"exportTargetWindow": "_self",
 								"chartLeftMargin":20, "chartRightMargin":20, "chartTopMargin":20, "chartBottomMargin":20, 
 								"captionPadding":20,"labelPadding": 20,
 								 //Logo TR -> Top Right... BR, BL, CC
-								"logoURL": "./imagenes/logoA.png","logoAlpha": "20","logoScale": "50","logoPosition": "BL",
+								"logoURL": "./imagenes/logoA.png","logoAlpha": "20","logoScale": "50","logoPosition": "TR",
            						"theme": "ocean"
 							 },
 							 "data": datosJSON,
-						  }
+						  },
+						  "events": {
+							"beforeRender": function(evt, args) {
+								var controllers = document.createElement("div"),
+									labels;
+								controllers.innerHTML = "<label for='set-dimensions-height'>Altura</label>&nbsp;<input id='set-dimensions-height' class='input-small' type='text' value='1000' />&nbsp;&nbsp;<input id='set-dimensions-change' class='resizebtn' type='Button' value='Redimensionar' /><p>Ejemplo: 2000 producirá una ventana de 2000 píxeles de altura, '50%' producirá una ventana de alto 50% de la página web</p>";
+								controllers.style.cssText = "position: inherit;left: 10px;font-family: Verdana, sans;font-size: 24px;font-style: normal;font-weight: bold;";
+								controllers.getElements
+								args.container.appendChild(controllers);
+								labels = controllers.getElementsByTagName("label");
+								for (var i in labels) {
+									labels[i].style.cssText = "display: inline;"
+								}
+							},
+							"renderComplete": function(evt, args) {
+								var setDimensionOnClick = function() {
+										var h = parseInt(document.getElementById("set-dimensions-height").value, 10) || 1000;
+										if (h) {
+											FusionCharts.items[evt.sender.id].resizeTo("95%", h);
+										}
+									},
+									changeBtn = document.getElementById("set-dimensions-change");
+
+								if (changeBtn.addEventListener) {
+									changeBtn.addEventListener("click", setDimensionOnClick);
+								} else {
+									changeBtn.onclick && changeBtn.onclick(setDimensionOnClick);
+								}
+							}
+
+						} // fin del events
 
 					  });
 					revenueChart.render();
 					
-					/*
-					FusionCharts.addEventListener ( 
-						FusionChartsEvents.PrintReadyStateChange , 
-							function (identifier, parameter) {
-								if(parameter.ready){ 
-								alert("Gráfica lista para imprimir");
-								document.getElementById('printButton').disabled = false;
-							}
-					}); */
-
 					/* Termina la gráfica FUSION */
 					/* =================================================================================== */
 

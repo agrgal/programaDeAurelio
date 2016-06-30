@@ -133,7 +133,11 @@ function unoSeptiembre($fechaDada) {
 Dado un array con valores, calculo la media
 ***********************************************************************************************/
 function mediaArray($a) {
-	return array_sum($a)/count($a);
+	if (count($a)>0){
+		return array_sum($a)/count($a);
+	} else {
+		return NULL;
+	}
 }
 
 /* ********************************************************************************************
@@ -142,18 +146,26 @@ Dado un array con valores, calculo la varianza
 function varianzaArray($a) {
   $varianza = 0;
   $media = mediaArray($a);
-  forEach ($a as $clave=>$valor) {
-	  $varianza=$varianza+pow($valor-$media,2);
+  if (!(is_null($media))){
+	  forEach ($a as $clave=>$valor) {
+		  $varianza=$varianza+pow($valor-$media,2);
+	  }
+	  $varianza = $varianza/count($a);
+	  return $varianza;
+  } else {
+	  return NULL;
   }
-  $varianza = $varianza/count($a);
-  return $varianza;
 }
 
 /* ********************************************************************************************
 Dado un array con valores, calculo la desviación típica
 ***********************************************************************************************/
 function desviaciontipicaArray($a) {
-	return sqrt(varianzaArray($a));
+	if(!(is_null(varianzaArray($a)))){
+		return sqrt(varianzaArray($a));
+	} else {
+		return NULL;
+	}
 }
 
 ?>
