@@ -28,6 +28,7 @@ HECHO 15º) En la carpeta PDF se generan temporalmente los pdf a descargar. Los s
 17º) Terminada la presentación de datos. 
 18º) ¿QUÉ OCURRE SI BORRO UNA ASIGNACIÓN? ¿BORRO LOS DATOS, O NO?
 19º) Repasar tamaño ventanas modales de ASIGNACIÓN
+20º) INTENTO instalar funciones estadísticas. ¡Ojo! PHP 7.
 
 
 Includes htmlsuelto

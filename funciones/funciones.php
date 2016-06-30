@@ -128,4 +128,32 @@ function unoSeptiembre($fechaDada) {
 		$fechaUnoSeptiembre=date('Y-m-d',strtotime($anno."-09-01")); // del uno de septiembre de ese año
 		return $fechaUnoSeptiembre;
 }
+
+/* ********************************************************************************************
+Dado un array con valores, calculo la media
+***********************************************************************************************/
+function mediaArray($a) {
+	return array_sum($a)/count($a);
+}
+
+/* ********************************************************************************************
+Dado un array con valores, calculo la varianza
+***********************************************************************************************/
+function varianzaArray($a) {
+  $varianza = 0;
+  $media = mediaArray($a);
+  forEach ($a as $clave=>$valor) {
+	  $varianza=$varianza+pow($valor-$media,2);
+  }
+  $varianza = $varianza/count($a);
+  return $varianza;
+}
+
+/* ********************************************************************************************
+Dado un array con valores, calculo la desviación típica
+***********************************************************************************************/
+function desviaciontipicaArray($a) {
+	return sqrt(varianzaArray($a));
+}
+
 ?>

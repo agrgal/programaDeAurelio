@@ -517,7 +517,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		$("#go").click(function(event,ui){
 			$.when(obtenerDatos()).done(function(data){
 				try { // se reciben en formato de div
-				   // alert(data);
+				   alert(data);
 			   
 				   // Redibujo un canvas dinámicamente, para poder refrescar datos. No me funciona mejor otra forma...
 				   // $("#Grafica").remove();
@@ -547,11 +547,11 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 
 				   $.each(posneg, function( index, value ) {
 						// alert( index + ": " + value );
-						if (value==0) { colores.push("FF4040"); }
-						if (value==1) { colores.push("40FF40"); }
-						if (value==2) { colores.push("4D648D"); }
+						if (value==0) { colores.push("6A1515"); } // rojo, negativo
+						if (value==1) { colores.push("115511"); } // verde, positivo
+						if (value==2) { colores.push("3D2E7E"); } // morado, neutro
 				   });
-				   
+				   				   		   
 				   datosJSON=[];
 				   $.each(etiquetas, function( index, value ) {
 						item = {}
@@ -561,9 +561,19 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 						datosJSON.push(item);
 				   });
 				   
+				   /* Estadísticas... Media, etc... */
+				   var tipo = recupera.tipo;
+				   if (tipo==1) { // positivo y negativo
+					   
+				   } else if (tipo==2) { // neutro
+					   item={}; item["label"]="MEDIA:"; item["color"]="2D1E6E"; item["value"]=recupera.promedio; datosJSON.push(item);
+					   item={}; item["label"]="DESVIACIÓN ESTÁNDARD:"; 
+					            item["color"]="2D1E6E"; item["value"]=recupera.desestandard; datosJSON.push(item);
+				   }
+				   
 				   
 				   /* ================================================================================= */
-				   FusionCharts.printManager.enabled(true); // Permite que se habilite la impresión
+				   // FusionCharts.printManager.enabled(true); // Permite que se habilite la impresión
   
 				   /* Empieza la gráfica FUSION */
 						var revenueChart = new FusionCharts({
@@ -575,27 +585,32 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 							"dataSource":  {
 							  "chart": {
 								"baseFontSize": 28, "baseFont":"Times New Roman", // Tamaño de todos los componentes por defecto
-								"bgColor":"#0D504D","bgAlpha":10, // Colores de fondo
-								"canvasBgColor":"#0D504D","canvasBgAlpha":15, // Colores de fondo
+								"bgColor":"#FFE991","bgAlpha":50, // Colores de fondo
+								"canvasBgColor":"#FFE991","canvasBgAlpha":60, // Colores de fondo
 								// "usePlotGradientColor":"1","plotGradientColor":"#ffffff", // Colores de gradientes -> ¿NO FUNCIONA?
 								"caption": $('#condiciones').text(), "captionFontSize": 28,
 								"alignCaptionWithCanvas": 0, // 0-> Alinea con todo el area, no con la gráfica
 								"subCaption": 'Tutoría de la asignación: '+$('#descripcion').attr("title"), // Se carga en barra superior
 								"subcaptionFontSize": 24,
 								"xAxisName": "", "yAxisName": "",
-								"valueFontSize": 24, "valueFontBold":1, "valueFontColor": "202080", // Para los valores dentro de las barras
+								"valueFontSize": 24, "valueFontBold":1, "valueFontColor": "#FFFFFF", // Para los valores dentro de las barras
 								"labelDisplay": "wrap", // "labelFontSize": 24,
 								// "divLineColor":"000000", "divLineThickness":20, "divLineAlpha":100,
-								"showBorder":1, "borderColor":"202080", "borderThickness":3,
+								"showBorder":1, "borderColor":"9E9789", "borderThickness":3,
+								 //Canvas Border Properties
+								"showCanvasBorder": "1", "canvasBorderColor": "#666666", "canvasBorderThickness": "2", "canvasBorderAlpha": "80",
 								"plotGradientColor": "",
 								"exportAtClientSide": "1", "exportEnabled": "1",
 								"toolbarButtonWidth":60, "toolbarButtonHeight":60, // , 'toolbarButtonColor'.
-								"toolbarX": "85%", 
+								"toolbarHAlign":"right", // "toolbarX": "85%", 
 								"exportFileName":"Grafica", "exportShowMenuItem":"1",
-								"exportFormats": "PNG=Imagen de Calidad PNG|PDF=Exportar como PDF|JPG=Imagen JPG",
+								"exportFormats": "PNG=Imagen HQ PNG|PDF=Exportar como PDF|JPG=Imagen JPG",
 								"exportTargetWindow": "_self",
-
-								"theme": "ocean"
+								"chartLeftMargin":20, "chartRightMargin":20, "chartTopMargin":20, "chartBottomMargin":20, 
+								"captionPadding":20,"labelPadding": 20,
+								 //Logo TR -> Top Right... BR, BL, CC
+								"logoURL": "./imagenes/logoA.png","logoAlpha": "20","logoScale": "50","logoPosition": "BL",
+           						"theme": "ocean"
 							 },
 							 "data": datosJSON,
 						  }
@@ -603,6 +618,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 					  });
 					revenueChart.render();
 					
+					/*
 					FusionCharts.addEventListener ( 
 						FusionChartsEvents.PrintReadyStateChange , 
 							function (identifier, parameter) {
@@ -610,7 +626,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 								alert("Gráfica lista para imprimir");
 								document.getElementById('printButton').disabled = false;
 							}
-					});
+					}); */
 
 					/* Termina la gráfica FUSION */
 					/* =================================================================================== */
