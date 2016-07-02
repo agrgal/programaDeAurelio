@@ -109,6 +109,12 @@ class misAlumnos
 		$this->devuelveAlumno($idal);
 		return $this->esteAlumno["unidad"];
 	}
+	
+	// 3) Devuelve su nombre
+	public function devuelveNombreAlumno ($idal) {
+		$this->devuelveAlumno($idal);
+		return $this->esteAlumno["nombre2"];
+	}
 
 }
 

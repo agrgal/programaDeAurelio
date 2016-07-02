@@ -286,6 +286,22 @@ class misOpiniones
 	    $datosOrdNoRepetidos=array_count_values($datos);	    
 	    return $datosOrdNoRepetidos; 
 	} // Fin del 9
+	
+	// ***********************************************************
+	// 10) Función que acepta una cadena SQL - La misma que la función 9 -
+	// Y retorna información estadistica del resultado POR ALUMNO...
+	public function itemsEstadisticaPorAlumno($cadenaSQL) {
+		$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
+	    $result=mysqli_query($link,$cadenaSQL); // ejecuta la cadena sql y almacena el resultado el $result
+        $cadenaReturn="";
+        while ($row=mysqli_fetch_array($result)) {
+			$cadenaReturn.=$row["alumno"]."-".$row["items"]."*";
+		}
+		mysqli_free_result($result); 
+	    mysqli_close($link); 	    
+	    $cadenaReturn=substr($cadenaReturn,0,strlen($cadenaReturn)-1);
+        return $cadenaReturn; 
+	} // Fin del 10
 
 }
 

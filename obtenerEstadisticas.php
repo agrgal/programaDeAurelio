@@ -96,7 +96,8 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		<div id="pestañas">
             <ul>
 				<li><a href="#FiltrodeDatos">Filtro de Datos</a></li>
-				<li><a href="#Datos">Datos</a></li>
+				<li><a href="#EstITEMS">Estadísticas de items</a></li>
+				<li><a href="#EstALUMNOS">Estadísticas por alumno/a</a></li>
 				<li><a href="#Instrucciones">Instrucciones</a></li>				
 			</ul> 
 			<!-- ********************************************************** -->
@@ -162,6 +163,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 					<p id="condiciones"></p>
 					<h1 style="display: <?php echo $mostrar; ?> ;">Cadena SQL</h1>
 					<p style="display: <?php echo $mostrar; ?> ;" id="SQL"></p> <!-- poner 'none' para ocultarlo -->
+					<!-- <p style="display: <?php echo $mostrar; ?> ;" id="SQL2"></p> <!-- poner 'none' para ocultarlo -->
 					<button id="go">Mostrar Datos</button>
 				</div>
 			</div>
@@ -169,7 +171,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			<!-- ********************************************************** -->
 			<!-- Mostrar los datos que se han filtrado -->
 			<!-- ********************************************************** --> 	
-			<div id="Datos">
+			<div id="EstITEMS">
 				<!-- Dibujo de la impresora -->
 				<div id="printer" title="Imprime resultados" title="Imprime resultados" >
 					<!-- <a id="imprimir" href="./pdf/scripts/listadoResultadosPDF.php" ><img src="./imagenes/iconos/printer_pdf.png"></a> -->
@@ -183,6 +185,15 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				<div id="MostrarDatos">	<!-- Aquí se inserta el HTML que muestra los datos -->			
 					<!-- <canvas id="Grafica" width="400" height="200"></canvas> <!-- Gráfica con las estadísticas -->
 					<div id="Grafica"></div>
+				</div>
+			</div>
+			<!-- ********************************************************** -->
+			<!-- Muestra datos por alumnos -->
+			<!-- ********************************************************** --> 
+			<div id="EstALUMNOS">
+				<div id="MostrarDatos2">	<!-- Aquí se inserta el HTML que muestra los datos -->			
+					<!-- <canvas id="Grafica" width="400" height="200"></canvas> <!-- Gráfica con las estadísticas -->
+					<div id="Grafica2"></div>
 				</div>
 			</div>
 			<!-- ********************************************************** -->
@@ -309,10 +320,12 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			active: 0,
 			create: function(event,ui) {
 				$("#pestañas").tabs("disable", 1); // desactiva la pestaña 1
+				$("#pestañas").tabs("disable", 2); // desactiva la pestaña 1
 			},
 			activate: function(event, ui){ //detecta la pestaña pulsada...
 				if(ui.newTab.index()=='0') { // Si se pulsa la pestaña 0... Filtro de Datos
 					$("#pestañas").tabs("disable", 1); // desactiva la pestaña 1
+					$("#pestañas").tabs("disable", 2); // desactiva la pestaña 1
 				}
 			},
 		}); 
@@ -515,11 +528,78 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		// Pulso el botón de obtención de datos
 		// ************************************
 		$("#go").click(function(event,ui){
-			$.when(obtenerDatos()).done(function(data){
+			$.when(obtenerDatos(),obtenerDatosPorAlumno()).done(function(data1,data2){
 				try { // se reciben en formato de div
-				   alert(data);
-			   
-				   // Redibujo un canvas dinámicamente, para poder refrescar datos. No me funciona mejor otra forma...
+				   alert(data1[0]);
+			       dibujarGraficaA(data1[0]); // primera gráfica. Recupera los valores en el array de datos	
+				} catch(err) {
+				   console.log(err.message);
+				}	
+				// Para la segunda gráfica....
+				try {
+				   alert(data2[0]);			
+				   // dibujarGraficaB(data2[0]); // segunda gráfica	   
+				} catch(err) {
+				   console.log(err.message);
+				}
+			});
+		});  
+		
+	
+		// ************************************
+		// Al hacer click en el icono impresora
+		// ************************************
+
+		$("#imprimir").click(function(event,ui){
+			// alert("Imprime...");
+			document.getElementById("formularioImprimir").submit();
+		}); 
+		
+		
+		// *******************************************
+		// Funciones dentro del document ready
+		// *******************************************
+		function rellenarCondiciones() {
+			var escogerAsignacion = $("#EscogerAsignacion option:selected").text();
+			$("#condiciones").html(escogerAsignacion+", "+ textoFecha.toLowerCase()+". "); // muestra texto
+			// Cadena SQL
+			escogerAsignacion = $( "#EscogerAsignacion option:selected").val();			
+			$("#SQL").html(escogerAsignacion);
+			cadenaSQL = 'SELECT alumno, items FROM tb_opiniones ';
+			$("#SQL").html(fechaINI+" - "+fechaFIN);
+			if (escogerAsignacion>=0 || fechaINI!="#" || fechaFIN!="#") {
+				cadenaSQL = cadenaSQL + "WHERE ";
+			} 			
+			if (escogerAsignacion>0) { cadenaSQL = cadenaSQL + 'asignacion = "'+escogerAsignacion+'" AND ';	}
+			if (escogerAsignacion==0) { // Permite elegir TODAS las asignaciones PERO de mi tutoría....
+				cadenaSQL = cadenaSQL + "(";
+				$("#EscogerAsignacion option").each(function(){
+					if ($(this).val()>0) {cadenaSQL = cadenaSQL + 'asignacion = "'+$(this).val()+'" OR ';}
+				});
+				cadenaSQL = cadenaSQL.slice(0,-4)+") "; // Quitar el último OR y añade paréntesis
+				cadenaSQL = cadenaSQL + ' AND '; // Poner el AND
+			} // Fin del IF de "Todas las asignaciones"
+			// Comprueba se fechaINI > fechaFIN. Si lo es, dar la vuelta
+			if (fechaINI!="#" && fechaFIN!="#" && fechaINI>fechaFIN) {
+					// alert("doy la vuelta"); LANZAR UN MENSAJE
+					// aprovecho la variable ordenado que ya no sirve, para hacer el intercambio.
+					ordenado = fechaINI; fechaINI = fechaFIN; fechaFIN = ordenado;
+			}
+			// Coloca fecha en cadena SQL.			
+			if (fechaINI!="#" && fechaFIN!="#") { cadenaSQL = cadenaSQL + "fecha BETWEEN '"+fechaINI+"' AND '"+fechaFIN+"' AND ";}
+			if (fechaINI!="#" && fechaFIN=="#") { cadenaSQL = cadenaSQL + "fecha> '"+fechaINI+"' AND ";}
+			if (fechaINI=="#" && fechaFIN!="#") { cadenaSQL = cadenaSQL + "fecha< '"+fechaFIN+"' AND ";}			
+			// SELECT * FROM `tb_opiniones` WHERE `fecha` BETWEEN '2015-03-15' AND '2016-05-11' AND `alumno` = 90 AND `asignacion` = 2 
+			if (cadenaSQL.slice(-5)==" AND ") { cadenaSQL = cadenaSQL.slice(0,-5);}
+			// $("#SQL").html(cadenaSQL); // Hasta aquí la claúsula WHERE
+			cadenaSQL = cadenaSQL + " ORDER BY alumno"; // Prefiero ordenar por alumno...
+			$("#SQL").html(cadenaSQL);
+		};		
+		
+		/* **************************************** */
+		/* Dibujar la gráfica de datos estadísticos totales */
+		function dibujarGraficaA(data) {
+				// Redibujo un canvas dinámicamente, para poder refrescar datos. No me funciona mejor otra forma...
 				   // $("#Grafica").remove();
 				   // $('#MostrarDatos').append('<canvas id="Grafica" width="400" height="200"></canvas>');	
 				   var recupera = jQuery.parseJSON(data);
@@ -530,6 +610,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				   }
 				   				   
 				   $("#pestañas").tabs("enable", 1); // activa la pestaña 1
+				   $("#pestañas").tabs("enable", 2); // activa la pestaña 1
 				   // $("#MostrarDatos").html('<h1>'+$("#condiciones").html()+'</h1>'+datos); // coloca los datos...
 				   // var sCabecera =  $("#condiciones").html();
 				   // sCabecera = sCabecera.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
@@ -537,7 +618,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				   // var sContenido = datos;
 				   // sContenido = sContenido.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 				   // $("#sendContenido").val(sContenido);
-				   $('#pestañas a[href="#Datos"]').trigger('click'); // simula el click en la pestaña 1
+				   $('#pestañas a[href="#EstITEMS"]').trigger('click'); // simula el click en la pestaña 1
 				   
 				   var etiquetas = recupera.items;  		   
 				   var datos = recupera.frecuencias;
@@ -552,13 +633,16 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				   });
 				   				   		   
 				   datosJSON=[];
+				   var contar = 100;
 				   $.each(etiquetas, function( index, value ) {
 						item = {}
 						item ["label"] = value;
 						item ["value"] = datos[index];
 						item ["color"] = colores[index];
+						contar = contar + 80; // calcular altura de la gráfica
 						datosJSON.push(item);
 				   });
+				   contarSTR = contar.toString()+"px"
 				   
 				   /* Estadísticas... Media, Desviacion Estándar etc... */
 				   var tipo = recupera.tipo;
@@ -581,7 +665,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 							"type": "bar2d",
 							"renderAt": "Grafica",
 							"width": "95%",
-							"height": "600px",
+							"height": contarSTR,
 							"dataFormat": "json",
 							"dataSource":  {
 							  "chart": {
@@ -619,7 +703,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 							"beforeRender": function(evt, args) {
 								var controllers = document.createElement("div"),
 									labels;
-								controllers.innerHTML = "<label for='set-dimensions-height'>Altura</label>&nbsp;<input id='set-dimensions-height' class='input-small' type='text' value='1000' />&nbsp;&nbsp;<input id='set-dimensions-change' class='resizebtn' type='Button' value='Redimensionar' /><p>Ejemplo: 2000 producirá una ventana de 2000 píxeles de altura, '50%' producirá una ventana de alto 50% de la página web</p>";
+								controllers.innerHTML = "<label for='set-dimensions-height'>Regula la altura de la gráfica</label>&nbsp;<input id='set-dimensions-height' class='input-small' type='text' value='1000' width='8em'/>&nbsp;&nbsp;<input id='set-dimensions-change' class='resizebtn' type='Button' value='Redimensionar' /><p>Ejemplo: 2000 producirá una ventana de 2000 píxeles de altura, '50%' producirá una ventana de alto 50% de la página web</p>";
 								controllers.style.cssText = "position: inherit;left: 10px;font-family: Verdana, sans;font-size: 24px;font-style: normal;font-weight: bold;";
 								controllers.getElements
 								args.container.appendChild(controllers);
@@ -654,63 +738,145 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 
 				   	
 				    // Activar notificación
-				    $("#notificacionObtenido").jqxNotification("open");				   
-				    	   
-				} catch(err) {
-				   console.log(err.message);
-				}	
-			});
-		});  
+				    $("#notificacionObtenido").jqxNotification("open");
+		} // Fin del dibujo de la gráfica A
 		
+/* ------------------------------------------------------------------------------------------------------------- */
+/* - Separando las dos gráficas -------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------- */
+		
+		/* *************************************************** */
+		/* Dibujar la gráfica de datos estadísticos por alumno */
+		function dibujarGraficaB(data) {
 	
-		// ************************************
-		// Al hacer click en el icono impresora
-		// ************************************
+				   var recupera = jQuery.parseJSON(data);
+				   
+				   if (recupera.tipo == 0) { // Si no hay resultados
+					   $("#notificacionNoObtenido").jqxNotification("open");	
+					   return; 
+				   }				   
+		   
+				   var etiquetas = recupera.alumnos;  		   
+				   var datos = recupera.positivos;
+				   // var posneg = recupera.posneg; 
+				   var colores = "3D2E7E";
 
-		$("#imprimir").click(function(event,ui){
-			// alert("Imprime...");
-			document.getElementById("formularioImprimir").submit();
-		}); 
-		
-		
-		// *******************************************
-		// Funciones dentro del document ready
-		// *******************************************
-		function rellenarCondiciones() {
-			var escogerAsignacion = $("#EscogerAsignacion option:selected").text();
-			$("#condiciones").html(escogerAsignacion+", "+ textoFecha.toLowerCase()+". "); // muestra texto
-			// Cadena SQL
-			escogerAsignacion = $( "#EscogerAsignacion option:selected").val();			
-			$("#SQL").html(escogerAsignacion);
-			cadenaSQL = 'SELECT items FROM tb_opiniones ';
-			$("#SQL").html(fechaINI+" - "+fechaFIN);
-			if (escogerAsignacion>=0 || fechaINI!="#" || fechaFIN!="#") {
-				cadenaSQL = cadenaSQL + "WHERE ";
-			} 			
-			if (escogerAsignacion>0) { cadenaSQL = cadenaSQL + 'asignacion = "'+escogerAsignacion+'" AND ';	}
-			if (escogerAsignacion==0) { // Permite elegir TODAS las asignaciones PERO de mi tutoría....
-				cadenaSQL = cadenaSQL + "(";
-				$("#EscogerAsignacion option").each(function(){
-					if ($(this).val()>0) {cadenaSQL = cadenaSQL + 'asignacion = "'+$(this).val()+'" OR ';}
-				});
-				cadenaSQL = cadenaSQL.slice(0,-4)+") "; // Quitar el último OR y añade paréntesis
-				cadenaSQL = cadenaSQL + ' AND '; // Poner el AND
-			} // Fin del IF de "Todas las asignaciones"
-			// Comprueba se fechaINI > fechaFIN. Si lo es, dar la vuelta
-			if (fechaINI!="#" && fechaFIN!="#" && fechaINI>fechaFIN) {
-					// alert("doy la vuelta"); LANZAR UN MENSAJE
-					// aprovecho la variable ordenado que ya no sirve, para hacer el intercambio.
-					ordenado = fechaINI; fechaINI = fechaFIN; fechaFIN = ordenado;
-			}
-			// Coloca fecha en cadena SQL.			
-			if (fechaINI!="#" && fechaFIN!="#") { cadenaSQL = cadenaSQL + "fecha BETWEEN '"+fechaINI+"' AND '"+fechaFIN+"' AND ";}
-			if (fechaINI!="#" && fechaFIN=="#") { cadenaSQL = cadenaSQL + "fecha> '"+fechaINI+"' AND ";}
-			if (fechaINI=="#" && fechaFIN!="#") { cadenaSQL = cadenaSQL + "fecha< '"+fechaFIN+"' AND ";}			
-			// SELECT * FROM `tb_opiniones` WHERE `fecha` BETWEEN '2015-03-15' AND '2016-05-11' AND `alumno` = 90 AND `asignacion` = 2 
-			if (cadenaSQL.slice(-5)==" AND ") { cadenaSQL = cadenaSQL.slice(0,-5);}
-			// $("#SQL").html(cadenaSQL); // Hasta aquí la claúsula WHERE
-			$("#SQL").html(cadenaSQL);
-		};		
+				   /*
+				   $.each(d, function( index, value ) {
+						// alert( index + ": " + value );
+						if (value==0) { colores.push("6A1515"); } // rojo, negativo
+						if (value==1) { colores.push("115511"); } // verde, positivo
+						if (value==2) { colores.push("3D2E7E"); } // morado, neutro
+				   }); */
+				   				   		   
+				   datosJSON=[];
+				   var contar = 100;
+				   $.each(etiquetas, function( index, value ) {
+						item = {}
+						item ["label"] = value;
+						item ["value"] = datos[index];
+						item ["color"] = colores[index];
+						contar = contar + 100; // calcular altura de la gráfica
+						datosJSON.push(item);
+				   });
+				   contarSTR = contar.toString()+"px"
+				   
+				   /* Estadísticas... Media, Desviacion Estándar etc... */
+				   /*
+				   var tipo = recupera.tipo;
+				   if (tipo==1) { // positivo y negativo
+					   item={}; item["label"]="MEDIA POSITIVOS: "; item["color"]="2D1E6E"; item["value"]=recupera.promedioPOS; datosJSON.push(item);
+					   item={}; item["label"]="DESVIACIÓN ESTÁNDARD POSITIVOS: "; item["color"]="2D1E6E"; item["value"]=recupera.desestandardPOS; datosJSON.push(item);
+					   item={}; item["label"]="MEDIA NEGATIVOS: "; item["color"]="2D1E6E"; item["value"]=recupera.promedioNEG; datosJSON.push(item);
+					   item={}; item["label"]="DESVIACIÓN ESTÁNDARD NEGATIVOS: "; item["color"]="2D1E6E"; item["value"]=recupera.desestandardNEG; datosJSON.push(item);
+				   } else if (tipo==2) { // neutro
+					   item={}; item["label"]="MEDIA:"; item["color"]="2D1E6E"; item["value"]=recupera.promedio; datosJSON.push(item);
+					   item={}; item["label"]="DESVIACIÓN ESTÁNDARD:"; 
+					            item["color"]="2D1E6E"; item["value"]=recupera.desestandard; datosJSON.push(item);
+				   } */
+				   
+				   
+				   /* ================================================================================= */
+  
+				   /* Empieza la gráfica FUSION */
+						var revenueChart2 = new FusionCharts({
+							"type": "bar2d",
+							"renderAt": "Grafica2",
+							"width": "95%",
+							"height": contarSTR,
+							"dataFormat": "json",
+							"dataSource":  {
+							  "chart": {
+								"baseFontSize": 28, "baseFont":"Times New Roman", // Tamaño de todos los componentes por defecto
+								"bgColor":"#FFE991","bgAlpha":50, // Colores de fondo
+								"canvasBgColor":"#FFE991","canvasBgAlpha":60, // Colores de fondo
+								// "usePlotGradientColor":"1","plotGradientColor":"#ffffff", // Colores de gradientes -> ¿NO FUNCIONA?
+								"caption": $('#condiciones').text(), "captionFontSize": 28,
+								"alignCaptionWithCanvas": 0, // 0-> Alinea con todo el area, no con la gráfica
+								"subCaption": 'Tutoría de la asignación: '+$('#descripcion').attr("title"), // Se carga en barra superior
+								"subcaptionFontSize": 24,
+								"xAxisName": "", "yAxisName": "",
+								"valueFontSize": 24, "valueFontBold":1, "valueFontColor": "#FFFFFF", // Para los valores dentro de las barras
+								"labelDisplay": "wrap", // "labelFontSize": 24,
+								// "divLineColor":"000000", "divLineThickness":20, "divLineAlpha":100,
+								"showBorder":1, "borderColor":"9E9789", "borderThickness":3,
+								 //Canvas Border Properties
+								"showCanvasBorder": "1", "canvasBorderColor": "#666666", "canvasBorderThickness": "2", "canvasBorderAlpha": "80",
+								"plotGradientColor": "",
+								"exportAtClientSide": "1", "exportEnabled": "1",
+								"toolbarButtonWidth":60, "toolbarButtonHeight":60, // , 'toolbarButtonColor'.
+								"toolbarHAlign":"left", // "toolbarX": "85%", 
+								"exportFileName":"Grafica", "exportShowMenuItem":"1",
+								"exportFormats": "PNG=Imagen HQ PNG|PDF=Exportar PDF|JPG=Imagen JPG",
+								"exportTargetWindow": "_self",
+								"chartLeftMargin":20, "chartRightMargin":20, "chartTopMargin":20, "chartBottomMargin":20, 
+								"captionPadding":20,"labelPadding": 20,
+								 //Logo TR -> Top Right... BR, BL, CC
+								"logoURL": "./imagenes/logoA.png","logoAlpha": "20","logoScale": "50","logoPosition": "TR",
+           						"theme": "ocean"
+							 },
+							 "data": datosJSON,
+						  },
+						  "events": {
+							"beforeRender": function(evt, args) {
+								var controllers = document.createElement("div"),
+									labels;
+								controllers.innerHTML = "<label for='set-dimensions-height2'>Regula la altura de la gráfica</label>&nbsp;<input id='set-dimensions-height2' class='input-small' type='text' value='1000' width='8em'/>&nbsp;&nbsp;<input id='set-dimensions-change2' class='resizebtn' type='Button' value='Redimensionar' /><p>Ejemplo: 2000 producirá una ventana de 2000 píxeles de altura, '50%' producirá una ventana de alto 50% de la página web</p>";
+								controllers.style.cssText = "position: inherit;left: 10px;font-family: Verdana, sans;font-size: 24px;font-style: normal;font-weight: bold;";
+								controllers.getElements
+								args.container.appendChild(controllers);
+								labels = controllers.getElementsByTagName("label");
+								for (var i in labels) {
+									labels[i].style.cssText = "display: inline;"
+								}
+							},
+							"renderComplete": function(evt, args) {
+								var setDimensionOnClick2 = function() {
+										var h = parseInt(document.getElementById("set-dimensions-height2").value, 10) || 1000;
+										if (h) {
+											FusionCharts.items[evt.sender.id].resizeTo("95%", h);
+										}
+									},
+									changeBtn = document.getElementById("set-dimensions-change2");
+
+								if (changeBtn.addEventListener) {
+									changeBtn.addEventListener("click", setDimensionOnClick2);
+								} else {
+									changeBtn.onclick && changeBtn.onclick(setDimensionOnClick2);
+								}
+							}
+
+						} // fin del events
+
+					  });
+					revenueChart2.render();
+					
+					/* Termina la gráfica FUSION */
+					/* =================================================================================== */
+				   	
+				    // Activar notificación
+				    // $("#notificacionObtenido").jqxNotification("open");
+		} // Fin del dibujo de la gráfica B
 		
 		// ***************************
 		// Tras cargarlo todo. Inicio.
@@ -739,6 +905,27 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		      data: { 
 			  SQL: $("#SQL").text(),
 			  posneg: PosNegSN,
+		      },
+		      success: function(data, textStatus, jqXHR){ 			  
+				// alert(data);
+				return data;
+		      },
+		  });
+	  } // Fin de la función Obtener datos del filtro  
+	  
+	  //************************************
+	 // F2) Obtener datos del filtro por Alumno
+	 function obtenerDatosPorAlumno() {
+		 // alert($("#SQL").text());
+		 console.log("****************** Obtiene SQL *******************");
+		 console.log("SQL: "+$("#SQL").text());
+		 console.log("Fotos: ");
+		 return $.ajax({
+			  type: 'POST',
+			  dataType: 'text',	
+		      url: "./tutorias/scripts/obtenerDatosEstadisticosPorAlumno.php", // En el script se construye la tabla...
+		      data: { 
+			  SQL: $("#SQL").text(),
 		      },
 		      success: function(data, textStatus, jqXHR){ 			  
 				// alert(data);

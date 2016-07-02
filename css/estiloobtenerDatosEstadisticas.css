@@ -49,14 +49,14 @@
 	height: auto;
 }
 
-#MostrarDatos {
+#MostrarDatos, #MostrarDatos2 {
 	overflow: hidden;
 	border: 0px solid orange;
 	margin: 4px auto;
 	text-align: center;
 }
 
-#MostrarDatos h1 {
+#MostrarDatos h1, #MostrarDatos2 h1{
   font-size: 1.3em;
   font-weight: bold;
   /* vertical-align: text-bottom; */
