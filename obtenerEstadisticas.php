@@ -173,15 +173,16 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			<!-- ********************************************************** --> 	
 			<div id="EstITEMS">
 				<!-- Dibujo de la impresora -->
+				<!-- 
 				<div id="printer" title="Imprime resultados" title="Imprime resultados" >
 					<!-- <a id="imprimir" href="./pdf/scripts/listadoResultadosPDF.php" ><img src="./imagenes/iconos/printer_pdf.png"></a> -->
-					<form id="formularioImprimir" action="./pdf/scripts/listadoResultadosPDF.php" method="POST">
+					<!-- <form id="formularioImprimir" action="./pdf/scripts/listadoResultadosPDF.php" method="POST">
 						<input id="sendCabecera" name="sendCabecera" type="text" style="display: none;" value="">
 						<input id="sendContenido" name="sendContenido" type="text" style="display: none;" value="">
 						<!-- <button type="submit"><img src="./imagenes/iconos/printer_pdf.png"></button> -->
-						<a id="imprimir" ><img src="./imagenes/iconos/printer_pdf.png"></a>
+						<!-- <a id="imprimir" ><img src="./imagenes/iconos/printer_pdf.png"></a>
 					</form>
-				</div>
+				</div> -->
 				<div id="MostrarDatos">	<!-- Aquí se inserta el HTML que muestra los datos -->			
 					<!-- <canvas id="Grafica" width="400" height="200"></canvas> <!-- Gráfica con las estadísticas -->
 					<div id="Grafica"></div>
@@ -530,14 +531,14 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		$("#go").click(function(event,ui){
 			$.when(obtenerDatos(),obtenerDatosPorAlumno()).done(function(data1,data2){
 				try { // se reciben en formato de div
-				   alert(data1[0]);
+				   // alert(data1[0]);
 			       dibujarGraficaA(data1[0]); // primera gráfica. Recupera los valores en el array de datos	
 				} catch(err) {
 				   console.log(err.message);
 				}	
 				// Para la segunda gráfica....
 				try {
-				   alert(data2[0]);			
+				   // alert(data2[0]);			
 				   dibujarGraficaB(data2[0]); // segunda gráfica	   
 				} catch(err) {
 				   console.log(err.message);
@@ -787,21 +788,8 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 					      else {item ["value"]=-0.1; item["showValue"]="0"; item["tooltext"]= "-";} // esto lo dibuja siempre a la izquierda si es cero;
 					   datosNegativos.push(item);
 				   });
-				   
-				   /* Estadísticas... Media, Desviacion Estándar etc... */
-				   /*
-				   var tipo = recupera.tipo;
-				   if (tipo==1) { // positivo y negativo
-					   item={}; item["label"]="MEDIA POSITIVOS: "; item["color"]="2D1E6E"; item["value"]=recupera.promedioPOS; datosJSON.push(item);
-					   item={}; item["label"]="DESVIACIÓN ESTÁNDARD POSITIVOS: "; item["color"]="2D1E6E"; item["value"]=recupera.desestandardPOS; datosJSON.push(item);
-					   item={}; item["label"]="MEDIA NEGATIVOS: "; item["color"]="2D1E6E"; item["value"]=recupera.promedioNEG; datosJSON.push(item);
-					   item={}; item["label"]="DESVIACIÓN ESTÁNDARD NEGATIVOS: "; item["color"]="2D1E6E"; item["value"]=recupera.desestandardNEG; datosJSON.push(item);
-				   } else if (tipo==2) { // neutro
-					   item={}; item["label"]="MEDIA:"; item["color"]="2D1E6E"; item["value"]=recupera.promedio; datosJSON.push(item);
-					   item={}; item["label"]="DESVIACIÓN ESTÁNDARD:"; 
-					            item["color"]="2D1E6E"; item["value"]=recupera.desestandard; datosJSON.push(item);
-				   } */
-				   
+
+					// Medias, desviación estándard, etc... Se obtiene en obtenerDatosEstadisticosPorAlumno...
 				   
 				   /* ================================================================================= */
   
@@ -846,7 +834,8 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 										"yaxisminvalue": -1*(recupera.maxnegativos+2),
 										"yaxismaxvalue": (recupera.maxpositivos+2),
 										"valueFontSize": 24, "valueFontBold":1, "valueFontColor": "#FFFFFF", // Para los valores dentro de las barras										
-										"showborder": "1",							
+										"plotHighlightEffect": "fadeout", "legendIconScale":3, "legendItemFontSize": 24,
+										"showborder": "1",											
 									},
 									"categories": [	{"category": datosCategoria,}], // fin de CATEGORIES
 									"dataset": [
@@ -954,6 +943,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		      url: "./tutorias/scripts/obtenerDatosEstadisticosPorAlumno.php", // En el script se construye la tabla...
 		      data: { 
 			  SQL: $("#SQL").text(),
+			  asignacion: $("#EscogerAsignacion option:selected").val(),
 		      },
 		      success: function(data, textStatus, jqXHR){ 			  
 				// alert(data);

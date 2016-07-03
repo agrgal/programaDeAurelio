@@ -33,22 +33,25 @@ $data["tipo"]=0; // por defecto, para que retorne algo, aunque sea tipo cero
 
 if ($_POST["SQL"]) {
 	$arrayResultados = $opiniones->itemsEstadistica($_POST["SQL"]);	
-	$items=[]; $itemspositivos=[]; $itemsnegativos=[]; $frecuencias=[]; $posneg=[];  $negativos=[]; $positivos=[];
-	foreach ($arrayResultados as $clave=>$valor) {			
-		$retorna = json_decode($opiniones->retornaItem($clave)); 
-		if ($_POST["posneg"]==1 and $retorna->{"positivo"}>=2) {
-			$data["tipo"]=2; // tipo de gráfica
-			$items[]=$retorna->{"item"}." (".$retorna->{"grupo"}.")";
-			$frecuencias[]=$valor;
-			$posneg[]=2; // color de las barras 
-		} else if ($_POST["posneg"]==0 and $retorna->{"positivo"}<=1) {
-			$data["tipo"]=1; // tipo de gráfica
-			// $items[]=$retorna->{"item"}." (".$retorna->{"grupo"}.")";
-			// $frecuencias[]=$valor;
-			if ($retorna->{"positivo"}==0) { $negativos[]=$valor; $itemsnegativos[]=$retorna->{"item"}." (".$retorna->{"grupo"}.")"; } // asignacion por tipos
-			if ($retorna->{"positivo"}==1) { $positivos[]=$valor; $itemspositivos[]=$retorna->{"item"}." (".$retorna->{"grupo"}.")"; } // asignacion por tipos
+	$data["numeroResultados"]=json_encode($arrayResultados); // visualización de lo obtenido
+	if (count($arrayResultados)>0) {
+		$items=[]; $itemspositivos=[]; $itemsnegativos=[]; $frecuencias=[]; $posneg=[];  $negativos=[]; $positivos=[];
+		foreach ($arrayResultados as $clave=>$valor) {			
+			$retorna = json_decode($opiniones->retornaItem($clave)); 
+			if ($_POST["posneg"]==1 and $retorna->{"positivo"}>=2) {
+				$data["tipo"]=2; // tipo de gráfica
+				$items[]=$retorna->{"item"}." (".$retorna->{"grupo"}.")";
+				$frecuencias[]=$valor;
+				$posneg[]=2; // color de las barras 
+			} else if ($_POST["posneg"]==0 and $retorna->{"positivo"}<=1) {
+				$data["tipo"]=1; // tipo de gráfica
+				// $items[]=$retorna->{"item"}." (".$retorna->{"grupo"}.")";
+				// $frecuencias[]=$valor;
+				if ($retorna->{"positivo"}==0) { $negativos[]=$valor; $itemsnegativos[]=$retorna->{"item"}." (".$retorna->{"grupo"}.")"; } // asignacion por tipos
+				if ($retorna->{"positivo"}==1) { $positivos[]=$valor; $itemspositivos[]=$retorna->{"item"}." (".$retorna->{"grupo"}.")"; } // asignacion por tipos
+			}
 		}
-	}
+	} // Fin del IF...
 	
 	// valores
 	if ($data["tipo"]==2) {

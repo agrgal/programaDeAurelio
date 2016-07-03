@@ -128,6 +128,7 @@ class misAsignaciones
 	}
 	// **********************************************************
 	
+
 	// 5a) Función que, dada un alumno , retorna un listado de asignaciones a las que pertenece dicho alumno.
 	// Tiene que retornar una retahíla id1#id2#id3#.... de índices de ASIGNACIONES.
 	public function devuelveAsignacionesDondeEstaUnAlumno ($idal) {

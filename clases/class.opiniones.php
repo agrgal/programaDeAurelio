@@ -270,7 +270,7 @@ class misOpiniones
 	public function itemsEstadistica($cadenaSQL) {
 		$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
 	    $result=mysqli_query($link,$cadenaSQL); // ejecuta la cadena sql y almacena el resultado el $result
-        $cadenaReturn="";
+        $cadenaReturn=null;
         while ($row=mysqli_fetch_array($result)) {
 			if (strlen($row["items"])>0) { // si no lo recupera, el valor por defecto)
 				  	$cadenaReturn.=$row["items"]."#";
@@ -278,13 +278,17 @@ class misOpiniones
 		}
 		mysqli_free_result($result); 
 	    mysqli_close($link); 	    
-	    $cadenaReturn=substr($cadenaReturn,0,strlen($cadenaReturn)-1);
-	    // return $cadenaReturn;
-	    $datos= explode("#",$cadenaReturn); // convierte la cadena en array
-	    asort($datos);
-	    // $datosOrdNoRepetidos = array_unique($datos,SORT_NUMERIC);	    
-	    $datosOrdNoRepetidos=array_count_values($datos);	    
-	    return $datosOrdNoRepetidos; 
+	    if (!is_null($cadenaReturn)) {
+			$cadenaReturn=substr($cadenaReturn,0,strlen($cadenaReturn)-1);
+			// return $cadenaReturn;
+			$datos= explode("#",$cadenaReturn); // convierte la cadena en array
+			asort($datos);
+			// $datosOrdNoRepetidos = array_unique($datos,SORT_NUMERIC);	    
+			$datosOrdNoRepetidos=array_count_values($datos);	    
+			return $datosOrdNoRepetidos;
+		} else {
+			return NULL;
+		}
 	} // Fin del 9
 	
 	// ***********************************************************
@@ -293,14 +297,18 @@ class misOpiniones
 	public function itemsEstadisticaPorAlumno($cadenaSQL) {
 		$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
 	    $result=mysqli_query($link,$cadenaSQL); // ejecuta la cadena sql y almacena el resultado el $result
-        $cadenaReturn="";
+        $cadenaReturn=null;
         while ($row=mysqli_fetch_array($result)) {
 			$cadenaReturn.=$row["alumno"]."-".$row["items"]."*";
 		}
 		mysqli_free_result($result); 
-	    mysqli_close($link); 	    
-	    $cadenaReturn=substr($cadenaReturn,0,strlen($cadenaReturn)-1);
-        return $cadenaReturn; 
+	    mysqli_close($link); 
+	    if (!is_null($cadenaReturn)) {	    
+			$cadenaReturn=substr($cadenaReturn,0,strlen($cadenaReturn)-1);
+			return $cadenaReturn; 
+	    } else {
+			return null;	
+		}
 	} // Fin del 10
 
 }
