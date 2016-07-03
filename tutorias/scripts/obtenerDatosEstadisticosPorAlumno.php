@@ -100,12 +100,12 @@ if ($_POST["SQL"]) {
 		if ($medida<=0) { $medida = round($medida*100/(array_sum($itemsnegativos)+0.1),2); }
 		
 		// Mostrar las medias
-		$alumnNombres[]="MEDIAS";
+		$alumnNombres[]="MEDIAS [POS:".round($mediapositivos,2)." , NEG:".round($medianegativos,2)."]";
 		$itemspositivos[]=round($mediapositivos,2);
 		$itemsnegativos[]=round($medianegativos,2);
 		
 		// Mostrar las desviaciones típicas
-		$alumnNombres[]="DESVIACIONES TÍPICAS";
+		$alumnNombres[]="DES.EST. [POS:".round($desviaciontipicapositivos,2)." , NEG:".round($desviaciontipicanegativos,2)."]";
 		$itemspositivos[]=round($desviaciontipicapositivos,2);
 		$itemsnegativos[]=round($desviaciontipicanegativos,2);
 		

@@ -775,16 +775,16 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				   datosPositivos=[];
 				   $.each(positivos, function( index, value ) {
 					   item = {};
-					   item ["value"] = value;
-					   if (value>0) {item["showValue"]="1";item["tooltext"]= value.toString()+" valores positivos ("+datosCategoria[index].label+")"; } 
+					   item ["value"] = value; // No muestra números menores que 1.
+					   if (value>=1) {item["showValue"]="1";item["tooltext"]= value.toString()+" valores positivos ("+datosCategoria[index].label+")"; } 
 						  else {item["showValue"]="0"; item["tooltext"]= "-";} // POR FIN: esa etiqueta muestra o no los valores.
 					   datosPositivos.push(item);
 				   });
 				   
 				   datosNegativos=[];
 				   $.each(negativos, function( index, value ) {
-					   item = {}
-					   if (value>0) {item ["value"] = -1*value; item["showValue"]="1"; item["tooltext"]= value.toString()+" valores negativos ("+datosCategoria[index].label+")";} 
+					   item = {} // No muestra números menores que 1.
+					   if (value>=1) {item ["value"] = -1*value; item["showValue"]="1"; item["tooltext"]= value.toString()+" valores negativos ("+datosCategoria[index].label+")";} 
 					      else {item ["value"]=-0.1; item["showValue"]="0"; item["tooltext"]= "-";} // esto lo dibuja siempre a la izquierda si es cero;
 					   datosNegativos.push(item);
 				   });
