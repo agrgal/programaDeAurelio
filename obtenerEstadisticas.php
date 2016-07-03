@@ -538,7 +538,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				// Para la segunda gráfica....
 				try {
 				   alert(data2[0]);			
-				   // dibujarGraficaB(data2[0]); // segunda gráfica	   
+				   dibujarGraficaB(data2[0]); // segunda gráfica	   
 				} catch(err) {
 				   console.log(err.message);
 				}
@@ -695,6 +695,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 								"captionPadding":20,"labelPadding": 20,
 								 //Logo TR -> Top Right... BR, BL, CC
 								"logoURL": "./imagenes/logoA.png","logoAlpha": "20","logoScale": "50","logoPosition": "TR",
+								"tooltipbgcolor": "F3F3F3",	"tooltipbordercolor": "111111", "tooltipcolor": "000000",
            						"theme": "ocean"
 							 },
 							 "data": datosJSON,
@@ -757,29 +758,35 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				   }				   
 		   
 				   var etiquetas = recupera.alumnos;  		   
-				   var datos = recupera.positivos;
-				   // var posneg = recupera.posneg; 
-				   var colores = "3D2E7E";
-
-				   /*
-				   $.each(d, function( index, value ) {
-						// alert( index + ": " + value );
-						if (value==0) { colores.push("6A1515"); } // rojo, negativo
-						if (value==1) { colores.push("115511"); } // verde, positivo
-						if (value==2) { colores.push("3D2E7E"); } // morado, neutro
-				   }); */
-				   				   		   
-				   datosJSON=[];
+				   var positivos = recupera.positivos;
+				   var negativos = recupera.negativos;
+		   				   		   
+				   datosCategoria=[];
 				   var contar = 100;
 				   $.each(etiquetas, function( index, value ) {
-						item = {}
+						item = {};
 						item ["label"] = value;
-						item ["value"] = datos[index];
-						item ["color"] = colores[index];
-						contar = contar + 100; // calcular altura de la gráfica
-						datosJSON.push(item);
+						contar = contar + 80; // calcular altura de la gráfica
+						datosCategoria.push(item);
 				   });
-				   contarSTR = contar.toString()+"px"
+				   contarSTR = contar.toString()+"px";
+				   
+				   datosPositivos=[];
+				   $.each(positivos, function( index, value ) {
+					   item = {};
+					   item ["value"] = value;
+					   if (value>0) {item["showValue"]="1";item["tooltext"]= value.toString()+" valores positivos ("+datosCategoria[index].label+")"; } 
+						  else {item["showValue"]="0"; item["tooltext"]= "-";} // POR FIN: esa etiqueta muestra o no los valores.
+					   datosPositivos.push(item);
+				   });
+				   
+				   datosNegativos=[];
+				   $.each(negativos, function( index, value ) {
+					   item = {}
+					   if (value>0) {item ["value"] = -1*value; item["showValue"]="1"; item["tooltext"]= value.toString()+" valores negativos ("+datosCategoria[index].label+")";} 
+					      else {item ["value"]=-0.1; item["showValue"]="0"; item["tooltext"]= "-";} // esto lo dibuja siempre a la izquierda si es cero;
+					   datosNegativos.push(item);
+				   });
 				   
 				   /* Estadísticas... Media, Desviacion Estándar etc... */
 				   /*
@@ -800,43 +807,63 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
   
 				   /* Empieza la gráfica FUSION */
 						var revenueChart2 = new FusionCharts({
-							"type": "bar2d",
+							"type": "stackedbar2d",
 							"renderAt": "Grafica2",
 							"width": "95%",
 							"height": contarSTR,
 							"dataFormat": "json",
 							"dataSource":  {
-							  "chart": {
-								"baseFontSize": 28, "baseFont":"Times New Roman", // Tamaño de todos los componentes por defecto
-								"bgColor":"#FFE991","bgAlpha":50, // Colores de fondo
-								"canvasBgColor":"#FFE991","canvasBgAlpha":60, // Colores de fondo
-								// "usePlotGradientColor":"1","plotGradientColor":"#ffffff", // Colores de gradientes -> ¿NO FUNCIONA?
-								"caption": $('#condiciones').text(), "captionFontSize": 28,
-								"alignCaptionWithCanvas": 0, // 0-> Alinea con todo el area, no con la gráfica
-								"subCaption": 'Tutoría de la asignación: '+$('#descripcion').attr("title"), // Se carga en barra superior
-								"subcaptionFontSize": 24,
-								"xAxisName": "", "yAxisName": "",
-								"valueFontSize": 24, "valueFontBold":1, "valueFontColor": "#FFFFFF", // Para los valores dentro de las barras
-								"labelDisplay": "wrap", // "labelFontSize": 24,
-								// "divLineColor":"000000", "divLineThickness":20, "divLineAlpha":100,
-								"showBorder":1, "borderColor":"9E9789", "borderThickness":3,
-								 //Canvas Border Properties
-								"showCanvasBorder": "1", "canvasBorderColor": "#666666", "canvasBorderThickness": "2", "canvasBorderAlpha": "80",
-								"plotGradientColor": "",
-								"exportAtClientSide": "1", "exportEnabled": "1",
-								"toolbarButtonWidth":60, "toolbarButtonHeight":60, // , 'toolbarButtonColor'.
-								"toolbarHAlign":"left", // "toolbarX": "85%", 
-								"exportFileName":"Grafica", "exportShowMenuItem":"1",
-								"exportFormats": "PNG=Imagen HQ PNG|PDF=Exportar PDF|JPG=Imagen JPG",
-								"exportTargetWindow": "_self",
-								"chartLeftMargin":20, "chartRightMargin":20, "chartTopMargin":20, "chartBottomMargin":20, 
-								"captionPadding":20,"labelPadding": 20,
-								 //Logo TR -> Top Right... BR, BL, CC
-								"logoURL": "./imagenes/logoA.png","logoAlpha": "20","logoScale": "50","logoPosition": "TR",
-           						"theme": "ocean"
-							 },
-							 "data": datosJSON,
-						  },
+								 "chart": {
+									    "baseFontSize": 28, "baseFont":"Times New Roman", // Tamaño de todos los componentes por defecto
+										"bgColor":"#FFE991","bgAlpha":50, // Colores de fondo
+										"canvasBgColor":"#FFE991","canvasBgAlpha":60, // Colores de fondo
+										// "usePlotGradientColor":"1","plotGradientColor":"#ffffff", // Colores de gradientes -> ¿NO FUNCIONA?
+										"caption": $('#condiciones').text(), "captionFontSize": 28,
+										"alignCaptionWithCanvas": 0, // 0-> Alinea con todo el area, no con la gráfica
+										"subCaption": 'Tutoría de la asignación: '+$('#descripcion').attr("title"), // Se carga en barra superior
+										"subcaptionFontSize": 24,
+										"xAxisName": "", "yAxisName": "",
+										"labelDisplay": "wrap", // "labelFontSize": 24,
+										// "divLineColor":"000000", "divLineThickness":20, "divLineAlpha":100,
+										"showBorder":1, "borderColor":"9E9789", "borderThickness":3,
+										 //Canvas Border Properties
+										"showCanvasBorder": "1", "canvasBorderColor": "#666666", "canvasBorderThickness": "2", "canvasBorderAlpha": "80",
+										"plotGradientColor": "",
+										"exportAtClientSide": "1", "exportEnabled": "1",
+										"toolbarButtonWidth":60, "toolbarButtonHeight":60, // , 'toolbarButtonColor'.
+										"toolbarHAlign":"left", // "toolbarX": "85%", 
+										"exportFileName":"Grafica", "exportShowMenuItem":"1",
+										"exportFormats": "PNG=Imagen HQ PNG|PDF=Exportar PDF|JPG=Imagen JPG",
+										"exportTargetWindow": "_self",
+										"chartLeftMargin":20, "chartRightMargin":20, "chartTopMargin":20, "chartBottomMargin":20, 
+										"captionPadding":20,"labelPadding": 20,
+										 //Logo TR -> Top Right... BR, BL, CC
+										"logoURL": "./imagenes/logoA.png","logoAlpha": "20","logoScale": "50","logoPosition": "TR",
+										"theme": "ocean",
+										"tooltipbgcolor": "F3F3F3",	"tooltipbordercolor": "111111", "tooltipcolor": "000000",
+       									"animation": "1",
+										"numdivlines": "2",
+										"yaxisminvalue": -1*(recupera.maxnegativos+2),
+										"yaxismaxvalue": (recupera.maxpositivos+2),
+										"valueFontSize": 24, "valueFontBold":1, "valueFontColor": "#FFFFFF", // Para los valores dentro de las barras										
+										"showborder": "1",							
+									},
+									"categories": [	{"category": datosCategoria,}], // fin de CATEGORIES
+									"dataset": [
+										{ // primera serie de datos
+											"seriesname": "Positivos",
+											"color": "115511",
+											"data": datosPositivos,
+										},
+										{ // Segunda serie de datos
+											"seriesname": "Negativos",
+											"color": "6A1515",
+											"data": datosNegativos,
+										},
+	
+									] // fin del dataset
+									
+						     }, // Fin del data source
 						  "events": {
 							"beforeRender": function(evt, args) {
 								var controllers = document.createElement("div"),
@@ -869,6 +896,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 						} // fin del events
 
 					  });
+					
 					revenueChart2.render();
 					
 					/* Termina la gráfica FUSION */

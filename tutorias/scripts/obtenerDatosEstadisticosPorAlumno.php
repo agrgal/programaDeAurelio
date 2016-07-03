@@ -33,13 +33,39 @@ $data["tipo"]=0; // por defecto, para que retorne algo, aunque sea tipo cero
 
 if ($_POST["SQL"]) {
 	$arrayResultados = $opiniones->itemsEstadisticaPorAlumno($_POST["SQL"]);	
-	$alum=[]; $itemspositivos=[]; $itemsnegativos=[];
+	$alum=[]; $itemspositivos=[]; $itemsnegativos=[]; $cadenas=[]; $items=[]; $alumnNombres=[];
 	// Separo cada alumno de los demás
 	$resultados=explode("*",$arrayResultados);
+	// 1º) Obtiene una lista de todos los datos
 	foreach ($resultados as $clave=>$valor) {
 		$dato=explode("-",$valor);
-		$alumn[]=iconv("ISO-8859-15", "UTF-8",$alumnos->devuelveNombreAlumno($dato[0]));
-		$cadenaitems=explode("#",$dato[1]);
+		// $alumn[]=iconv("ISO-8859-15", "UTF-8",$alumnos->devuelveNombreAlumno($dato[0]));
+		$alumn[]=$dato[0]; //
+		$cadenas[]=$dato[1];
+	} // Fin del foreach
+	// 2º) alumnado cadenas únicas. Ordenado.
+	$alumnadoNoRepetido=array_unique($alumn); sort($alumnadoNoRepetido);
+	// 3º) Por cada alumnado no repetido, consigo en items una cadena 
+	foreach ($alumnadoNoRepetido as $clave => $valor) {
+		$items[$clave]="";
+		$alumnNombres[]=iconv("ISO-8859-15", "UTF-8",$alumnos->devuelveNombreAlumno($valor));
+		foreach ($alumn as $clave2 => $valor2) { // por cada alumno
+			if ($valor==$valor2) {
+				if (strlen($cadenas[$clave2])>0) { $items[$clave].=$cadenas[$clave2]."#";}
+			}
+		} // fin del foreach de cada alumno
+		
+		if (strlen($items[$clave])>0 and substr($items[$clave],-1)=="#") {	
+			$items[$clave]=substr($items[$clave],0,strlen($items[$clave])-1); 
+		} // Quitar el último #
+				
+	} // Fin del foreach de cada alumnado no repetido
+	
+
+	// 4º) Extraer los datos de los positivos y negativos
+
+    foreach ($items as $clave => $valor) {	
+		$cadenaitems=explode("#",$valor); 
 		$pos=0; $neg=0;
 		foreach ($cadenaitems as $clave2=>$valor2) {
 			if (!is_null($valor2)) {
@@ -49,15 +75,27 @@ if ($_POST["SQL"]) {
 				if ($informacionItem->{"positivo"}==1 and !is_null($informacionItem->{"positivo"})) { $pos+=1; }	// Suma uno si es positivo
 			}
 		} // Fin del for each de cadena de items...
-		$itemspositivos[]=$pos;
-		$itemsnegativos[]=$neg;
-	} // Fin del for each de resultados
-	$data["alumnos"]= $alumn;	
-	$data["positivos"]=$itemspositivos;
-	$data["negativos"]=$itemsnegativos;
+		$itemspositivos[$clave]=$pos;
+		$itemsnegativos[$clave]=$neg; 
+	 } // Fin del for each de resultados 
+		
+	// $data["alumnos"]= $alumn;	
+	// $data["positivos"]=$cadenas;
+	
+	$data["alumnos"]= $alumnNombres;	// Alumnos sin repetir, sus nombres
+	// $data["positivos"]=$items;
+	
+	// $data["alumnos"]= $alumn;	
+	$data["positivos"]=$itemspositivos; // Items positivos
+	$data["negativos"]=$itemsnegativos; // Items negativos
+	
+	// información estadística
+	$data["maxpositivos"]=max($itemspositivos); // máximo de otro
+	$data["maxnegativos"]=max($itemsnegativos); // máximo de uno
+	
 } // Fin del $_POST...
 
-	echo json_encode($arrayResultados);
+	echo json_encode($data);
 	
 ?>
 
