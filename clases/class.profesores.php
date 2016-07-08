@@ -8,6 +8,7 @@ class profesores
 	var $Empleado;	
 	var $listaprofesorado; 
 	var $DNI;
+	var $Email;
 
 
     // *******************************************
@@ -17,6 +18,26 @@ class profesores
 		// las funciones se deben llamar desde la página original
 		$this->Empleado = dado_Id($this->idprofesor,"Empleado","tb_profesores","idprofesor");
 		return $this->Empleado;
+	}
+	// *******************************************
+	
+	// *******************************************
+    // 1BIS) retorna el email del profesor dado su id
+	function profesorEmail()
+	{
+		// las funciones se deben llamar desde la página original
+		$this->Email = dado_Id($this->idprofesor,"email","tb_profesores","idprofesor");
+		return $this->Email;
+	}
+	// *******************************************
+	
+	// *******************************************
+    // 1BIS) retorna la contraseña del profesor dado su id
+	function profesorDNI()
+	{
+		// las funciones se deben llamar desde la página original
+		$this->DNI = dado_Id($this->idprofesor,"DNI","tb_profesores","idprofesor");
+		return $this->DNI;
 	}
 	// *******************************************
 	

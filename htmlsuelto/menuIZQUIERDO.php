@@ -15,7 +15,9 @@ session_start();
 				echo '<li><a href="./opiniones.php">Opiniones alumno por alumno</a></li>';
 				echo '<li><a href="./opinionesHistorico.php">Histórico de opiniones</a></li>';
 				echo '<li><a href="./opinionesGenerales.php">Opinión General de una clase</a></li>';
+				// echo '<li><a href="./cambioDatos.php">Cambiar contraseña y correo electrónico</a></li>';
 		    }
+		    echo '<li><a href="./cambioDatos.php">Cambiar contraseña y correo electrónico</a></li>';
 	echo '</ul>';
 	} else if ($_POST["lee"]=="3" || (!isset($_POST["lee"]) && $_SESSION["menuIZQ"]=="3")) { // Menú del Administrador
 	$_SESSION["menuIZQ"]=3; // la establece por si acaso

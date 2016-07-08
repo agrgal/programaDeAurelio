@@ -28,7 +28,8 @@ HECHO 15º) En la carpeta PDF se generan temporalmente los pdf a descargar. Los s
 17º) Terminada la presentación de datos. 
 18º) ¿QUÉ OCURRE SI BORRO UNA ASIGNACIÓN? ¿BORRO LOS DATOS, O NO?
 19º) Repasar tamaño ventanas modales de ASIGNACIÓN
-20º) INTENTO instalar funciones estadísticas. ¡Ojo! PHP 7.
+20º) INTENTO instalar funciones estadísticas. ¡Ojo! PHP 7. Paso, creo las funciones en funciones.php
+
 
 
 Includes htmlsuelto
@@ -115,6 +116,7 @@ Clase Cursos
 	         // dada una signación con la retahíla de alumnos 1#2#24#45#...#23#467...
 	         // devuelve una cadena con los cursos 1ESOC#1ESOD... a los que pertenecen esos alumnos.
 	         // según el valor $tipo: 0-> devuelve cursos cortos 1ESOD. Con 1 -> como en Séneca 1 ESO D
+	function devuelveAlumnosAsignacion ($idasignacion) // acepta idasignacion y devuelve retahíla de idalumnos de esa asignación
 	
 Clase alumnos
 =============
@@ -123,7 +125,9 @@ Clase alumnos
 	                 // idalumno, nombre (Apellidos, Nombre), nombre2 (Nombre + Apellidos), unidad, div
 	                
 	function devuelveAlumno ($id) // según el id busca en la base de datos los parámetros para esteAlumno
-
+    function devuelveUnidadDeUnAlumno ($idal) // devuelve el curso de un alumno
+    function devuelveNombreAlumno ($idal) // devuelve el nombre en formato Nombre Apll1 Apll2
+    
 Clase asignaciones
 ===================
 
@@ -154,7 +158,7 @@ Clase asignaciones
 	function devuelveAsignacionesDeUnaTutoria($id, $profesor)
 	    // Función que, dada una lista de alumnos (id1#id2#id3...#idn) , 
 	    // retorna un listado de asignaciones a las que pertenecen dichos alumnos
-	    // dado id y profesor
+	    // dado id (identifiación de la tutoría)  y profesor
 	function asignacionDescripcion($idasignacion) // devuelve la descripción dando su id simplemente
 	function asignacionProfesor($idasignacion, $cual) //devuelve el Nombre del profesor de una asignacion. 
 	    // Cual -->0 el idprofesor, Si Cual -> 1, el nombre
@@ -175,7 +179,9 @@ Clase opiniones
         // devuelve un array codificado en JSON  con los valores de items y observaciones 
      function retornaItem ($id) // dado un identificador de item, id, recupera un json con el valor de ese identificador
      function itemsElegidos ($cadena) // dada una cadena del tipo 9#14#.. devuelve los items separados por punto y coma.
-     function retornaValores($cadenaSQL) // Doy una cadena SQL y retorna un array con los datos obtenidos. // ARREGLADA 12-06-2016
+     function retornaValores($cadenaSQL) // Doy una cadena SQL y retorna un array con los datos obtenidos DE CADA OPINION. // ARREGLADA 12-06-2016
+     function itemsEstadistica($cadenaSQL) // Doy una cadenaSQL y por cada item devuelve su frecuencia de aparición
+     function itemsEstadisticaPorAlumno($cadenaSQL) // Misma cadena SQL y devuelve cada alumno con sus items.
      
 Clase evaluaciones
 ==================
@@ -189,4 +195,15 @@ Clase evaluaciones
                                             // Cero, si no lo encuentra.
                                             // Si id es false, retorna la fecha de fin del período de evaluación que toca para esa fecha.
                                             // Si fuera del período, la fecha actual.
-                                 
+             
+Clase materias
+==============
+
+	 function devuelveMateria ($id)	// Dada una ide de materia, devuelve la información sobre ella.
+	 function listaMaterias() // Lista todas las materias
+	 
+Clase opiniones generales
+=========================
+
+	function checkOpinion($evaluacion, $asignacion) // comprueba si existe o no una Opinión General, una evaluación para una asignación. Si existe devuelve su id.
+	function retornaValores($cadenaSQL) // retorna los valores de una opinión general.
