@@ -157,8 +157,7 @@ Clase asignaciones
 	function devuelveAsignacionesDondeEstaUnAlumno ($idal)
 		// devuelve un listado de asignaciones que corresponden a un alumno
 	function devuelveAsignacionesDeUnaTutoria($id, $profesor)
-	    // Función que, dada una lista de alumnos (id1#id2#id3...#idn) , 
-	    // retorna un listado de asignaciones a las que pertenecen dichos alumnos
+	    // Función que, dado un id y el valor del profesor, retorna las asignaciones de esa tutoría
 	    // dado id (identifiación de la tutoría)  y profesor
 	function asignacionDescripcion($idasignacion) // devuelve la descripción dando su id simplemente
 	function asignacionProfesor($idasignacion, $cual) //devuelve el Nombre del profesor de una asignacion. 

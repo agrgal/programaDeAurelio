@@ -14,7 +14,7 @@ session_start();
 			if ($_SESSION["idasignacion"]>1) { // sólo si está establecida la variable de sesión
 				echo '<li><a href="./opiniones.php">Opiniones alumno por alumno</a></li>';
 				echo '<li><a href="./opinionesHistorico.php">Histórico de opiniones</a></li>';
-				echo '<li><a href="./opinionesGenerales.php">Opinión General de una clase</a></li>';
+				echo '<li><a href="./opinionesGenerales.php">Opinión General de una clase</a></li>';				
 				// echo '<li><a href="./cambioDatos.php">Cambiar contraseña y correo electrónico</a></li>';
 		    }
 		    echo '<li><a href="./cambioDatos.php">Cambiar contraseña y correo electrónico</a></li>';
@@ -41,6 +41,7 @@ session_start();
 			<li><a href="./obtenerDatosTutor.php">Datos en mi tutoría</a></li>
 			<li><a href="./obtenerDatosGenerales.php">Datos Generales</a></li>
 			<li><a href="./obtenerEstadisticas.php">Datos Estadísticos</a></li>
+			<li><a href="./enviarEmail.php">Enviar email al equipo educativo</a></li>
 		</ul>
 	    ';
 	} else {

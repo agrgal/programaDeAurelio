@@ -157,8 +157,7 @@ class misAsignaciones
 	   mysqli_close($link); 
 	}
 	
-	// ********************************************************** 
-	
+	// ********************************************************** 	
 	// 5b) Función que, dado un id y el valor del profesor, retorna las asignaciones de esa tutoría
 	public function devuelveAsignacionesDeUnaTutoria($id, $profesor) {
 		// A) Recibe la asignación. Recupera sus alumnos.
@@ -257,6 +256,17 @@ class misAsignaciones
 	   mysqli_close($link);
 	}
 	// ********************************************************** 
+	
+	// 9) Dada una asignación, devuelve un div con información de la asignacion para los email
+	public function asignacionDIV($id) {
+		$nombreProfesor = $this->asignacionProfesor($id,1);
+		$claveProfesor = $this->asignacionProfesor($id,0);
+		$this->claseprofesor->idprofesor=$claveProfesor;
+		$email = $this->claseprofesor->profesorEmail();
+		$cadena='<div id="'.$claveProfesor.'" class="divasignacionEmail" email="'.$email.'" title="'.$nombreProfesor.'">'.$nombreProfesor.'</div>';
+		return $cadena;
+		// return $email;
+	} // ************************************************************************
 }
 
 ?>
