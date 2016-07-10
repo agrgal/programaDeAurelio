@@ -182,7 +182,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				</div> <!-- Fin de pestañas2 -->
 				</div> <!-- Contiene pestañas2 -->
 				<!-- Escritura de cadena SQL -->
-				<div id="CadenaSQL">
+				<div id="CadenaSQL" class="effect7">
 					<h1>Condiciones</h1>
 					<p id="condiciones"></p>
 					<h1 style="display: <?php echo $mostrar; ?> ;">Cadena SQL</h1>

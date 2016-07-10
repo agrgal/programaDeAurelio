@@ -41,7 +41,7 @@ if ($ID>0) {
       // echo $datos_json;      
       
 } else {
-      
-      echo 'No tienes nada';
+      $datos_json[]='"idprofesor":"0"';
+      echo "{".implode(",", $datos_json)."}";
 }
 ?>

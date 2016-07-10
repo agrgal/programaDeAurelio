@@ -77,7 +77,7 @@ if (!isset($_SESSION['menuIZQ'])) { $_SESSION['menuIZQ']=0; }
 			<div id="form" style="text-align: center; border: 0px solid black;"> 		     
 				 <form action="#">
 					<h3>Escribe tu contraseña de acceso &nbsp;&nbsp;
-					<input type="password" id="introducecontraseña" maxlength="10" size="12">
+					<input type="password" id="introducecontraseña" maxlength="10" size="12" onfocus="this.value='';">
 					&nbsp;&nbsp;y pulsa&nbsp;&nbsp;<a id="comprueba">Acceder</a></h3>
 				 </form> 
 			</div>
@@ -97,6 +97,14 @@ if (!isset($_SESSION['menuIZQ'])) { $_SESSION['menuIZQ']=0; }
 	<!-- Comprobar el paso de parámetros si se activa -->
 	<?php // echo  "<p>Nivel: ".$_SESSION['permisos']."</p>"; ?>
 	<?php // echo  "<p>Profesor: ".$_SESSION['profesor']."</p>"; ?>
+	
+	<!-- ********************************************************** -->
+	<!-- ZONA DE DIALOGS O Notificaciones-->
+	<!-- ********************************************************** -->
+	
+		<div id="notificacionFallo"  class="notificacion">
+			<div><h1 style="font-size: 3em;">La contraseña no es correcta</h1></div>
+		</div>
 	
 	<!-- ********************************************************** -->
 	<!-- FIN DEL CONTENIDO PRINCIPAL -->
@@ -140,12 +148,28 @@ if (!isset($_SESSION['menuIZQ'])) { $_SESSION['menuIZQ']=0; }
 		console.log( "Load was performed." );
 		}); 
 		
+		 $("#notificacionFallo").jqxNotification({
+                width: 500, position: "top-right", opacity: 0.9,
+                autoOpen: false, animationOpenDelay: 500, autoClose: true, autoCloseDelay: 4000, template: "error"
+         });
 		
 		// Función para click del button de comprueba contraseña 
 		$("#comprueba")
 		.button()
-		.click(function(event) {
-		   recuperaInformacionProfesor(); // llama a la informacion del profesorado.
+		.click(function(event) {	   
+		   $.when(recuperaInformacionProfesor()).done(function(data){
+				try {
+					var datos = jQuery.parseJSON(data);
+					// alert(datos.idprofesor);
+					if (datos.idprofesor>0) {
+						location.reload();  // cambia la página.
+					} else {
+						$("#notificacionFallo").jqxNotification("open");						
+					}
+				} catch(err) {
+					console.log(err.message);
+				}	
+		   });
 		});
 		
 		// Función para click del button de comprueba contraseña. Así coge el estilo del botón
@@ -157,7 +181,15 @@ if (!isset($_SESSION['menuIZQ'])) { $_SESSION['menuIZQ']=0; }
 		.click(function(event) {
 		   cerrarSesion(); // llama a la informacion del profesorado.
 		});	
+		
+		// Al empezar pone un valor a cero
+		// $("#introducecontraseña").val("");
 				
+	 }); // Fin del document ready
+	 
+	 $(window).load(function() {
+		 // Me aseguro que tras recargar la página, se borran los cambios de autocompletar
+		 $("#introducecontraseña").val("");
 	 });
 	 
 	 // ******************************************************
@@ -168,16 +200,22 @@ if (!isset($_SESSION['menuIZQ'])) { $_SESSION['menuIZQ']=0; }
 		function recuperaInformacionProfesor() {
 				 var id = $("#introducecontraseña").val();
 				 // alert(id);
-				 var posting = $.post( "./profesores/scripts/compruebacontrasenna.php", { 
-					  lee: id,
-				  });
-				  posting.done(function(data,status) { 
-					  // $("#testear").html(data);
-					  // aunque envía datos, al establecer las variables de sesión y recargar
-					  // la página es suficiente
-					  // al tner el script una cabecera como ISO-8859-15 se acabn los problemas de conversión... :-)
-					  location.reload();
-				  });
+				 return $.ajax({
+					  type: 'POST',
+					  dataType: 'text',
+					  url: "./profesores/scripts/compruebacontrasenna.php", 
+					  data: { // Parece que las llamadas con ajax van mejor que con POST...
+					  lee: id, 
+					  },					 		 
+						  success: function(data, textStatus, jqXHR){
+							 // alert(data);
+							 return data;
+						  },
+						  error: function (jqXHR , textStatus, errorThrown) {
+							  return "";
+						  }
+			      });
+				 
 		} 
 		
 		// F2) Llama al script y recupera informacion del profesor

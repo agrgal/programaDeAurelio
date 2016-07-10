@@ -91,42 +91,72 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
     
     <div id="contents"> <!-- &&&& -->   
 		
-		<div id="cambioPassword">
+		<div id="cambioPassword" class="effect7">
 			<h1>Cambio de contraseñas</h1>
 			<div id="cambioPasswordInside">
-			<label for="introducecontraseña">Contraseña Anterior</label>
-				<input type="text" id="introducecontraseña" maxlength="9" size="9" value="<?php // echo $DNI; ?>"></br>
+			<label for="introducecontraseñaparacambiar">Contraseña Anterior</label>
+				<input type="password" id="introducecontraseñaparacambiar" maxlength="9" size="9" onload="this.value='';" onfocus="this.value='';"
+				title="Introduce la contraseña anterior" alt="Introduce la contraseña anterior"></br>
 			<label for="nuevacontraseña">Nueva contraseña</label>
-				<input type="text" id="nuevacontraseña" maxlength="9" size="9"></br>
+				<input type="password" id="nuevacontraseña" maxlength="9" size="9"
+				title="Introduce la nueva contraseña. De 5 a 9 caracteres; debe contener una letra y un número, al menos" 
+				alt="Introduce la nueva contraseña. De 5 a 9 caracteres; debe contener una letra y un número, al menos"
+				>
 			<label for="repitenuevacontraseña">Repite nueva contraseña</label>
-				<input type="text" id="repitenuevacontraseña" maxlength="9" size="9"></br>
+				<input type="password" id="repitenuevacontraseña" maxlength="9" size="9"
+				title="Repite la nueva contraseña" alt="Repite la nueva contraseña""></br>
 			</div>
-		</div>
-		<div class="botonCambiar">
-			<button id="cambiaContraseña">Cambiar Contraseña</button>
+			<div class="botonCambiar">
+				<button id="cambiaContraseña" title="Ejecuta el cambio de contraseña" alt="Ejecuta el cambio de contraseña">Cambiar Contraseña &nbsp;<i class="fa fa-key fa-fw"></i></button>
+			</div>
 		</div>
 
 		
-		<div id="cambioEmail">
+		<div id="cambioEmail" class="effect7">
 			<h1>Cambio de Correo electrónico</h1>
 			<div id="cambioEmailInside">
 			<p id="emailantiguo" class="relieve"><?php echo "Tu email actual es: ".$email; ?></p>
 			<label for="nuevoEmail">Nuevo email</label>
-				<input type="text" id="nuevoEmail" maxlength="100" size="45"></br>
+				<input type="text" id="nuevoEmail" maxlength="100" size="45"
+				title="Introduce el nuevo email" alt="Introduce el nuevo email" ></br>
 			<label for="repiteNuevoEmail">Repite Nuevo email</label>
-				<input type="text" id="repiteNuevoEmail" maxlength="100" size="45"></br>
+				<input type="text" id="repiteNuevoEmail" maxlength="100" size="45"
+				title="Repite el nuevo email" alt="Repite el nuevo email"></br>
+			</div>
+			<div class="botonCambiar">
+				<button id="cambiaEmail" title="Ejecuta el cambio de Email" alt="Ejecuta el cambio de Email">Cambiar Correo Electrónico &nbsp;<i class="fa fa-envelope-o fa-fw"></i></button>
 			</div>
 		</div>
-		<div class="botonCambiar">
-			<button id="cambiaEmail" title="Cambio de Email">Cambiar Correo Electrónico</button>
-		</div>
+
 			
 	</div> <!-- &&&& FIN DEL CONTENEDOR-->	
 
 	<!-- ********************************************************** -->
 	<!-- FIN DEL CONTENIDO PRINCIPAL -->
 	<!-- ********************************************************** -->
-    
+	
+	<!-- ********************************************************** -->
+	<!-- ZONA DE DIALOGS O Notificaciones-->
+	<!-- ********************************************************** -->
+	
+
+		<div id="notificacionGuardoEmail" class="notificacion">
+			<div><h1>Se ha registrado el dato y guardado</h1></div>
+		</div>
+		
+		<div id="notificacionFalloEmail"  class="notificacion">
+			<div><h1>El dato existente se ha salvado y/o modificado</h1></div>
+		</div>
+		
+		<div id="notificacionGuardoPassword" class="notificacion">
+			<div><h1>Se ha registrado el dato y guardado</h1></div>
+		</div>
+		
+		<div id="notificacionFalloPassword"  class="notificacion">
+			<div><h1>El dato existente se ha salvado y/o modificado</h1></div>
+		</div>
+	
+   
     <!-- HTML suelto: pie de página *******************************  -->
     <?php include_once("./htmlsuelto/pie.php"); ?> 
     <!-- ********************************************************** -->
@@ -165,22 +195,107 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
   
   <script>     
      
-     $(document).ready(function() {  		 
-
-	 $("#introducecontraseña").button(); // modelo de caja them sunny
+     $(document).ready(function() {  
+		 
+	    // ========================================================================================
+        // Incorpora otros scripts
+        // ========================================================================================
+        
+		// 1a) Incorpora la funcionalidad del menú
+		$.getScript( "./htmlsuelto/js_menu.js", function( data, textStatus, jqxhr ) {
+		console.log( data ); // Data returned
+		console.log( textStatus ); // Success
+		console.log( jqxhr.status ); // 200
+		console.log( "Load was performed." );
+		}); 
+		
+		// 1c) Activa los ToolTIP en el documento
+	    $.getScript( "./htmlsuelto/js_tooltips.js", function( data, textStatus, jqxhr ) {
+		console.log( data ); // Data returned
+		console.log( textStatus ); // Success
+		console.log( jqxhr.status ); // 200
+		console.log( "Load was performed." );
+		});	 
+					 
+     // Variables y elementos principales
+     
+	 $("#introducecontraseñaparacambiar").button(); // modelo de caja them sunny
 	 $("#nuevacontraseña").button(); // modelo de caja them sunny
 	 $("#repitenuevacontraseña").button(); // modelo de caja them sunny
 	 $("#cambiaContraseña").button(); // modelo de caja them sunny
 	 
 	 $("#nuevoEmail").button(); // modelo de caja them sunny
 	 $("#repiteNuevoEmail").button(); // modelo de caja them sunny
-	 $("#cambiaEmail").button(); // modelo de caja them sunny
+	 $("#cambiaEmail").button(); // modelo de caja them sunny	 
+	 	 
+	
 	 
+	 // ========================================================================================
+     // Defino diálogos y/o notificaciones
+     // ========================================================================================	
+		 $("#notificacionGuardoEmail, #notificacionGuardoPassword").jqxNotification({
+                width: 500, position: "top-right", opacity: 0.9,
+                autoOpen: false, animationOpenDelay: 300, autoClose: true, autoCloseDelay: 2000, template: "info"
+         });
+         $("#notificacionFalloEmail, #notificacionFalloPassword").jqxNotification({
+                width: 500, position: "top-right", opacity: 0.9,
+                autoOpen: false, animationOpenDelay: 500, autoClose: true, autoCloseDelay: 4000, template: "warning"
+         });
+	 
+	 // Funcionalidad botones
+	 // cambio de email
 	 $("#cambiaEmail").click(function(){
-		cambiarEmail($("#nuevoEmail").val(),$("#repiteNuevoEmail").val());
-	 });
+		   $.when(cambiarEmail($("#nuevoEmail").val(),$("#repiteNuevoEmail").val())).done(function(data){
+				try {
+					var datos = jQuery.parseJSON(data);
+					if (datos.valido==1) {
+						$("#notificacionGuardoEmail").html('<div><h1>'+datos.mensaje+'</h1></div>');
+						$("#notificacionGuardoEmail").jqxNotification("open");
+						setInterval(function(){ location.reload(); },4000); // Al poco, cambia la página. 
+					} else if (datos.valido==0) {
+						$("#notificacionFalloEmail").html('<div><h1>'+datos.mensaje+'</h1></div>');
+						$("#notificacionFalloEmail").jqxNotification("open");
+					}
+
+				} catch(err) {
+					console.log(err.message);
+				}	
+		   });
+	 }); // Fin de cambiar el email
+	 
+	 // cambio de contraseña
+	 $("#cambiaContraseña").click(function(){
+		   $.when(cambiarPassword($("#introducecontraseñaparacambiar").val(),$("#nuevacontraseña").val(),$("#repitenuevacontraseña").val())).done(function(data){
+				try {
+					var datos = jQuery.parseJSON(data);
+					if (datos.valido==1) {
+						$("#notificacionGuardoPassword").html('<div><h1>'+datos.mensaje+'</h1></div>');
+						$("#notificacionGuardoPassword").jqxNotification("open");
+						setInterval(function(){ location.reload(); },4000); // Al poco, cambia la página.
+					} else if (datos.valido==0) {
+						$("#notificacionFalloPassword").html('<div><h1>'+datos.mensaje+'</h1></div>');
+						$("#notificacionFalloPassword").jqxNotification("open");						
+					}
+				} catch(err) {
+					console.log(err.message);
+				}	
+		   });
+	 }); // Fin de cambiar contraseña 
 			
 	 }); // fin del document ready
+	 
+	 
+	 $(window).load(function() {
+		 // Me aseguro que tras recargar la página, se borran los cambios de autocompletar
+		 // alert($("#introducecontraseñaparacambiar").val());
+		 $("#introducecontraseñaparacambiar").val([]); // asegurarse que no se autocompleta al empezar
+		 // alert($("#introducecontraseñaparacambiar").val());
+		 $("#nuevacontraseña").val(""); // asegurarse que no se autocompleta al empezar
+		 $("#repitenuevacontraseña").val(""); // asegurarse que no se autocompleta al empezar
+		 $("#nuevoEmail").val(""); // asegurarse que no se autocompleta al empezar
+		 $("#repiteNuevoEmail").val(""); // asegurarse que no se autocompleta al empezar
+		 $('#introducecontraseñaparacambiar').focus();
+	 });
 	 
 	 // ******************************************************
 	 // Funciones en la página *******************************
@@ -201,8 +316,8 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 				  repite: repite, // Repite EMAIL
 				  },					 		 
 		          success: function(data, textStatus, jqXHR){
-					 alert(data);
-				     // return data;
+					 //alert(data);
+				     return data;
 			      },
 			      error: function (jqXHR , textStatus, errorThrown) {
 					  return "";
@@ -210,6 +325,33 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 			  });
 
 	  } // Fin de la función Cambia el email
+	  
+	 //************************** 
+	 // F2) Cambia el password
+	 function cambiarPassword(antiguo, nuevo, repite) {
+		     console.log("****************** Cambiar password *******************");
+		     console.log("Antiguo: "+antiguo);
+		     console.log("Nuevo: "+nuevo);
+		     console.log("Repite: "+repite);
+		     return $.ajax({
+			      type: 'POST',
+			      dataType: 'text',
+			      url: "./profesores/scripts/cambiarpassword.php", 
+			      data: { // Parece que las llamadas con ajax van mejor que con POST...
+				  antiguo: antiguo, // Antiguo PASS
+				  nuevo: nuevo, // Nuevo PASS
+				  repite: repite, // Repite PASS
+				  },					 		 
+		          success: function(data, textStatus, jqXHR){
+					 // alert(data);
+				     return data;
+			      },
+			      error: function (jqXHR , textStatus, errorThrown) {
+					  return "";
+				  }
+			  });
+
+	  } // Fin de la función Cambia el password
 	  
  <!-- * =======================================================================================================   * --> 	
 

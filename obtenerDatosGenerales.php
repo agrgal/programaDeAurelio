@@ -113,7 +113,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			<!-- Filtrado de datos -->
 			<!-- ********************************************************** --> 			
 			<div id="FiltrodeDatos">
-				<div id="contieneEvaluaciones"> <!-- Incluye las evaluaciones -->
+				<div id="contieneEvaluaciones" class="effect7"> <!-- Incluye las evaluaciones -->
 						<?php 
 							// $evaluacion->listaEvaluaciones(); No hace falta porque lo meto en el constructor
 							foreach ($evaluacion->listadoDeEvaluaciones["div"] as $clave => $valor) {
@@ -123,7 +123,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 						?>
 				</div>
 				<!-- Escritura de cadena SQL -->
-				<div id="CadenaSQL">
+				<div id="CadenaSQL" class="effect7">
 					<h1>Condiciones</h1>
 					<p id="condiciones"></p>
 					<h1 style="display: <?php echo $mostrar; ?> ;">Cadena SQL</h1>
