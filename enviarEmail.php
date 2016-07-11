@@ -113,8 +113,18 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		</div>
 		
 		<div id="escribir" class="effect7">
-			<p>Hola</p>
+			<h2></h2>
+			<h2>Asunto</h2>
+			<div class="zonaEscrituraEmail" id="zonaEscrituraEmailAsunto">
+				<div id="editorAsunto" class="froala-view" title="Escribe asunto"></div>
+			</div>
+			<h2>Cuerpo del Mensaje</h2>
+			<div class="zonaEscrituraEmail" >
+				<div id="editorMensaje" class="froala-view" title="Escribe el mensaje a enviar"></div>
+			</div>
+			<button id="enviarMensaje"><i class="fa fa-envelope" style="font-size: 4em;"></i></button>
 		</div>
+		
 			
 	</div> <!-- &&&& FIN DEL CONTENEDOR-->	
 
@@ -163,7 +173,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
   <script type="text/javascript" src="./jquery/jqx/jqx-all.js"></script> 
   <!-- Owl carousel 
   <script type="text/javascript" src="./owl-carousel/owl.carousel.js"></script>
-  <!-- Editor de texto froala. Non commercial use 
+  <!-- Editor de texto froala. Non commercial use -->
   <script src="./jquery/froala/js/froala_editor.min.js"></script>  
   <script src="./jquery/froala/js/langs/es.js"></script>  
   <script src="./jquery/froala/js/plugins/char_counter.min.js"></script>
@@ -174,7 +184,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
   <script src="./jquery/froala/js/plugins/font_family.min.js"></script>
   <script src="./jquery/froala/js/plugins/font_size.min.js"></script>
   <script src="./jquery/froala/js/plugins/block_styles.min.js"></script> 
-  <script src="./jquery/froala/js/plugins/video.min.js"></script> --> 
+  <script src="./jquery/froala/js/plugins/video.min.js"></script>
   
   <script>     
      
@@ -225,7 +235,52 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			position: { my: "center center-100", at: "center center", of: "#container" }
 			// el "centro arriba" de mi cuadro de diálogo (my) , en el centro arriba (at) del contenedor (of)
 		 }); */	
-
+		 
+		 $("#enviarMensaje").button();
+		 
+		 // ========================================================================================
+		 // Al pulsar sobre el botón Enviar mensaje
+		 // ========================================================================================
+		 $('#enviarMensaje').click(function(e) {
+			var SPara = $("#Para").val();
+			var SAsunto = $("#editorAsunto").editable("getHTML", false, false);
+			var SMensaje = $("#editorMensaje").editable("getHTML", false, false);
+			$.when(sendEmail(SPara, SAsunto, SMensaje)).done(function(data){
+				try {
+					alert(data);
+					// var datos2 = jQuery.parseJSON(data2);
+					// alert(datos2.devolver+" "+datos2.notificacion);
+					// notificaciones(datos2.devolver,datos2.notificacion);
+				} catch(err) {
+					console.log(err.message);
+				}
+			});
+		 });
+		 
+		 // **********************************		 
+		 // Cuadro de escritura 
+		 // **********************************
+		 $('#editorMensaje').editable({ // idioma también cargando el es.js 
+				 inlineMode: false, language: 'es', maxCharacters: 3000,
+				 placeholder: 'Escribe el cuerpo del mensaje. Hasta 3000 caracteres...', 
+				 heightMin: 100, heightMax: 300, height: 200,
+				 buttons: ["bold", "italic", "underline", "strikeThrough","sep"
+						   ,"fontFamily", "fontSize", "formatBlock", "color","sep"
+						   ,"insertOrderedList", "insertUnorderedList", "outdent", "indent", "sep"
+						   ,"createLink", "insertHorizontalRule", "table","html"]
+		 });
+		 // **********************************
+		 $('#editorAsunto').editable({ // idioma también cargando el es.js 
+		 inlineMode: false, language: 'es', maxCharacters: 1000,
+		 placeholder: 'Escribe el asunto del mensaje. Hasta 1000 caracteres...', 
+		 heightMin: 60, heightMax: 100, height: 60,
+		 buttons: ["bold", "italic", "underline", "strikeThrough","sep"
+				   ,"fontFamily", "fontSize", "formatBlock", "color","sep"
+				   ,"insertOrderedList", "insertUnorderedList", "outdent", "indent", "sep"
+				   ,"createLink", "insertHorizontalRule", "table","html"]
+		 });
+		 // **********************************
+		 
 		// Al pulsar sobre un div de profesor, se cambia su color y se añade un dato al div Para
 		$('.divasignacionEmail').click(function(e) { 
 			if (!($(this).attr("id")=="todos" || $(this).attr("id")=="ninguno")) {
@@ -264,7 +319,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			var cadenaEmail = "";
 			$('.divasignacionEmail').each(function(e) {
 				if ($(this).hasClass("divasignacionEmailSeleccionada") && !($(this).attr("id")=="todos" || $(this).attr("id")=="ninguno")) {
-					cadenaEmail = cadenaEmail + $(this).attr("email")+";";
+					cadenaEmail = cadenaEmail + $(this).attr("id")+";";
 				}
 			});
 			$('#Para').val(cadenaEmail.slice(0,-1));
@@ -278,23 +333,19 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 
 	 //************************************
 	 // F1) Obtener datos del filtro
-	 function obtenerDatos(conNombreAlumno,conNombreAsignacion) {
-		 if ($("#fotoYN").jqxSwitchButton('checked')) { var fotoSN = 1; } else { var fotoSN=0; }
-		 // alert(fotoSN);
-		 // alert(conNombreAlumno);
-		 // alert(conNombreAsignacion);
-		 console.log("****************** Obtiene SQL *******************");
-		 console.log("SQL: "+$("#SQL").text());
-		 console.log("Fotos: ");
+	 function sendEmail(para,asunto,mensaje) {
+		 console.log("****************** Obtiene Mensaje a enviar *******************");
+		 console.log("Asunto: "+asunto);
+		 console.log("Para: "+para);
+		 console.log("Mensaje: "+mensaje);
 		 return $.ajax({
 			  type: 'POST',
 			  dataType: 'text',	
-		      url: "./tutorias/scripts/obtenerDatos.php", // En el script se construye la tabla...
+		      url: "./tutorias/scripts/sendEmail.php", // En el script se construye la tabla...
 		      data: { 
-			  SQL: $("#SQL").text(), // La variable de sesión de la asignación se consigue en el script.	
-			  foto: fotoSN,		
-			  conNombreAlumno: conNombreAlumno,
-			  conNombreAsignacion: conNombreAsignacion,  
+				 para: para,
+				 asunto: asunto,
+				 mensaje: mensaje,
 		      },
 		      success: function(data, textStatus, jqXHR){ 			  
 				// alert(data);

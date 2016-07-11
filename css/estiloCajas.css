@@ -256,13 +256,15 @@
   padding: 10px 15px;
   border: 0px solid green;
   float: left;
-  background: #b7cde2;
+  /* background: #b7cde2; */
+  background: #FBEDBA;
         border-radius: 10px;
         box-shadow: 5px 5px 5px black;
 }
 
 .divasignacionEmailSeleccionada {
-    background: lightGreen;
+    /* background: lightGreen; */
+    background: #91FFB2;
         border-radius: 10px;
         box-shadow: 5px 5px 5px black;
 }
