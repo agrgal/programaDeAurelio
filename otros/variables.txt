@@ -30,7 +30,7 @@ HECHO 15º) En la carpeta PDF se generan temporalmente los pdf a descargar. Los s
 19º) Repasar tamaño ventanas modales de ASIGNACIÓN
 20º) INTENTO instalar funciones estadísticas. ¡Ojo! PHP 7. Paso, creo las funciones en funciones.php
 21º) En cambiar contraseña... ¿Cómo puñetas se borra el contenido inicial si accedo directamente tras la página de reconocimiento?
-
+22º) Tamaño al principio de los editores FROALA. Ver parte de correo. 
 
 
 Includes htmlsuelto

@@ -9,10 +9,11 @@ include_once("../../funciones/funciones.php"); // funciones varias de conexión 
 // Incluyo además las clases que se van a usar
 include_once("../../clases/class.micalendario.php"); //clase mi calendario que presenta fechas formateadas
 // include_once("../../clases/class.formulario.php"); //clase que recupera datos de formularios
+include_once("../../clases/class.materias.php"); //clase que recupera datos de materias
 include_once("../../clases/class.profesores.php"); //clase que recupera datos de profesores
-// include_once("../../clases/class.cursos.php"); //clase que recupera datos de cursos
-// include_once("../../clases/class.asignaciones.php"); //clase que recupera datos de alumnos
-// include_once("../../clases/class.alumnos.php"); //clase que recupera datos de alumnos
+include_once("../../clases/class.cursos.php"); //clase que recupera datos de cursos
+include_once("../../clases/class.asignaciones.php"); //clase que recupera datos de alumnos
+include_once("../../clases/class.alumnos.php"); //clase que recupera datos de alumnos
 // include_once("../../clases/class.opiniones.php"); //clase que recupera datos de las opiniones
 // require_once("../../phpmailer/class.phpmailer.php"); //clase que envía datos a través del correo electrónico
 require_once("../../phpmailer/PHPMailerAutoload.php"); //clase que envía datos a través del correo electrónico
@@ -20,16 +21,26 @@ require_once("../../phpmailer/PHPMailerAutoload.php"); //clase que envía datos 
 $calendario= New micalendario(); // variable de calendario.
 // $formulario = New formulario(); // variable de la clase formulario
 $profesores = New profesores(); // variable de la clase profesores
-// $curso = New misCursos(); // variable de la clase profesores
-// $asignaciones = New misAsignaciones(); //variable de la clase asignaciones 
-// $alumnos = New misAlumnos(); // variable de la clase alumnos
+$curso = New misCursos(); // variable de la clase profesores
+$alumnos = New misAlumnos(); // variable de la clase alumnos
+$materia = New misMaterias(); // variable de la clase materia
 // $opiniones = New misOpiniones(); // variable de la clase opiniones
+$asignacion = New misAsignaciones($curso, $profesores, $materia, $alumnos); // Uso el constructor para pasarle la clase curso, profesorado, alumno y materias a Asignaciones
+
 
 session_start(); //activo variables de sesion
 
 // echo $_POST["para"]." - ".  $_POST["asunto"]." - ".  $_POST["mensaje"];
 
+$data=[];
+$data["valido"]=0;
+
+if ($_POST["para"] and strip_tags($_POST["mensaje"])) {
+	
 $fechahora="<p>Enviado el ".$calendario->fechaformateada($calendario->fechadehoy())." a las ".$calendario->horactual()."</p>";
+$alumnosEstaTutoria = $asignacion->devuelveListadoAlumnosdeEstaAsignacion($_SESSION["idasignacion"],$_SESSION["profesor"]);
+$cursos = $curso->devuelveCursosdeAsignacion ($alumnosEstaTutoria, 0);
+$cursos = str_replace("#",",",$cursos);
 
 $mail  = new PHPMailer();
 $mail->CharSet = "UTF-8"; // importante para que lo envíe como UTF-8
@@ -39,17 +50,17 @@ $profesores->idprofesor = $_SESSION["profesor"];
 $tutor = iconv("ISO-8859-15", "UTF-8",cambiarnombre($profesores->nombreEmpleado()));
 
 $detutor = "Tutor/a: ".$tutor;
-$asunto = $detutor."; ".strip_tags($_POST["asunto"]);
+$asunto = $detutor." (".$cursos."); ".strip_tags($_POST["asunto"]);
 
 $cabecera ='<p style="text-align: center;"><img width="300px" heigth="auto" src="../../imagenes/iesseritium.png"></p>';
 // $cabecera.='<p style="text-align: center;">Alumnado de <strong>'.$alumno["cadenaclases"].'</strong></p>';
-$cabecera.='<p style="text-align: center;">Asunto: <strong>'.$asunto.'</strong></p>';
+$cabecera.='<p style="text-align: center; font-size: 2em; ">Asunto: <strong>'.$asunto.'</strong></p>';
 $pie = '<hr width="80%">';
-$pie.= '<p style="text-align: center;">Este es un mensaje automático. Por favor, no responder al remitente del mensaje.</p>';
-$pie.= '<p style="text-align: center;">No imprimas este mensaje si no es absolutamente necesario. Contribuye así a la reducción de la huella de carbono.</p>';
-$pie.= '<p style="text-align: center;"><img width="100px" heigth="auto" src="../../imagenes/huellacarbono.png"></p>';
+$pie.= '<p style="text-align: center; font-size: 1em; ">Este es un mensaje automático. Por favor, no responder al remitente del mensaje.</p>';
+$pie.= '<p style="text-align: center; font-size: 1em; ">No imprimas este mensaje si no es absolutamente necesario. Contribuye así a la reducción de la huella de carbono.</p>';
+$pie.= '<p style="text-align: center; font-size: 1em; "><img width="100px" heigth="auto" src="../../imagenes/huellacarbono.png"></p>';
 
-$body = $cabecera.'<p>'.$cuerpo.'</p>'.$fechahora.$pie;
+$body = $cabecera.$cuerpo.$fechahora.$pie;
 
 $mail->IsSMTP(); // telling the class to use SMTP
 
@@ -67,18 +78,26 @@ try {
   // $mail->AddReplyTo('name@yourdomain.com', 'First Last'); 
   $n=0;
   $arraycorreos = explode(";",$_POST["para"]);
+  $muestracorreos="";
   foreach ($arraycorreos as $valor) { // $valor es la identificación del profesor
      $profesores->idprofesor=$valor;
      $cadenacorreo=$profesores->profesorEmail();
-     $cadenanombre=cambiarnombre($profesores->nombreEmpleado());
+     $cadenanombre=iconv("ISO-8859-15", "UTF-8",cambiarnombre($profesores->nombreEmpleado()));
      $mail->AddAddress($cadenacorreo, $cadenanombre);
      // Si lo quiero con copia oculta, funciona, pero después puede llegar a la bandeja de SPAM
      // if ($n==0) {$mail->AddAddress($valor, "Este");}
      // if ($n>0) {$mail->AddBCC($valor);}
-     $muestracorreos.=$cadenacorreo."(".$cadenanombre."), ";
+     $muestracorreos.=$cadenacorreo." (".$cadenanombre."), ";
      $n++;
   }
   $muestracorreos=substr($muestracorreos,0,strlen($muestracorreos)-2);
+  
+  $data["informacion"]='<div><h1 style="font-size: 2em; font-weight: bold; color: #3322FF; ">Correo enviado con éxito</h1><h1 style="font-size: 2em; font-weight: bold;">Correos: '.$muestracorreos.'</h1><h1 style="font-size: 2em;  font-weight: bold;">Asunto: '.$asunto.'</h1>
+  '.str_replace("../../imagenes","./imagenes",$body).'
+  </div>';
+  $data["valido"]=1;
+  echo json_encode($data);
+  
   $mail->SetFrom($remitente, "IES Seritium");
   // $mail->AddReplyTo('name@yourdomain.com', 'First Last');
   // $mail->Subject    = "Mensaje de Tutoría del IES Seritium";
@@ -90,18 +109,25 @@ try {
   $mail->Send();
   // echo '<div>';
   // echo '<div id="presentardatos"><h2>Mensaje enviado con éxito</h2></div>';
-  echo '<div id="presentardatos">
-          <h2>Enviado a: '.$muestracorreos.'</h2>
-          <h2>Asunto: '.$asunto.'</h2>
-          <h2>Cuerpo del mensaje: </h2>
-          <p>'.$body.'</p>
-        </div>';
+
 } catch (phpmailerException $e) {
-  echo '<div id="presentardatos"><h2>Mailer Error: ' .$e->errorMessage().'</h2></div>'; 
+  $data["error"]=$e->errorMessage(); 
+  echo json_encode($data);
 } catch (Exception $e) {
-  echo '<div id="presentardatos"><h2>' .$e->getMessage().'</h2></div>'; 
+  $data["error"]=$e->getMessage(); 
+  echo json_encode($data);
    //Boring error messages from anything else!
 } 
+
+} // Fin del PARA 
+
+else {
+	
+	$data["error"]="No has seleccionado correos o escrito ningún mensaje";
+	echo json_encode($data);
+}
+
+
 
 /* 
  

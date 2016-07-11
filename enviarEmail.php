@@ -140,8 +140,12 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 	<!-- Notificaciones -->
 	<!-- ********************************************************** -->
 		
-		<div id="notificacionObtenido">
-			<div><h1>Se han obtenido los datos requeridos</h1></div>
+		<div id="notificacionEnviado">
+			<div><h1>Aquí va la notificación</h1></div>
+		</div>
+		
+		<div id="notificacionNoEnviado">
+			<div><h1>Aquí va la notificación</h1></div>
 		</div>
 		
 	<!-- ********************************************************** -->
@@ -219,9 +223,14 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		// Defino diálogos y/o notificaciones
 		// ========================================================================================	
 		
-		 $("#notificacionObtenido").jqxNotification({
-                width: 500, position: "top-right", opacity: 0.9,
-                autoOpen: false, animationOpenDelay: 300, autoClose: true, autoCloseDelay: 2000, template: "info"
+		 $("#notificacionEnviado").jqxNotification({
+                width: 1000, position: "top-right", opacity: 0.9,
+                autoOpen: false, animationOpenDelay: 300, autoClose: true, autoCloseDelay: 10000, template: "info"
+         });
+         
+         $("#notificacionNoEnviado").jqxNotification({
+                width: 700, position: "top-right", opacity: 0.9,
+                autoOpen: false, animationOpenDelay: 300, autoClose: true, autoCloseDelay: 5000, template: "warning"
          });
 		 
 		 /* 1d) Definición del diálogo de confirmación de grabar datos, borrar y modificar asignacion y confirmar que no hay datos
@@ -247,10 +256,15 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			var SMensaje = $("#editorMensaje").editable("getHTML", false, false);
 			$.when(sendEmail(SPara, SAsunto, SMensaje)).done(function(data){
 				try {
-					alert(data);
-					// var datos2 = jQuery.parseJSON(data2);
-					// alert(datos2.devolver+" "+datos2.notificacion);
-					// notificaciones(datos2.devolver,datos2.notificacion);
+					// alert(data);
+					var datos = jQuery.parseJSON(data);
+					if (datos.valido==1) {
+						$("#notificacionEnviado").html(datos.informacion);
+						$("#notificacionEnviado").jqxNotification("open");
+					} else {
+						$("#notificacionNoEnviado").html('<h1 style="font-size: 3em;">'+datos.error+'</h1>');
+						$("#notificacionNoEnviado").jqxNotification("open");
+					}
 				} catch(err) {
 					console.log(err.message);
 				}
@@ -260,6 +274,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		 // **********************************		 
 		 // Cuadro de escritura 
 		 // **********************************
+
 		 $('#editorMensaje').editable({ // idioma también cargando el es.js 
 				 inlineMode: false, language: 'es', maxCharacters: 3000,
 				 placeholder: 'Escribe el cuerpo del mensaje. Hasta 3000 caracteres...', 
@@ -267,20 +282,20 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				 buttons: ["bold", "italic", "underline", "strikeThrough","sep"
 						   ,"fontFamily", "fontSize", "formatBlock", "color","sep"
 						   ,"insertOrderedList", "insertUnorderedList", "outdent", "indent", "sep"
-						   ,"createLink", "insertHorizontalRule", "table","html"]
-		 });
+						   ,"createLink", "insertHorizontalRule", "table","html"],
+		  });
 		 // **********************************
 		 $('#editorAsunto').editable({ // idioma también cargando el es.js 
-		 inlineMode: false, language: 'es', maxCharacters: 1000,
-		 placeholder: 'Escribe el asunto del mensaje. Hasta 1000 caracteres...', 
-		 heightMin: 60, heightMax: 100, height: 60,
-		 buttons: ["bold", "italic", "underline", "strikeThrough","sep"
-				   ,"fontFamily", "fontSize", "formatBlock", "color","sep"
-				   ,"insertOrderedList", "insertUnorderedList", "outdent", "indent", "sep"
-				   ,"createLink", "insertHorizontalRule", "table","html"]
+			 inlineMode: false, language: 'es', maxCharacters: 1000,
+			 placeholder: 'Escribe el asunto del mensaje. Hasta 1000 caracteres...', 
+			 heightMin: 60, heightMax: 100, height: 60,
+			 buttons: ["bold", "italic", "underline", "strikeThrough","sep"
+					   ,"fontFamily", "fontSize", "formatBlock", "color","sep"
+					   ,"insertOrderedList", "insertUnorderedList", "outdent", "indent", "sep"
+					   ,"createLink", "insertHorizontalRule", "table","html"]
 		 });
 		 // **********************************
-		 
+	 
 		// Al pulsar sobre un div de profesor, se cambia su color y se añade un dato al div Para
 		$('.divasignacionEmail').click(function(e) { 
 			if (!($(this).attr("id")=="todos" || $(this).attr("id")=="ninguno")) {
@@ -324,8 +339,14 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			});
 			$('#Para').val(cadenaEmail.slice(0,-1));
 		} // Fin de rellena el INPUT Para
-					
+		
+				
 	 }); // fin del document ready
+	 
+	 // Al terminar de cargar el DOM
+	 $(window).load(function() {
+		 $('#editorMensaje').editable({fontSizeDefaultSelection: '40px'});
+	 });
 	 
 	 // ******************************************************
 	 // Funciones en la página *******************************
