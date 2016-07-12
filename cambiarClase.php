@@ -129,8 +129,9 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			<!-- Elige un nuevo curso -->
 			<!-- ********************************************************** --> 	
 			<div id="EligeCurso">
-				<h2 id="cursoAntiguoh2">De este curso a... </h2>
+				
 				<div id="cursos" title="Elige un curso de destino">
+					<h2 id="cursoAntiguoh2">De este curso a... </h2>
 					<select name="EscogerCurso" id="EscogerCurso">
 						<?php 
 						$curso->listarCursos();
@@ -141,13 +142,22 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 						?>
 					</select>
 				</div>
+				<div id="muestraCurso">
+					<input id="cursonuevo" type="text" value="" style="display: none;">
+					<p id="muestraCursoActual">No hay curso seleccionado</p>
+				</div>	
 			</div>
 			
 			<!-- ********************************************************** -->
 			<!-- Correspondencia entre opiniones-->
 			<!-- ********************************************************** --> 	
 			<div id="Correspondencia">
-
+				<div id="asignacionesAntiguas" class="effect7">
+					Esto hay que rellenarlo mediante una llamada ajax
+				</div>
+				<div id="asignacionesNuevas" class="effect7">
+					Esto hay que rellenarlo mediante una llamada ajax
+				</div>
 			</div>
 			<!-- ********************************************************** -->
 			<!-- Insertar instrucciones -->
@@ -331,8 +341,6 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			},
 		}); 
 		
-
-		
 		// Definicion del select de cursos EscogerCurso
 	    $( "#EscogerCurso" )
 			.selectmenu({
@@ -346,14 +354,29 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			change: function(event,ui) {
 				var escogerCurso = $("#EscogerCurso option:selected").text();	
 				var escogerCursoCorto = $("#EscogerCurso option:selected").attr("corto");
-				alert(escogerCurso+" - "+escogerCursoCorto);
-				$("#pestañas").tabs("enable", 2); // activo la pestaña 1, la segunda 
+				$("#cursonuevo").val(escogerCursoCorto);
+				$("#muestraCursoActual").html("A la nueva clase: "+escogerCurso);
+				// alert(escogerCurso+" - "+escogerCursoCorto);
+				$("#pestañas").tabs("enable", 2); // activo la pestaña 1, la segunda
+				// PRIMERA LLAMADA AJAX
+				 // llama a la función que obtiene las asignaciones que tiene ese alumno/A
+				$.when(obtenerAntiguos($("#idalumno").val())).done(function(data){
+					try { // se reciben en formato de div
+						var datos = jQuery.parseJSON(data);
+					    if (datos.valido==1) {
+							$("#asignacionesAntiguas").html(datos.divs);
+						} else {
+							$("#asignacionesAntiguas").html("Este alumno/a no tiene asignaciones antiguas asignadas");
+						} 
+					} catch(err) {
+					   console.log(err.message);
+					}	
+				});
 			},
 			focus: function(event,ui) {
 				$("#pestañas").tabs("disable", 2); // desactivo la pestaña 1, la segunda
 			},
-		}); 	
-		
+		}); 			
 				
 		// ************************************
 		// Pulso el botón de obtención de datos
@@ -392,24 +415,16 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 	 // ******************************************************	 
 
 	 //************************************
-	 // F1) Obtener datos del filtro
-	 function obtenerDatos(conNombreAlumno,conNombreAsignacion) {
-		 if ($("#fotoYN").jqxSwitchButton('checked')) { var fotoSN = 1; } else { var fotoSN=0; }
-		 // alert(fotoSN);
-		 // alert(conNombreAlumno);
-		 // alert(conNombreAsignacion);
+	 // F1) Obtener asignaciones del alumno, curso antiguo
+	 function obtenerAntiguos(alumno) {
 		 console.log("****************** Obtiene SQL *******************");
-		 console.log("SQL: "+$("#SQL").text());
-		 console.log("Fotos: ");
+		 console.log("alumnos: "+alumno);
 		 return $.ajax({
 			  type: 'POST',
 			  dataType: 'text',	
-		      url: "./tutorias/scripts/obtenerDatos.php", // En el script se construye la tabla...
+		      url: "./tutorias/scripts/obtenerAntiguos.php", // En el script se construye la tabla...
 		      data: { 
-			  SQL: $("#SQL").text(), // La variable de sesión de la asignación se consigue en el script.	
-			  foto: fotoSN,		
-			  conNombreAlumno: conNombreAlumno,
-			  conNombreAsignacion: conNombreAsignacion,  
+			  alumno: alumno, // La variable de sesión de la asignación se consigue en el script.	 
 		      },
 		      success: function(data, textStatus, jqXHR){ 			  
 				// alert(data);

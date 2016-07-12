@@ -100,12 +100,15 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				<div id="ninguno" class="divasignacionEmail" title="Deselecciona los emails de todo el equipo educativo">Ninguno/a</div>
 				<?php 
 				$asignacionesEstaTutoria = $asignacion->devuelveAsignacionesDeUnaTutoria($_SESSION["idasignacion"],$_SESSION["profesor"]);
+				// echo $asignacionesEstaTutoria;
 				$profesoradoEmail=[];
 				foreach ($asignacionesEstaTutoria as $clave => $valor) {
 					$profesoradoEmail[]=$asignacion->asignacionDIV($valor);
+					// if (!is_null($valor) and !empty($valor)) { $profesoradoEmail[]=$asignacion->asignacionDIV($valor); }
+					// echo $clave." -> ".$valor." // ";
 				}
 				$profesoradoEmail=array_unique($profesoradoEmail); // todos los divs los filtros y no los repito, si son iguales.
-				foreach ($profesoradoEmail as $clave => $valor) { echo $valor; } // Presento los divs en pantalla								
+				foreach ($profesoradoEmail as $clave => $valor) { echo $valor; } // Presento los divs en pantalla
 				?>
 
             </div>

@@ -268,3 +268,30 @@
         border-radius: 10px;
         box-shadow: 5px 5px 5px black;
 }
+
+/* ============================ */
+/* DIV para Cambio de clase     */
+/* ============================ */
+
+.divasignacionCambio {
+  width: auto;
+  max-width: 45%;
+  font-size: 1em;
+  font-weight: bold;
+  margin: 10px 10px;
+  padding: 10px 15px;
+  border: 0px solid green;
+  float: left;
+  text-align: center;
+  /* background: #b7cde2; */
+  background: #FBEDBA;
+        border-radius: 10px;
+        box-shadow: 5px 5px 5px black;
+}
+
+.divasignacionEmailCambio {
+    /* background: lightGreen; */
+    background: #91FFB2;
+        border-radius: 10px;
+        box-shadow: 5px 5px 5px black;
+}

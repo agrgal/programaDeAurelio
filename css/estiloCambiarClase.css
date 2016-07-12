@@ -1,9 +1,9 @@
-#EligeAlumno {
+#EligeAlumno, #EligeCurso, #Correspondencia {
     background: url("../imagenes/patterns/science-background.png") repeat; 
 	overflow: hidden;
 }
 
-#alumnos, #muestraAlumno {
+#alumnos, #muestraAlumno, #cursos, #muestraCurso {
 	float: left;
 	width: 45%;
 	border: 0px solid black;
@@ -11,13 +11,13 @@
 	text-align: justify;
 }
 
-#muestraAlumno {
+#muestraAlumno, #muestraCurso {
 	float: right;
 	width: 45%;
 	margin: 2px auto;
 }
 
-#muestraAlumno p {
+#muestraAlumno p, #muestraCurso p {
 	text-align: center;
 	font-size: 1.2em;
 	font-weight: bold;
@@ -27,7 +27,7 @@
 	text-shadow: rgb(185, 170, 156) 7px 6px 2px;
 }
 
-#alumnos h2 {
+#alumnos h2, #cursos h2 {
 	text-align: center;
 	font-size: 1em;
 	/* font-weight: bold; */
@@ -35,4 +35,19 @@
 	color: rgb(41, 39, 0);
 	/* background-color: rgb(231, 212, 195); */
 	text-shadow: rgb(185, 170, 156) 2px 1px 1px;
+}
+
+#cursos h2 {
+  text-align: left;
+}
+
+#asignacionesAntiguas, #asignacionesNuevas {
+	float: left;
+	width: 49%;
+	border: 0px solid black;
+	padding: 1px auto;
+}
+
+#asignacionesNuevas {
+   float: right;
 }

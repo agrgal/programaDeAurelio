@@ -171,6 +171,8 @@ class misAsignaciones
 		$cadena = substr($cadena, 0, -1);
 		// C) Split de esa cadena y meterlo en un array.
 		$asignacionesDeEstaTutoriaArray=explode("#",$cadena);
+		$asignacionesDeEstaTutoriaArray = array_filter($asignacionesDeEstaTutoriaArray, function($var){return !is_null($var);} ); // Quitar los nulos
+		$asignacionesDeEstaTutoriaArray = array_filter($asignacionesDeEstaTutoriaArray, function($var){return !empty($var);} ); // Quitar los vacios
 		// D) quitar repetidos y ordenar
 		$asignacionesDeEstaTutoriaArray = array_unique($asignacionesDeEstaTutoriaArray);
 		asort($asignacionesDeEstaTutoriaArray);
@@ -267,6 +269,20 @@ class misAsignaciones
 		return $cadena;
 		// return $email;
 	} // ************************************************************************
+	
+	// 10) Dada una asignación, devuelve un div con información del mismo
+	public function asignacionDIV2($id) {
+		$nombreProfesor = $this->asignacionProfesor($id,1);
+		$claveProfesor = $this->asignacionProfesor($id,0);
+		$nombreMateria = $this->asignacionMateria($id,1);
+		$claveMateria = $this->asignacionMateria($id,0);
+		$cadena='<div id="'.$id.'" class="divasignacionCambio" materia="'.$claveMateria.'" profesor="'.$claveProfesor.'" title="'.$nombreProfesor.' ('.$nombreMateria.')">'.
+		'<h2>'.$nombreProfesor.'</h2>'.
+		'<h4>'.$nombreMateria.'</h4>'.
+		'</div>';
+		return $cadena;
+	} // ************************************************************************
+
 }
 
 ?>
