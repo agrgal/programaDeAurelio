@@ -44,18 +44,18 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 <head profile="http://www.w3.org/2005/10/profile">
   <!-- *** Principio del HEAD *************************************-->	
   <meta content="text/html; charset=iso-8859-15" http-equiv="content-type">
-  <title>Enviar email al equipo educativo</title>
+  <title>Cambiar a un alumno de clase</title>
   <link rel="icon" 
         type="image/png" 
         href="./imagenes/logoA.png">
   <meta content="Aurelio Gallardo Rodríguez" name="author">  
-  <meta content="Obtengo los datos de tutoría" name="description">
+  <meta content="Cambiar a un alumno de clase" name="description">
 
   <!-- ***************************** -->
   <!-- Linkar a hojas de estilo CSS -->
   <!-- ***************************** -->
   <?php include_once("./css/cargarestiloscss.php"); ?>
-  <link rel="stylesheet" href="./css/estiloenviarEmail.css"> <!-- Efectos aplicados a esta hoja -->
+  <link rel="stylesheet" href="./css/estiloCambiarClase.css"> <!-- Efectos aplicados a esta hoja -->
   
   <!-- *** Final del HEAD, antes los ficheros de enlace a CSS ******-->
 </head>
@@ -94,37 +94,68 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
     <div id="contents"> <!-- &&&& -->   
 		
 		<div id="pestañas">
-            <div id="profesorado" class="effect7">
-				<h1>PARA...</h1>
-				<div id="todos" class="divasignacionEmail" title="Selecciona los emails de todo el equipo educativo">Todos/as</div>
-				<div id="ninguno" class="divasignacionEmail" title="Deselecciona los emails de todo el equipo educativo">Ninguno/a</div>
-				<?php 
-				$asignacionesEstaTutoria = $asignacion->devuelveAsignacionesDeUnaTutoria($_SESSION["idasignacion"],$_SESSION["profesor"]);
-				$profesoradoEmail=[];
-				foreach ($asignacionesEstaTutoria as $clave => $valor) {
-					$profesoradoEmail[]=$asignacion->asignacionDIV($valor);
+            <ul>
+				<li><a href="#EligeAlumno">1º) Elige Alumno</a></li>
+				<li><a href="#EligeCurso">2º) Elige nuevo curso</a></li>
+				<li><a href="#Correspondencia">3º) Corresponde asignaciones</a></li>
+				<li><a href="#Instrucciones">Instrucciones</a></li>				
+			</ul> 
+			<!-- ********************************************************** -->
+			<!-- Haz la elección de un alumno -->
+			<!-- ********************************************************** --> 			
+			<div id="EligeAlumno">
+				<?php // Select para seleccionar alumnos
+				$alumnos = $asignacion->devuelveListadoAlumnosdeEstaAsignacion($_SESSION["idasignacion"],$_SESSION["profesor"]);
+				$alumnosArray = explode("#",$alumnos);
+				echo '<div id="alumnos" title="Escoge un alumno de tu tutoría">';
+				echo '<h2>Elige alumno/a a quien cambiar de clase</h2>';
+				echo '<select name="EscogerAlumno" id="EscogerAlumno" class="seleccionaidalumno">';
+				foreach($alumnosArray as $clave => $valor) {
+					$alumno->devuelveAlumno($valor);
+					$unidad = $alumno->devuelveUnidadDeUnAlumno($valor);
+					echo '<option unidad="'.$unidad.'" value="'.$valor.'">'.$alumno->esteAlumno["nombre2"].' ('.$unidad.')</option>';
 				}
-				$profesoradoEmail=array_unique($profesoradoEmail); // todos los divs los filtros y no los repito, si son iguales.
-				foreach ($profesoradoEmail as $clave => $valor) { echo $valor; } // Presento los divs en pantalla								
+				echo '</select>';
+				echo '</div>';				
 				?>
+				<div id="muestraAlumno">	
+					<input id="idalumno" type="text" value="" style="display: none;">
+					<input id="cursoantiguo" type="text" value="" style="display: none;">
+					<p id="muestraAlumnoActual">No hay alumno/a seleccionado/a</p>				
+				</div>
+			</div>
 
-            </div>
-            <input id="Para" size="80" width="80" style="display: none;">
-		</div>
-		
-		<div id="escribir" class="effect7">
-			<h2></h2>
-			<h2>Asunto</h2>
-			<div class="zonaEscrituraEmail" id="zonaEscrituraEmailAsunto">
-				<div id="editorAsunto" class="froala-view" title="Escribe asunto" style="font-size: 28px;"></div>
+			<!-- ********************************************************** -->
+			<!-- Elige un nuevo curso -->
+			<!-- ********************************************************** --> 	
+			<div id="EligeCurso">
+				<h2 id="cursoAntiguoh2">De este curso a... </h2>
+				<div id="cursos" title="Elige un curso de destino">
+					<select name="EscogerCurso" id="EscogerCurso">
+						<?php 
+						$curso->listarCursos();
+						$listadoDeCursos = $curso->listaDeCursos;
+						foreach($listadoDeCursos["largo"] as $clave => $valor) {
+							echo '<option corto="'.$listadoDeCursos["corto"][$clave].'" value="'.$valor.'">'.$valor.'</option>';
+						}
+						?>
+					</select>
+				</div>
 			</div>
-			<h2>Cuerpo del Mensaje</h2>
-			<div class="zonaEscrituraEmail" >
-				<div id="editorMensaje" class="froala-view" title="Escribe el mensaje a enviar"  style="font-size: 40px;"></div>
+			
+			<!-- ********************************************************** -->
+			<!-- Correspondencia entre opiniones-->
+			<!-- ********************************************************** --> 	
+			<div id="Correspondencia">
+
 			</div>
-			<button id="enviarMensaje"><i class="fa fa-envelope" style="font-size: 4em;"></i></button>
+			<!-- ********************************************************** -->
+			<!-- Insertar instrucciones -->
+			<!-- ********************************************************** --> 
+			<div id="Instrucciones">
+			
+			</div>
 		</div>
-		
 			
 	</div> <!-- &&&& FIN DEL CONTENEDOR-->	
 
@@ -140,12 +171,8 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 	<!-- Notificaciones -->
 	<!-- ********************************************************** -->
 		
-		<div id="notificacionEnviado">
-			<div><h1>Aquí va la notificación</h1></div>
-		</div>
-		
-		<div id="notificacionNoEnviado">
-			<div><h1>Aquí va la notificación</h1></div>
+		<div id="notificacionObtenido">
+			<div><h1>Se han obtenido los datos requeridos</h1></div>
 		</div>
 		
 	<!-- ********************************************************** -->
@@ -177,7 +204,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
   <script type="text/javascript" src="./jquery/jqx/jqx-all.js"></script> 
   <!-- Owl carousel 
   <script type="text/javascript" src="./owl-carousel/owl.carousel.js"></script>
-  <!-- Editor de texto froala. Non commercial use -->
+  <!-- Editor de texto froala. Non commercial use 
   <script src="./jquery/froala/js/froala_editor.min.js"></script>  
   <script src="./jquery/froala/js/langs/es.js"></script>  
   <script src="./jquery/froala/js/plugins/char_counter.min.js"></script>
@@ -187,13 +214,15 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
   <script src="./jquery/froala/js/plugins/media_manager.min.js"></script>
   <script src="./jquery/froala/js/plugins/font_family.min.js"></script>
   <script src="./jquery/froala/js/plugins/font_size.min.js"></script>
-  <script src="./jquery/froala/js/plugins/block_styles.min.js"></script>
-  <script src="./jquery/froala/js/plugins/video.min.js"></script>
+  <script src="./jquery/froala/js/plugins/block_styles.min.js"></script> 
+  <script src="./jquery/froala/js/plugins/video.min.js"></script> --> 
   
   <script>     
      
      $(document).ready(function() { 
 		 
+		 // Variables Generales
+
 		// 1a) Incorpora la funcionalidad del menú
 		$.getScript( "./htmlsuelto/js_menu.js", function( data, textStatus, jqxhr ) {
 			console.log( data ); // Data returned
@@ -218,19 +247,38 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			console.log( "Load was performed." );
 		});		
 		
-			 
+		
+		 // ===========================================================================================
+		 // DEFINO tabs. LLAMO Pestañas. y también el acordeon, y los botones de fecha. Lista ordenable
+		 // ===========================================================================================
+		
+		$('#pestañas').tabs({
+			active: 0,
+			create: function(event,ui) {
+				$("#pestañas").tabs("disable", 1); // desactiva la pestaña 1
+				$("#pestañas").tabs("disable", 2); // desactiva la pestaña 2
+			},
+			activate: function(event, ui){ //detecta la pestaña pulsada...
+				if(ui.newTab.index()=='0') { // Si se pulsa la pestaña 0... Escoger Alumnos
+					// $("#pestañas").tabs("disable", 1); // desactiva la pestaña 1
+					// $("#pestañas").tabs("disable", 2); // desactiva la pestaña 2
+					location.reload(); // mejor recargar la página...
+				};
+				if(ui.newTab.index()=='1') { // Si se pulsa la pestaña 1... Escoger Cursos
+					seleccionDeCurso();
+					$("#pestañas").tabs("disable", 2); // desactiva la pestaña 2
+				};
+				
+			},
+		}); 
+	    	 
 		// ========================================================================================
 		// Defino diálogos y/o notificaciones
 		// ========================================================================================	
 		
-		 $("#notificacionEnviado").jqxNotification({
-                width: 1000, position: "top-right", opacity: 0.9,
-                autoOpen: false, animationOpenDelay: 300, autoClose: true, autoCloseDelay: 10000, template: "info"
-         });
-         
-         $("#notificacionNoEnviado").jqxNotification({
-                width: 700, position: "top-right", opacity: 0.9,
-                autoOpen: false, animationOpenDelay: 300, autoClose: true, autoCloseDelay: 5000, template: "warning"
+		 $("#notificacionObtenido").jqxNotification({
+                width: 500, position: "top-right", opacity: 0.9,
+                autoOpen: false, animationOpenDelay: 300, autoClose: true, autoCloseDelay: 2000, template: "info"
          });
 		 
 		 /* 1d) Definición del diálogo de confirmación de grabar datos, borrar y modificar asignacion y confirmar que no hay datos
@@ -244,127 +292,124 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			position: { my: "center center-100", at: "center center", of: "#container" }
 			// el "centro arriba" de mi cuadro de diálogo (my) , en el centro arriba (at) del contenedor (of)
 		 }); */	
-		 
-		 $("#enviarMensaje").button();
-		 
-		 // ========================================================================================
-		 // Al pulsar sobre el botón Enviar mensaje
-		 // ========================================================================================
-		 $('#enviarMensaje').click(function(e) {
-			var SPara = $("#Para").val();
-			var SAsunto = $("#editorAsunto").editable("getHTML", false, false);
-			var SMensaje = $("#editorMensaje").editable("getHTML", false, false);
-			$.when(sendEmail(SPara, SAsunto, SMensaje)).done(function(data){
-				try {
-					// alert(data);
-					var datos = jQuery.parseJSON(data);
-					if (datos.valido==1) {
-						$("#notificacionEnviado").html(datos.informacion);
-						$("#notificacionEnviado").jqxNotification("open");
-					} else {
-						$("#notificacionNoEnviado").html('<h1 style="font-size: 3em;">'+datos.error+'</h1>');
-						$("#notificacionNoEnviado").jqxNotification("open");
-					}
-				} catch(err) {
-					console.log(err.message);
-				}
-			});
-		 });
-		 
-		 // **********************************		 
-		 // Cuadro de escritura 
-		 // **********************************
 
-		 $('#editorMensaje').editable({ // idioma también cargando el es.js 
-				 inlineMode: false, language: 'es', maxCharacters: 3000,
-				 placeholder: 'Escribe el cuerpo del mensaje. Hasta 3000 caracteres...', 
-				 heightMin: 100, heightMax: 300, height: 200,
-				 buttons: ["bold", "italic", "underline", "strikeThrough","sep"
-						   ,"fontFamily", "fontSize", "formatBlock", "color","sep"
-						   ,"insertOrderedList", "insertUnorderedList", "outdent", "indent", "sep"
-						   ,"createLink", "insertHorizontalRule", "table","html"],
-		  });
-		 // **********************************
-		 $('#editorAsunto').editable({ // idioma también cargando el es.js 
-			 inlineMode: false, language: 'es', maxCharacters: 1000,
-			 placeholder: 'Escribe el asunto del mensaje. Hasta 1000 caracteres...', 
-			 heightMin: 60, heightMax: 100, height: 60,
-			 buttons: ["bold", "italic", "underline", "strikeThrough","sep"
-					   ,"fontFamily", "fontSize", "formatBlock", "color","sep"
-					   ,"insertOrderedList", "insertUnorderedList", "outdent", "indent", "sep"
-					   ,"createLink", "insertHorizontalRule", "table","html"]
-		 });
-		 // **********************************
-		 
-		 
-	 
-		// Al pulsar sobre un div de profesor, se cambia su color y se añade un dato al div Para
-		$('.divasignacionEmail').click(function(e) { 
-			if (!($(this).attr("id")=="todos" || $(this).attr("id")=="ninguno")) {
-				if ($(this).hasClass("divasignacionEmailSeleccionada")) {
-					$(this).removeClass("divasignacionEmailSeleccionada"); // se la quita a las demás
-				} else {
-					$(this).addClass("divasignacionEmailSeleccionada"); // se la añade a la que se ha hecho click.
-				}
-				$('#ninguno').removeClass("divasignacionEmailSeleccionada");
-				$('#todos').removeClass("divasignacionEmailSeleccionada");
-				rellenarPara();
-		    }  // Si no es todos o ninguno
+		// ========================================================================================
+		// Defino 
+		// ========================================================================================	
+		
+		// 1) Definición del SELECT de alumnos
+    	$( "#EscogerAlumno" )
+			.selectmenu({
+				width:700, 
+				style: 'popup',
+			})			
+			.selectmenu("menuWidget")
+			   .addClass("overflow5"); // carga un estilo que está en /css/estiloSelectMenuOverflow.css				   
+   	
+	   	$( "#EscogerAlumno" ).selectmenu({
+			open: function(event,ui) {
+				// $('#EligeAlumno').val($('#EligeAlumno option:first').val());
+				// alert($("#EligeAlumno option:selected").text());
+				$("#idalumno").val($("#EligeAlumno option:selected").val()); // pone el id en el campo de texto
+				$("#cursoantiguo").val($("#EligeAlumno option:selected").attr("unidad")); // pone el id en el campo de texto
+				$("#muestraAlumnoActual").html("Alumno/a actual: "+$("#EligeAlumno option:selected").text());
+				$("#cursoAntiguoh2").html("De la clase "+$("#cursoantiguo").val()+" a ...");	
+				$("#pestañas").tabs("enable", 1); // activo la pestaña 1, la segunda			
+			},			
+			change: function(event,ui) {
+				var escogerAlumno = $("#EligeAlumno option:selected").text();	
+				var escogerAlumnoID = $("#EligeAlumno option:selected").val();
+				var cursoAntiguo = $("#EligeAlumno option:selected").attr("unidad");
+				$("#idalumno").val(escogerAlumnoID); // pone el id en el campo de texto
+				$("#cursoantiguo").val(cursoAntiguo); // pone el id en el campo de texto
+				$("#muestraAlumnoActual").html("Alumno/a actual: "+escogerAlumno);
+				$("#cursoAntiguoh2").html("De la clase "+cursoAntiguo+" a ...");
+				$("#pestañas").tabs("enable", 1); // activo la pestaña 1, la segunda 
+			},
+			focus: function(event,ui) {
+				$("#pestañas").tabs("disable", 1); // activo la pestaña 1, la segunda
+			},
 		}); 
 		
+
 		
-		// Seleccionados todos
-		$('#todos').click(function(e) { 
-			$('.divasignacionEmail').each(function(e) {
-				$(this).addClass("divasignacionEmailSeleccionada"); // se la quita a las demás
-		    });
-		    $('#ninguno').removeClass("divasignacionEmailSeleccionada");
-		    rellenarPara();
-		});
-		
-		// Deselecciona todos
-		$('#ninguno').click(function(e) { 
-			$('.divasignacionEmail').each(function(e) {
-				$(this).removeClass("divasignacionEmailSeleccionada"); // se la quita a las demás
-		    });
-		    $('#ninguno').addClass("divasignacionEmailSeleccionada");
-		    rellenarPara();
-		});
-		
-		// Rellena el input PARA
-		function rellenarPara() {
-			var cadenaEmail = "";
-			$('.divasignacionEmail').each(function(e) {
-				if ($(this).hasClass("divasignacionEmailSeleccionada") && !($(this).attr("id")=="todos" || $(this).attr("id")=="ninguno")) {
-					cadenaEmail = cadenaEmail + $(this).attr("id")+";";
-				}
-			});
-			$('#Para').val(cadenaEmail.slice(0,-1));
-		} // Fin de rellena el INPUT Para
+		// Definicion del select de cursos EscogerCurso
+	    $( "#EscogerCurso" )
+			.selectmenu({
+				width:500, 
+				style: 'popup',
+			})			
+			.selectmenu("menuWidget")
+			   .addClass("overflow5"); // carga un estilo que está en /css/estiloSelectMenuOverflow.css	
+			   
+		$( "#EscogerCurso" ).selectmenu({
+			change: function(event,ui) {
+				var escogerCurso = $("#EscogerCurso option:selected").text();	
+				var escogerCursoCorto = $("#EscogerCurso option:selected").attr("corto");
+				alert(escogerCurso+" - "+escogerCursoCorto);
+				$("#pestañas").tabs("enable", 2); // activo la pestaña 1, la segunda 
+			},
+			focus: function(event,ui) {
+				$("#pestañas").tabs("disable", 2); // desactivo la pestaña 1, la segunda
+			},
+		}); 	
 		
 				
+		// ************************************
+		// Pulso el botón de obtención de datos
+		// ************************************
+		$("#go").click(function(event,ui){
+			$.when(obtenerDatos(conNombreAlumno,conNombreAsignacion)).done(function(datos){
+				try { // se reciben en formato de div
+				   	   
+				} catch(err) {
+				   console.log(err.message);
+				}	
+			});
+		});  		
+	
+		
+		// *******************************************
+		// Funciones dentro del document ready
+		// *******************************************
+		
+		function seleccionDeCurso() {
+			var curAnt = $("#cursoantiguo").val(); // Curso antiguo a Cambiar
+			// recorre los options 
+			$("#EscogerCurso option").each(function(){
+				if ($(this).val().slice(0,-1)!=curAnt.slice(0,-1)) {$(this).remove();} // Quita los que no son de su nivel
+				if ($(this).val()==curAnt) {$(this).remove();} // Quita el mismo curso, obviamente
+			});
+			$( "#EscogerCurso" ).selectmenu({}).selectmenu("menuWidget").addClass("overflow6"); // altura auto ¿? Parece que funciona
+			$( "#EscogerCurso" ).selectmenu( "refresh" );
+		}
+	
+			
 	 }); // fin del document ready
 	 
- 
 	 // ******************************************************
 	 // Funciones en la página *******************************
 	 // ******************************************************	 
 
 	 //************************************
 	 // F1) Obtener datos del filtro
-	 function sendEmail(para,asunto,mensaje) {
-		 console.log("****************** Obtiene Mensaje a enviar *******************");
-		 console.log("Asunto: "+asunto);
-		 console.log("Para: "+para);
-		 console.log("Mensaje: "+mensaje);
+	 function obtenerDatos(conNombreAlumno,conNombreAsignacion) {
+		 if ($("#fotoYN").jqxSwitchButton('checked')) { var fotoSN = 1; } else { var fotoSN=0; }
+		 // alert(fotoSN);
+		 // alert(conNombreAlumno);
+		 // alert(conNombreAsignacion);
+		 console.log("****************** Obtiene SQL *******************");
+		 console.log("SQL: "+$("#SQL").text());
+		 console.log("Fotos: ");
 		 return $.ajax({
 			  type: 'POST',
 			  dataType: 'text',	
-		      url: "./tutorias/scripts/sendEmail.php", // En el script se construye la tabla...
+		      url: "./tutorias/scripts/obtenerDatos.php", // En el script se construye la tabla...
 		      data: { 
-				 para: para,
-				 asunto: asunto,
-				 mensaje: mensaje,
+			  SQL: $("#SQL").text(), // La variable de sesión de la asignación se consigue en el script.	
+			  foto: fotoSN,		
+			  conNombreAlumno: conNombreAlumno,
+			  conNombreAsignacion: conNombreAsignacion,  
 		      },
 		      success: function(data, textStatus, jqXHR){ 			  
 				// alert(data);

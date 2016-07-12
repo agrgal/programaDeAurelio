@@ -42,6 +42,7 @@ session_start();
 			<li><a href="./obtenerDatosGenerales.php">Datos Generales</a></li>
 			<li><a href="./obtenerEstadisticas.php">Datos Estadísticos</a></li>
 			<li><a href="./enviarEmail.php">Enviar email al equipo educativo</a></li>
+			<li><a href="./cambiarClase.php">Cambiar alumno/a de clase</a></li>
 		</ul>
 	    ';
 	} else {

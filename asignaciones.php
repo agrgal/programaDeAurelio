@@ -191,7 +191,8 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 		<div id="dialog-confirm-borrar" title="Borrar datos">
 		   <p><span class="fa fa-trash fa-2x" style="float:left; margin:0 7px 20px 0;">
 		   </span>
-		   ¿De verdad quieres borrar esta Asignación?<span class="hoverAsignacion"></span>
+		   ¿De verdad quieres borrar esta Asignación? Deberías cancelar y obtener un PDF de las opiniones y opiniones generales referidas
+		   a esta asignación, pues se borrarán a su vez.<span class="hoverAsignacion"></span>
 		   </p>
 		</div>
 		
@@ -267,10 +268,10 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 		  $("#dialog-confirm, #dialog-confirm-modificar, #dialog-confirm-borrar, #dialog-confirm-nohaydatos").dialog({
 			autoOpen: false,
 			modal: true,
-			maxWidth:600,
-            maxHeight: 450,
-            width: 600,
-            height: 450,
+			maxWidth:1000,
+            maxHeight: 600,
+            width: 1000,
+            height: 600,
 			position: { my: "center center-100", at: "center center", of: "#container" }
 			// el "centro arriba" de mi cuadro de diálogo (my) , en el centro arriba (at) del contenedor (of)
 		 });
