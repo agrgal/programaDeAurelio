@@ -37,6 +37,7 @@ if (!isset($_SESSION['menuIZQ'])) { $_SESSION['menuIZQ']=0; }
   <!-- Linkar a hojas de estilo CSS -->
   <!-- ***************************** -->
   <?php include_once("./css/cargarestiloscss.php"); ?>
+  <link rel="stylesheet" href="./css/frase.css"> <!-- Efectos aplicados a esta hoja -->
  
   <!-- *** Final del HEAD, antes los ficheros de enlace a CSS ******-->
 </head>
@@ -90,8 +91,101 @@ if (!isset($_SESSION['menuIZQ'])) { $_SESSION['menuIZQ']=0; }
 			</h1>
 			<h2 style="text-align: center;">Has accedido correctamente al sistema</h2>
 			<p  style="text-align: center;"><a id="abandonar">Cerrar sesión</a></p>
-			<p  style="text-align: center;">Pensar en si se puede poner alguna frase aleatoria...</p>
+			
+			<!-- Frase aleatoria; SCRIPT COPIADO DE https://es.wikiquote.org/wiki/Wikiquote:Frase_del_d%C3%ADa -->
+			<?php 
+			$registros = array();
+			if (($fichero = fopen("./otros/frases.csv", "r")) !== FALSE) {
+				// Lee los nombres de los campos
+				$nombres_campos = fgetcsv($fichero, 0, "###", "\"", "\"");
+				$num_campos = count($nombres_campos);
+				// Lee los registros
+				while (($datos = fgetcsv($fichero, 0, "###", "\"", "\"")) !== FALSE) {
+				// Crea un array asociativo con los nombres y valores de los campos
+					for ($icampo = 0; $icampo < $num_campos; $icampo++) {
+						$registro[$nombres_campos[$icampo]] = $datos[$icampo];
+						// echo $nombres_campos[$icampo];
+					}
+					// Añade el registro leido al array de registros
+					$registros[] = $registro;
+				}
+				fclose($fichero);
+
+				$aleatorio = rand(0,count($registros)-1); 
+				$frase = $registros[$aleatorio]["Frase"];
+				$autor = trim($registros[$aleatorio]["Autor"]);
+								
+			} ?>
+			<!-- Fin de frase aleatoria -->
+						
+			<div id="frase" class="effect7" style="width: 80%; margin: 10px auto; padding: 10px 10px;" >
+				<?php echo '<p>'.iconv("UTF-8","ISO-8859-15", "\"".trim($frase)."\", de ".$autor).'</p>'; ?>
+			
+			
+			<?php
+			$title = str_replace(" ", "_", $autor);
+			$results = array();
+			$pais=array(); $pais[0]="en"; $pais[1]="es";
+			foreach ($pais as $p) {
+				$imagesQuery = "http://".$p.".wikipedia.org/w/api.php?action=query&titles=".$title."&prop=images&format=json&imlimit=3";
+				$jsonResponse = file_get_contents($imagesQuery);
+				// echo $jsonResponse;
+				$json_array = json_decode($jsonResponse, true);
+				foreach($json_array['query']['pages'] as $page){
+					if(count($page['images']) > 0) {
+						foreach($page['images'] as $image){
+							// echo $image["title"];
+							// echo str_replace("_"," ",normaliza($title));
+							if (strpos($image["title"],str_replace("_"," ",$title))>0 or 
+							     strpos($image["title"],str_replace("_"," ",normaliza($title)))>0 
+							     ) {
+								$title2 = str_replace(" ", "_", $image["title"]);
+								$imageinfourl = "http://".$p.".wikipedia.org/w/api.php?action=query&titles=".$title2."&prop=imageinfo&iiprop=url&format=json&imlimit=5";
+								$imageinfo = file_get_contents($imageinfourl);
+								// echo $imageinfo;
+								$image_array = json_decode($imageinfo, true);
+								$image_pages = $image_array["query"]["pages"];
+								foreach($image_pages as $a){
+									$results["url"][] = $a["imageinfo"][0]["url"];
+								}
+							} // primero mira si el nombre coincide
+						} // Si hay fotos pero no resultados
+												
+						/* if(count($results["url"])<=0) {
+							foreach($page['images'] as $image){
+								$title2 = str_replace(" ", "_", $image["title"]);
+								$imageinfourl = "http://".$p.".wikipedia.org/w/api.php?action=query&titles=".$title2."&prop=imageinfo&iiprop=url&format=json&imlimit=5";
+								$imageinfo = file_get_contents($imageinfourl);
+								// echo $imageinfo;
+								$image_array = json_decode($imageinfo, true);
+								$image_pages = $image_array["query"]["pages"];
+								foreach($image_pages as $a){
+									$results["url"][] = $a["imageinfo"][0]["url"];
+								}
+							} // Si hay fotos pero no resultados
+						} // Fin de si no hay resultados */
+						
+					}
+				}
+			}
+			
+			// echo count($results["url"]);
+			//Si existe una imagen en wikipedia
+			if (count($results["url"])>0) {
+				$imagenAleatoria = rand(0,count($results["url"])-1);
+				echo '<p><div class="polaroid"><img src="'.$results["url"][$imagenAleatoria].'"></div></p>';			
+			} 
+			
+			/* foreach ($results["url"] as $clave => $direccion) {
+				echo '<p>'.$clave.'<img src="'.$direccion.'"></p>';
+			} */
+			
+			echo '</div>'; // Fin del div de frases...
+			?>
+    
+			
 	<?php } ?>
+	
 	</div> <!-- &&&& -->
 	
 	<!-- Comprobar el paso de parámetros si se activa -->

@@ -1,11 +1,11 @@
 <?php 
 /* ****************************************************************
-Incluyo una funci�n con los datos de conexi�n
+Incluyo una función con los datos de conexión
 ****************************************************************** */
 include_once("./configuracion/config.php");
 
 /* ****************************************************************
-Esta funci�n conecta a una base de datos en concreto
+Esta función conecta a una base de datos en concreto
 ****************************************************************** */
 function Conectarse()
 { // para conectarse a una base de datos, que ya se define en config.php
@@ -15,10 +15,10 @@ if
 // (!($link=mysql_connect("","pepe","pepa")))
 (!($link=mysql_connect($mysql_server,$mysql_login,$mysql_pass)))
 {
-echo "<p>Error conectando a la base de datos. Datos incorrectos de servidor, login o contrase�a</p>";
+echo "<p>Error conectando a la base de datos. Datos incorrectos de servidor, login o contraseña</p>";
 exit();
 }
-if (!mysql_select_db($bd,$link)) //base de datos:conexi�n
+if (!mysql_select_db($bd,$link)) //base de datos:conexión
 {
 echo "<p>Error cuando selecciono la base de datos. No existe esa base de datos.</p>";
 exit();
@@ -37,7 +37,7 @@ if (mysqli_connect_errno())
 }
 
 /* ****************************************************************
-Esta funci�n recupera el valor de un campo en concreto...
+Esta función recupera el valor de un campo en concreto...
 ****************************************************************** */
 function dado_Id($Id,$tipo,$tabla,$nombreid) 
 	{ // Recupera el valor de la base de datos	
@@ -58,7 +58,7 @@ function dado_Id($Id,$tipo,$tabla,$nombreid)
 	}
 	
 /* *****************************************************************************
-Esta funci�n cambiar el nombre del tipo Apll1 Apll2, Nombre a Nombre y apellidos
+Esta función cambiar el nombre del tipo Apll1 Apll2, Nombre a Nombre y apellidos
 *********************************************************************************/
 function cambiarnombre($nombre) {
     $palabras = preg_split('/,/', $nombre);
@@ -88,7 +88,7 @@ function retornaApellidos($nombre) {
 }
 
 /* ********************************************************************************************
-Comprueba si una cadena es o no vac�a
+Comprueba si una cadena es o no vacía
 ***********************************************************************************************/
 function IsNullOrEmptyString($question){
     return (!isset($question) || trim($question)==='');
@@ -106,8 +106,8 @@ function fechaMySQL2DatePicker($fec) {
 Cambiar fecha MySQL a formato largo
 ***********************************************************************************************/
 function fechaMySQL2Larga($fec) {
-	// Mejor as�, por si el servidor no tiene SETLOCALE activado...	
-	$dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","S�bado");
+	// Mejor así, por si el servidor no tiene SETLOCALE activado...	
+	$dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
 	$meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 	return $dias[date('w',strtotime($fec))].", ".date('d',strtotime($fec))." de ".$meses[date('n',strtotime($fec))-1]. " de ".date('Y',strtotime($fec)) ;
     // return date("l, d \d\e M \d\e Y", strtotime($fec));
@@ -121,11 +121,11 @@ function fechaMySQL2together($fec) {
 }
 
 /* ********************************************************************************************
-Dada una fecha, te calcula el uno de septiembre de ese a�o
+Dada una fecha, te calcula el uno de septiembre de ese año
 ***********************************************************************************************/
 function unoSeptiembre($fechaDada) {
 		$anno = date('Y',strtotime($fechaDada));
-		$fechaUnoSeptiembre=date('Y-m-d',strtotime($anno."-09-01")); // del uno de septiembre de ese a�o
+		$fechaUnoSeptiembre=date('Y-m-d',strtotime($anno."-09-01")); // del uno de septiembre de ese año
 		return $fechaUnoSeptiembre;
 }
 
@@ -158,7 +158,7 @@ function varianzaArray($a) {
 }
 
 /* ********************************************************************************************
-Dado un array con valores, calculo la desviaci�n t�pica
+Dado un array con valores, calculo la desviación típica
 ***********************************************************************************************/
 function desviaciontipicaArray($a) {
 	if(!(is_null(varianzaArray($a)))){
@@ -166,6 +166,18 @@ function desviaciontipicaArray($a) {
 	} else {
 		return NULL;
 	}
+}
+
+/* ********************************************************************************************
+quitar tildes
+***********************************************************************************************/
+function normaliza($cadena){
+    $originales = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ';
+    $modificadas = 'AAAAAAACEEEEIIIIDNOOOOOOUUUUYbbaaaaaaaceeeeiiiidnoooooouuuyybyRr';
+    $cadena = utf8_decode($cadena);
+    $cadena = strtr($cadena, utf8_decode($originales), $modificadas);
+    // $cadena = strtolower($cadena);
+    return utf8_encode($cadena);
 }
 
 ?>
