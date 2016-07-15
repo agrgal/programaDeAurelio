@@ -360,17 +360,34 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				$("#pestañas").tabs("enable", 2); // activo la pestaña 1, la segunda
 				// PRIMERA LLAMADA AJAX
 				 // llama a la función que obtiene las asignaciones que tiene ese alumno/A
-				$.when(obtenerAntiguos($("#idalumno").val())).done(function(data){
+				$.when(obtenerAntiguos($("#idalumno").val()),obtenerNuevos($("#cursonuevo").val())).done(function(data1,data2){
+					// primer conjunto de datos
 					try { // se reciben en formato de div
-						var datos = jQuery.parseJSON(data);
-					    if (datos.valido==1) {
-							$("#asignacionesAntiguas").html(datos.divs);
+						// Asignaciones antiguas del alumno/a
+						var datos1 = jQuery.parseJSON(data1[0]);
+					    if (datos1.valido==1) {
+							$("#asignacionesAntiguas").html(datos1.divs);
 						} else {
 							$("#asignacionesAntiguas").html("Este alumno/a no tiene asignaciones antiguas asignadas");
 						} 
 					} catch(err) {
 					   console.log(err.message);
 					}	
+					// Segundo conjunto de datos
+					try { // se reciben en formato de div
+						// Asignaciones antiguas del alumno/a
+						var datos2 = jQuery.parseJSON(data2[0]);
+					    if (datos2.valido==1 && datos2.divs.length>0) {
+							// alert(datos2.divs); // alert(datos2.numeros);
+							$("#asignacionesNuevas").html(datos2.divs);
+						} else {
+							$("#asignacionesNuevas").html("Esta clase no tiene asignaciones nuevas asignadas");
+						} 
+					} catch(err) {
+					   console.log(err.message);
+					}	
+					
+					
 				});
 			},
 			focus: function(event,ui) {
@@ -425,6 +442,25 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		      url: "./tutorias/scripts/obtenerAntiguos.php", // En el script se construye la tabla...
 		      data: { 
 			  alumno: alumno, // La variable de sesión de la asignación se consigue en el script.	 
+		      },
+		      success: function(data, textStatus, jqXHR){ 			  
+				// alert(data);
+				return data;
+		      },
+		  });
+	  } // Fin de la función Obtener datos del filtro  
+	  
+	  //************************************
+	 // F2) Obtener asignaciones de la nueva clase
+	 function obtenerNuevos(clase) {
+		 console.log("****************** Obtiene SQL *******************");
+		 console.log("clase: "+clase);
+		 return $.ajax({
+			  type: 'POST',
+			  dataType: 'text',	
+		      url: "./tutorias/scripts/obtenerNuevos.php", // En el script se construye la tabla...
+		      data: { 
+			  clase: clase, // La variable de sesión de la asignación se consigue en el script.	 
 		      },
 		      success: function(data, textStatus, jqXHR){ 			  
 				// alert(data);

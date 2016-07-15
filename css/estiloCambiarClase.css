@@ -43,11 +43,62 @@
 
 #asignacionesAntiguas, #asignacionesNuevas {
 	float: left;
-	width: 49%;
+	width: 59%;
 	border: 0px solid black;
 	padding: 1px auto;
 }
 
 #asignacionesNuevas {
+   width: 39%;
    float: right;
+}
+
+/* ============================ */
+/* DIV para Cambio de clase     */
+/* ============================ */
+
+.bloque, .bloque2 {
+	width: 100%;
+	float: left;
+	border: 0px solid red;
+	text-align: center;
+	padding: 2px;	
+	clear: both;
+	position: relative;
+}
+
+.divasignacionCambio {
+  width: 45%;
+  max-width: 45%;
+  height: auto;
+  font-size: 1em;
+  font-weight: bold;
+  margin: 10px 10px;
+  padding: 2px 2px;
+  border: 0px solid green;
+  float: left;
+  text-align: center;
+  /* background: #b7cde2; */
+  background: #BAE9FB;
+        border-radius: 10px;
+        box-shadow: 5px 5px 5px black;
+}
+
+
+
+.destino {
+	width: 45%;
+	max-width: 45%;
+	height: auto;
+	margin: 10px 10px;
+    padding: 2px 2px;
+	float: right;
+	/* border: 4px dotted black; */
+	position: absolute;
+	top: 4px;
+	bottom: 4px;
+	right: 4px;
+	/* background: #BAE9FB; */
+        border-radius: 10px;
+        box-shadow: 5px 5px 5px black;
 }

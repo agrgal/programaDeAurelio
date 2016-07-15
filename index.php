@@ -173,7 +173,7 @@ if (!isset($_SESSION['menuIZQ'])) { $_SESSION['menuIZQ']=0; }
 			//Si existe una imagen en wikipedia
 			if (count($results["url"])>0) {
 				$imagenAleatoria = rand(0,count($results["url"])-1);
-				echo '<p><div class="polaroid"><img src="'.$results["url"][$imagenAleatoria].'"></div></p>';			
+				echo '<p><img src="'.$results["url"][$imagenAleatoria].'"></p>';			
 			} 
 			
 			/* foreach ($results["url"] as $clave => $direccion) {

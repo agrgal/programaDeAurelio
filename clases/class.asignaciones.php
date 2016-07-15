@@ -274,11 +274,13 @@ class misAsignaciones
 	public function asignacionDIV2($id) {
 		$nombreProfesor = $this->asignacionProfesor($id,1);
 		$claveProfesor = $this->asignacionProfesor($id,0);
-		$nombreMateria = $this->asignacionMateria($id,1);
-		$claveMateria = $this->asignacionMateria($id,0);
+		$nombreMateria = $this->asignacionMateria($id,1);		
+		$claveMateria = $this->asignacionMateria($id,0);		
+		// $clases = $this->clasecurso->devuelveCursosdeAsignacion($this->clasecurso->devuelveAsignacionLarga($id),0);
+		$clases = $this->clasecurso->devuelveCursosdeAsignacion($this->clasecurso->devuelveAlumnosAsignacion($id),0);
 		$cadena='<div id="'.$id.'" class="divasignacionCambio" materia="'.$claveMateria.'" profesor="'.$claveProfesor.'" title="'.$nombreProfesor.' ('.$nombreMateria.')">'.
-		'<h2>'.$nombreProfesor.'</h2>'.
-		'<h4>'.$nombreMateria.'</h4>'.
+		'<h3>'.$nombreProfesor.'</h3>'.
+		'<h5>'.$nombreMateria.' ('.str_replace("#",",",$clases).') </h5>'.		
 		'</div>';
 		return $cadena;
 	} // ************************************************************************

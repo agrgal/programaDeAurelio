@@ -33,24 +33,38 @@ session_start(); //activo variables de sesion
 $data=[];
 $data["valido"]=0;
 $data["divs"]="";
+$data["numeros"]="";
 
-if ($_POST["alumno"]>0) {
-	$asignacionAlumno = $asignacion->devuelveAsignacionesDondeEstaUnAlumno($_POST["alumno"]);
-		if (!is_null($asignacionAlumno) and !empty($asignacionAlumno)) {
-			$asignacionAlumnoArray=explode("#",$asignacionAlumno);
-			$cadena="";
-			foreach ($asignacionAlumnoArray as $clave => $valor) {
-				// $cadena.= $asignacion->asignacionDIV2($valor); // lama a los divs que están en la clase asignación
-				$cadena.='<div class="bloque" id="'.$valor.'">'.$asignacion->asignacionDIV2($valor).'<div class="destino" id="destino'.$valor.'"></div></div>';
+if (!is_null($_POST["clase"]) and !empty($_POST["clase"])) {
+	// $data["divs"]="¡Tengo datos! para ".$_POST["clase"];
+	$alumnado = $curso->devuelveAsignacionLarga($_POST["clase"]); // dada una clase (1ESOC) devuelve retahíla de alumnos 
+	$alumnadoArray= explode("#",$alumnado);
+	$asignaciones="";
+	foreach ($alumnadoArray as $clave => $valor) { //por cada alumno
+		$asignaciones.=$asignacion->devuelveAsignacionesDondeEstaUnAlumno($valor)."#";
+	}
+	$asignaciones=substr($asignaciones, 0, -1); // le quito el último comodin
+	$asignacionClase = explode("#",$asignaciones); // Convierto los valores en array
+	// $data["divs"]=$asignaciones;
+	$data["numeros"]=$asignaciones;
+	if (count($asignacionClase)>0) { // Si existen datos...
+		foreach (array_unique($asignacionClase) as $clave => $valor) {
+			// $cadena.= $asignacion->asignacionDIV2($valor); // llama a los divs que están en la clase asignación
+			if (!is_null($valor) and !empty($valor)) {
+				$cadena.='<div class="bloque2" id="'.$valor.'">'.$asignacion->asignacionDIV2($valor).'</div>';
 			}
-			$data["valido"]=1;
-			$data["divs"]= iconv("ISO-8859-15", "UTF-8",$cadena);
-			echo json_encode($data);
-		} else {
-			echo json_encode($data);
 		}
-}
+		$data["valido"]=1; // Cambio a válido
+		if (strlen($cadena)>0) { 
+			$data["divs"]= iconv("ISO-8859-15", "UTF-8",$cadena); // Paso la cadena de valores
+		} else {
+			$data["divs"]= "";
+		}
+	}
 
+} 
+
+echo json_encode($data);
 
 
 
