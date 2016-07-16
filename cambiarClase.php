@@ -366,7 +366,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 						// Asignaciones antiguas del alumno/a
 						var datos1 = jQuery.parseJSON(data1[0]);
 					    if (datos1.valido==1) {
-							$("#asignacionesAntiguas").html(datos1.divs);
+							$("#asignacionesAntiguas").html('<h1>Asignaciones que tiene</h1>'+datos1.divs);
 						} else {
 							$("#asignacionesAntiguas").html("Este alumno/a no tiene asignaciones antiguas asignadas");
 						} 
@@ -379,7 +379,11 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 						var datos2 = jQuery.parseJSON(data2[0]);
 					    if (datos2.valido==1 && datos2.divs.length>0) {
 							// alert(datos2.divs); // alert(datos2.numeros);
-							$("#asignacionesNuevas").html(datos2.divs);
+							$("#asignacionesNuevas").html('<h1>Asignaciones que puede tener</h1>'+datos2.divs);
+							$(".bloque2").each(function(e){
+								$(this).children().removeClass("divasignacionCambio");
+								$(this).children().addClass("divasignacionCambio2");
+							});
 						} else {
 							$("#asignacionesNuevas").html("Esta clase no tiene asignaciones nuevas asignadas");
 						} 
