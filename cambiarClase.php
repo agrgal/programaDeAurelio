@@ -83,6 +83,9 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
     <!-- *********************************************************** -->
      
 	<div id="test"> <!-- TESTER -->
+		<input id="idalumno" type="text" value="" style="display: text;">
+		<input id="cursoantiguo" type="text" value="" style="display: text;">
+		<input id="cursonuevo" type="text" value="" style="display: text;">
 	    <p id="testear">
 	    </p>
     </div>	<!-- TESTER -->
@@ -119,8 +122,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				echo '</div>';				
 				?>
 				<div id="muestraAlumno">	
-					<input id="idalumno" type="text" value="" style="display: none;">
-					<input id="cursoantiguo" type="text" value="" style="display: none;">
+
 					<p id="muestraAlumnoActual">No hay alumno/a seleccionado/a</p>				
 				</div>
 			</div>
@@ -143,7 +145,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 					</select>
 				</div>
 				<div id="muestraCurso">
-					<input id="cursonuevo" type="text" value="" style="display: none;">
+					
 					<p id="muestraCursoActual">No hay curso seleccionado</p>
 				</div>	
 			</div>
@@ -152,6 +154,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			<!-- Correspondencia entre opiniones-->
 			<!-- ********************************************************** --> 	
 			<div id="Correspondencia">
+				<input id="parejas" type="text" value="" style="display: text;">
 				<div id="asignacionesAntiguas" class="effect7">
 					<h1>Asignaciones que tiene</h1>
 				</div>
@@ -365,26 +368,60 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 					try { // se reciben en formato de div
 						// Asignaciones antiguas del alumno/a
 						var datos1 = jQuery.parseJSON(data1[0]);
+						alert(datos1.asignacionAlumno);
 					    if (datos1.valido==1) {
 							var titulo = $("#asignacionesAntiguas").html();
 							$("#asignacionesAntiguas").html(titulo + datos1.divs);
-							$("#asignacionesAntiguas").children().each(function(e){
-								if ($(this).hasClass("bloque")) {
+							$("#asignacionesAntiguas .bloque").children().each(function(e){
+								if ($(this).hasClass("destino")) {
 										$(this).droppable({  
 											// var factor = 0,8;
 											// ************************************************
 											// A) Introduzco elementos en la zona seleccionable. 
 											// ************************************************     
 											drop: function (event, ui) {
-												alert("Lo que dejado caer aquí "+$(this).attr("id"));
-												alert(ui.draggable.attr("id")); // obtengo la clase, para distinguirlo);
-												$(this).append(ui.draggable); // este incorpora el objeto al bloque
+												// alert("Lo que dejado caer aquí "+$(this).attr("id"));
+												// alert(ui.draggable.attr("id")); // obtengo la clase, para distinguirlo);
+												if (!($(this).children().hasClass("divasignacionCambio2"))) {
+													// Importante, voy construyendo 
+												    $(this).append(ui.draggable); // este incorpora el objeto al bloque
+												    var estilo = ui.draggable.attr("class");	
+													if (estilo.indexOf("divasignacionCambio2")>=0) { // Sólo afecta a los que tienen esa clase
+													// alert(parseInt($(this).css("max-width")));
+													ui.draggable.css("max-width",(parseInt($(this).css("max-width"))-40)); // tamaño letra
+													// alert(ui.draggable.css("max-width"));
+													ui.draggable.css("width",(parseInt($(this).css("width"))-30)); // tamaño letra
+													ui.draggable.css("position","relative"); // en relación con bloque
+													ui.draggable.css("top","10px"); // posición esquina superior
+													ui.draggable.css("left","10px"); // posición a la izquierda
+													ui.draggable.css("margin","0px"); // margin
+													ui.draggable.css("font-size","0.6em"); // tamaño letra
+													ui.draggable.css("height",parseInt($(this).css("height"))-30); // tamaño letra	
+													}	
+												    montarParejas(); // reconoce los ID y los deja en el input...
+												}
 											},
 											out: function (event, ui) {	
+												var estilo = ui.draggable.attr("class"); // obtengo la clase, para distinguirlo
+												var objeto = $(ui.draggable);
+												objeto.draggable( "option", "revert", false );
+												// ================================================
+												// Si el objeto es de la clase divasignacionCambio2
+												// ================================================
+												if (estilo.indexOf("divasignacionCambio2")>=0) {
+													objeto.css("max-width",""); // Quita la propiedad y se asigna la de la clase divasignacionCambio2
+													objeto.css("width",""); objeto.css("margin",""); objeto.css("height",""); objeto.css("font-size","");
+												objeto.appendTo("#asignacionesNuevas"); // lo asimilo otra vez a la zona de Asignaciones Nuevas.				   
+												$("#asignacionesNuevas").find(".divasignacionCambio2").sort(function(a,b){
+												   return $(a).attr("id")>$(b).attr("id"); // esto ordena por orden en id
+												}).appendTo("#asignacionesNuevas");
+												}
+												montarParejas(); // reconoce los ID y los deja en el input...
 											},
 										});
-								} // Fin si es de la clase bloque
+								} // Fin si es de la clase bloque								
 							});
+							
 						} else {
 							$("#asignacionesAntiguas").html("<h1>Este alumno/a no tiene asignaciones antiguas asignadas</h1>");
 						} 
@@ -464,6 +501,27 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			$( "#EscogerCurso" ).selectmenu({}).selectmenu("menuWidget").addClass("overflow6"); // altura auto ¿? Parece que funciona
 			$( "#EscogerCurso" ).selectmenu( "refresh" );
 		}
+		
+		// ******************************************
+		// reescribe el INPUT de las  parejas
+		// Al hacer un DRAG and DROP
+		// ******************************************
+		function montarParejas() {
+			$("#parejas").val(""); // Reinicio el valor de parejas 
+			$("#asignacionesAntiguas .bloque").children().each(function(e){					
+				if ($(this).hasClass("destino")) {
+					// Si existe un bloque
+					// alert("Reconozco que hay un bloque");
+					if ($(this).children().hasClass("divasignacionCambio2")) {
+						// Y en su interior tengo dejado un bloque...
+						// alert($(this).attr("id"));
+						// alert($(this).children().attr("id"));
+						var parejas = $("#parejas").val()+$(this).attr("id")+"-"+$(this).children().attr("id")+"#";
+						$("#parejas").val(parejas);
+					}
+				}
+			});
+		} // Fin de montar Parejas
 	
 			
 	 }); // fin del document ready

@@ -33,6 +33,7 @@ session_start(); //activo variables de sesion
 $data=[];
 $data["valido"]=0;
 $data["divs"]="";
+$data["asignacionAlumno"]="No hay asignaciones";
 
 if ($_POST["alumno"]>0) {
 	$asignacionAlumno = $asignacion->devuelveAsignacionesDondeEstaUnAlumno($_POST["alumno"]);
@@ -41,10 +42,11 @@ if ($_POST["alumno"]>0) {
 			$cadena="";
 			foreach ($asignacionAlumnoArray as $clave => $valor) {
 				// $cadena.= $asignacion->asignacionDIV2($valor); // lama a los divs que están en la clase asignación
-				$cadena.='<div class="bloque" id="'.$valor.'">'.$asignacion->asignacionDIV2($valor).'<div class="destino" id="destino'.$valor.'" title="by Mobiletuxedo in gestures"></div></div>';
+				$cadena.='<div class="bloque" id="'.$valor.'">'.$asignacion->asignacionDIV2($valor).'<div class="destino" id="'.$valor.'" title="by Mobiletuxedo in gestures"></div></div>';
 			}
 			$data["valido"]=1;
 			$data["divs"]= iconv("ISO-8859-15", "UTF-8",$cadena);
+			$data["asignacionAlumno"]=iconv("ISO-8859-15", "UTF-8",$asignacionAlumno);
 			echo json_encode($data);
 		} else {
 			echo json_encode($data);

@@ -139,7 +139,7 @@ class misAsignaciones
 		// 2) Tengo que encontrar las asignaciones en las que en "datos" encuentre el curso "1ESOE" o la id
 		$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
 	    $Sql='SELECT idasignacion FROM tb_asignaciones ';
-	    $Sql.="WHERE datos LIKE '%#".$idal."#%' OR datos LIKE '%".$idal."#' OR datos LIKE '".$idal."#%' OR datos LIKE '%".$cursoalumno."%' ";
+	    $Sql.="WHERE datos=".$idal." OR datos LIKE '%#".$idal."#%' OR datos LIKE '%#".$idal."' OR datos LIKE '".$idal."#%' OR datos LIKE '%".$cursoalumno."%' ";
 	    $Sql.='ORDER BY idasignacion';
 	    $ii=0; // contador 
 	    // NO PUEDO USARLO... $Sql = sprintf($Sql, mysqli_real_escape_string($link,"idasignacion")); // Seguridad que evita los ataques SQL Injection  	
@@ -150,6 +150,7 @@ class misAsignaciones
 		} // fin del while
 		if (!is_null($cadena)) { // si no lo recupera, el valor por defecto)
 		    return substr($cadena, 0, -1); //envia el valor dado
+		    // return $Sql;
 		    } else {
 		    return NULL;
 	        }
@@ -265,7 +266,8 @@ class misAsignaciones
 		$claveProfesor = $this->asignacionProfesor($id,0);
 		$this->claseprofesor->idprofesor=$claveProfesor;
 		$email = $this->claseprofesor->profesorEmail();
-		$cadena='<div id="'.$claveProfesor.'" class="divasignacionEmail" email="'.$email.'" title="'.$nombreProfesor.'">'.$nombreProfesor.'</div>';
+		$cadena='<div id="'.$claveProfesor.'" class="divasignacionEmail" email="'.$email.'" title="'.$nombreProfesor.'">'
+		.$nombreProfesor.'</div>';
 		return $cadena;
 		// return $email;
 	} // ************************************************************************

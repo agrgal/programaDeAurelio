@@ -51,6 +51,7 @@
 #asignacionesNuevas {
    width: 39%;
    float: right;
+   padding-bottom: 20px;
 }
 
 #asignacionesAntiguas h1, #asignacionesNuevas h1 {
@@ -127,13 +128,14 @@
 	max-width: 45%;
 	height: auto;
 	margin: 10px 10px;
-    padding: 4px;
+    padding: 0px;
 	float: right;
-	/* border: 4px dotted black; */
+	border: 1px solid black; 
 	position: absolute;
 	top: 4px;
 	bottom: 4px;
 	right: 4px;
+	text-align: center;
 	background: url("../imagenes/iconos/fingers-gesture.png") center no-repeat;
 	background-size: 80px 60px;
         border-radius: 10px;
