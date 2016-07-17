@@ -51,7 +51,8 @@ if (!is_null($_POST["clase"]) and !empty($_POST["clase"])) {
 		foreach (array_unique($asignacionClase) as $clave => $valor) {
 			// $cadena.= $asignacion->asignacionDIV2($valor); // llama a los divs que están en la clase asignación
 			if (!is_null($valor) and !empty($valor)) {
-				$cadena.='<div class="bloque2" id="'.$valor.'">'.$asignacion->asignacionDIV2($valor).'</div>';
+				$cadena.=$asignacion->asignacionDIV2($valor);
+				// $cadena.='<div class="bloque2" id="'.$valor.'">'.$asignacion->asignacionDIV2($valor).'</div>';
 			}
 		}
 		$data["valido"]=1; // Cambio a válido

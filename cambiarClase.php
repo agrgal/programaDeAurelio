@@ -153,10 +153,10 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			<!-- ********************************************************** --> 	
 			<div id="Correspondencia">
 				<div id="asignacionesAntiguas" class="effect7">
-					Esto hay que rellenarlo mediante una llamada ajax
+					<h1>Asignaciones que tiene</h1>
 				</div>
 				<div id="asignacionesNuevas" class="effect7">
-					Esto hay que rellenarlo mediante una llamada ajax
+					<h1>Asignaciones que podría tener</h1>
 				</div>
 			</div>
 			<!-- ********************************************************** -->
@@ -366,9 +366,27 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 						// Asignaciones antiguas del alumno/a
 						var datos1 = jQuery.parseJSON(data1[0]);
 					    if (datos1.valido==1) {
-							$("#asignacionesAntiguas").html('<h1>Asignaciones que tiene</h1>'+datos1.divs);
+							var titulo = $("#asignacionesAntiguas").html();
+							$("#asignacionesAntiguas").html(titulo + datos1.divs);
+							$("#asignacionesAntiguas").children().each(function(e){
+								if ($(this).hasClass("bloque")) {
+										$(this).droppable({  
+											// var factor = 0,8;
+											// ************************************************
+											// A) Introduzco elementos en la zona seleccionable. 
+											// ************************************************     
+											drop: function (event, ui) {
+												alert("Lo que dejado caer aquí "+$(this).attr("id"));
+												alert(ui.draggable.attr("id")); // obtengo la clase, para distinguirlo);
+												$(this).append(ui.draggable); // este incorpora el objeto al bloque
+											},
+											out: function (event, ui) {	
+											},
+										});
+								} // Fin si es de la clase bloque
+							});
 						} else {
-							$("#asignacionesAntiguas").html("Este alumno/a no tiene asignaciones antiguas asignadas");
+							$("#asignacionesAntiguas").html("<h1>Este alumno/a no tiene asignaciones antiguas asignadas</h1>");
 						} 
 					} catch(err) {
 					   console.log(err.message);
@@ -379,25 +397,44 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 						var datos2 = jQuery.parseJSON(data2[0]);
 					    if (datos2.valido==1 && datos2.divs.length>0) {
 							// alert(datos2.divs); // alert(datos2.numeros);
-							$("#asignacionesNuevas").html('<h1>Asignaciones que puede tener</h1>'+datos2.divs);
-							$(".bloque2").each(function(e){
-								$(this).children().removeClass("divasignacionCambio");
-								$(this).children().addClass("divasignacionCambio2");
+							var titulo2 = $("#asignacionesNuevas").html();
+							$("#asignacionesNuevas").html(titulo2 + datos2.divs);
+							$("#asignacionesNuevas").children().each(function(e){
+								if ($(this).hasClass("divasignacionCambio")) { // Cambia los divs que tenían divasignacionCambio por divasignacionCambio2
+									$(this).removeClass("divasignacionCambio");
+									$(this).addClass("divasignacionCambio2");
+									// Convertirlo en DRAGGABLE...
+									$(this).draggable({
+									   containment: "body", // contenedor donde puede moverse
+									   stack: "body", // pone su z-index por encima de todos los de esa zona
+									   helper: 'clone', // mueve una copia del elemento
+									   revert: 'invalid', // vuelve a su lugar original si no puedo ponerlo sobre la zona objetivo
+									   appendTo: 'body', // lo añade al body 
+									   cursor: "move",		   
+									}); // los hago cuando se llaman...
+								} 
 							});
 						} else {
-							$("#asignacionesNuevas").html("Esta clase no tiene asignaciones nuevas asignadas");
+							$("#asignacionesNuevas").html("<h1>Esta clase no tiene asignaciones nuevas asignadas</h1>");
 						} 
 					} catch(err) {
 					   console.log(err.message);
-					}	
-					
-					
+					}		
+
 				});
 			},
 			focus: function(event,ui) {
 				$("#pestañas").tabs("disable", 2); // desactivo la pestaña 1, la segunda
 			},
-		}); 			
+		}); 	
+		
+		
+		// ************************************
+		// DRAG AND DROP
+		// ************************************
+		// hay que conveertirlo en DRAG al momento de llamarlo
+		
+
 				
 		// ************************************
 		// Pulso el botón de obtención de datos

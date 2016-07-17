@@ -45,12 +45,23 @@
 	float: left;
 	width: 59%;
 	border: 0px solid black;
-	padding: 1px auto;
+	padding: 5px 5px;
 }
 
 #asignacionesNuevas {
    width: 39%;
    float: right;
+}
+
+#asignacionesAntiguas h1, #asignacionesNuevas h1 {
+	text-align: center;
+	font-size: 1.4em;
+	padding: 10px 10px;
+	/* font-weight: bold; */
+	/* vertical-align: text-bottom; */
+	color: rgb(41, 39, 0);
+	/* background-color: rgb(231, 212, 195); */
+	text-shadow: rgb(185, 170, 156) 7px 6px 2px;
 }
 
 /* ============================ */
@@ -60,9 +71,10 @@
 .bloque, .bloque2 {
 	width: 100%;
 	float: left;
-	border: 2px solid red;
+	border: 0px solid red;
 	text-align: center;
-	padding: 2px;	
+	padding: 2px;
+	/* margin: 8px;	*/
 	clear: both;
 	position: relative;
 }
@@ -74,21 +86,39 @@
   font-size: 1em;
   font-weight: bold;
   margin: 10px 10px;
-  padding: 2px 2px;
+  padding: 4px;
   border: 0px solid green;
   float: left;
   text-align: center;
   /* background: #b7cde2; */
-  background: #BAE9FB;
+  background: #FFE06A;
         border-radius: 10px;
         box-shadow: 5px 5px 5px black;
 }
 
 .divasignacionCambio2 {
-	background: red;
-	width: 50%;
-	display: inline;
-	
+	width: 200px;
+	max-width: 200px;
+	height: auto;
+	background: #6AFFD4;
+	font-size: 0.8em;
+	display: block-inline;
+        border-radius: 10px;
+        box-shadow: 5px 5px 5px grey;
+}
+
+.divasignacionCambio h3, .divasignacionCambio2 h3, .divasignacionCambio h5, .divasignacionCambio2 h5 {
+	padding: 2px;
+	color: rgb(0, 0, 0);
+	/* background-color: rgb(231, 212, 195); */
+	text-shadow: rgb(185, 170, 156) 2px 2px 1px;
+}
+
+.divasignacionCambio h5, .divasignacionCambio2 h5 {
+	padding: 2px;
+	color: rgb(102, 0, 128);
+	/* background-color: rgb(231, 212, 195); */
+	text-shadow: rgb(185, 170, 156) 2px 2px 1px;
 }
 
 
@@ -97,14 +127,15 @@
 	max-width: 45%;
 	height: auto;
 	margin: 10px 10px;
-    padding: 2px 2px;
+    padding: 4px;
 	float: right;
 	/* border: 4px dotted black; */
 	position: absolute;
 	top: 4px;
 	bottom: 4px;
 	right: 4px;
-	/* background: #BAE9FB; */
+	background: url("../imagenes/iconos/fingers-gesture.png") center no-repeat;
+	background-size: 80px 60px;
         border-radius: 10px;
         box-shadow: 5px 5px 5px black;
 }
