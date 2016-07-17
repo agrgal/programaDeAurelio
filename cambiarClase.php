@@ -368,9 +368,14 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 					try { // se reciben en formato de div
 						// Asignaciones antiguas del alumno/a
 						var datos1 = jQuery.parseJSON(data1[0]);
-						alert(datos1.asignacionAlumno);
+						// alert(datos1.asignacionAlumno);
 					    if (datos1.valido==1) {
-							var titulo = $("#asignacionesAntiguas").html();
+							// Borrar si hay divs anteriores
+							$("#asignacionesAntiguas").children().each(function(e){
+										$(this).remove(); 
+							});
+							// Recupera el título
+							var titulo = '<h1>Asignaciones donde estaba</h1>'							;
 							$("#asignacionesAntiguas").html(titulo + datos1.divs);
 							$("#asignacionesAntiguas .bloque").children().each(function(e){
 								if ($(this).hasClass("destino")) {
@@ -433,8 +438,11 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 						// Asignaciones antiguas del alumno/a
 						var datos2 = jQuery.parseJSON(data2[0]);
 					    if (datos2.valido==1 && datos2.divs.length>0) {
+							$("#divasignacionCambio2").children().each(function(e){
+								$(this).remove();
+							});
 							// alert(datos2.divs); // alert(datos2.numeros);
-							var titulo2 = $("#asignacionesNuevas").html();
+							var titulo2 = "<h1>Agregar asignaciones nuevas</h1>";
 							$("#asignacionesNuevas").html(titulo2 + datos2.divs);
 							$("#asignacionesNuevas").children().each(function(e){
 								if ($(this).hasClass("divasignacionCambio")) { // Cambia los divs que tenían divasignacionCambio por divasignacionCambio2

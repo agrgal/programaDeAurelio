@@ -139,7 +139,11 @@ class misAsignaciones
 		// 2) Tengo que encontrar las asignaciones en las que en "datos" encuentre el curso "1ESOE" o la id
 		$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
 	    $Sql='SELECT idasignacion FROM tb_asignaciones ';
-	    $Sql.="WHERE datos=".$idal." OR datos LIKE '%#".$idal."#%' OR datos LIKE '%#".$idal."' OR datos LIKE '".$idal."#%' OR datos LIKE '%".$cursoalumno."%' ";
+	    $Sql.="WHERE datos LIKE '".$idal; // Si datos es del tipo 14, un sólo número
+	    $Sql.="' OR datos LIKE '%#".$idal; // Si encuentra la cadena #14
+	    $Sql.="#%' OR datos LIKE '%#".$idal; // Si encuentra la cadena #14#
+	    $Sql.="' OR datos LIKE '".$idal; // Si encuentra la cadena 14#
+	    $Sql.="#%' OR datos LIKE '%".$cursoalumno."%' "; // Si encuentra el curso
 	    $Sql.='ORDER BY idasignacion';
 	    $ii=0; // contador 
 	    // NO PUEDO USARLO... $Sql = sprintf($Sql, mysqli_real_escape_string($link,"idasignacion")); // Seguridad que evita los ataques SQL Injection  	
