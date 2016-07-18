@@ -40,7 +40,7 @@ $data["claseantigua"]=$_POST["claseantigua"];
 $data["clasenueva"]=$_POST["clasenueva"];
 $data["alumno"]=$_POST["alumno"];
 $data["hayParejas"]="NO";
-$data["borrada"]="NO";
+$data["borrada"]="";
 $data["claveEncontrada"]="claveEncontrada";
 
 // $_POST --> alumno, claseantigua,clasenueva, parejas
@@ -71,11 +71,11 @@ if (!is_null($_POST["parejas"]) and !empty($_POST["parejas"])) {
 	// ==========================================
 	foreach ($antigua as $clave => $valor) {
 		$Sql=""; // Como ejecuta varios Sql, al principio debe ser nulo.
-		// $link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
+		$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
 	    $Sql='UPDATE tb_opiniones SET asignacion ="'.$nueva[$clave].'"';
 	    $Sql.=' WHERE asignacion = "'.$valor.'" AND alumno = "'.$_POST["alumno"].'"';
-	    // mysqli_query($link,iconv("UTF-8","ISO-8859-15", $Sql)); // ejecuto el Sql
-	    // mysqli_close($link); // Cierro el enlace...	
+	    mysqli_query($link,iconv("UTF-8","ISO-8859-15", $Sql)); // ejecuto el Sql
+	    mysqli_close($link); // Cierro el enlace...	
 	    $data["divs"].=$Sql." <--> ";	    
 	} // Fin del foreach de cambio de asignaciones. FUNCIONA 18-Julio
 	
@@ -88,7 +88,7 @@ if (!is_null($_POST["parejas"]) and !empty($_POST["parejas"])) {
 			$datosFinal=""; // Para que también me sirva de bandera, al inicio como vacío.
 			$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
 			$Sql ='SELECT datos FROM tb_asignaciones WHERE idasignacion="'.$valor.'"';
-			$data["divs"].=$Sql." <--> ";	
+			// $data["divs"].=$Sql." <--> ";	
 			$result=mysqli_query($link,$Sql); // ejecuta la cadena sql y almacena el resultado el $result
 			$row = mysqli_fetch_array($result);
 			if (!is_null($row["datos"]) or !empty($row["datos"])) { // si no lo recupera, el valor por defecto)
@@ -104,40 +104,85 @@ if (!is_null($_POST["parejas"]) and !empty($_POST["parejas"])) {
 					// d) reconstruir cadena
 					$datosFinal = implode("#",$valores);	
 					$cadena = "EXISTE CAMBIO: ".$row["datos"]." - ".$datosFinal;
-					$data["cadena"]=$cadena;
+					$data["cadena"].=$cadena." - ";
 			  } // Fin del IF de clave encontrada	  
 			} // Fin del if que reconoce los datos: row datos
 			mysqli_free_result($result); 
 			mysqli_close($link); 	    
 			
 			// e) Si hay una cadena reconstruida, UPDATE para actualizarla
-			if (($enArray==true) and (!is_null($datosFinal) or !empty($datosFinal)) ){ // Si ha existido un cambio en los datos
+			// DESCRIPCION
+			if (($enArray==true) and !empty($datosFinal) ){ // Si ha existido un cambio en los datos
 				$Sql=""; // Como ejecuta varios Sql, al principio debe ser nulo.
-				// $link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
+				$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
 				$Sql='UPDATE tb_asignaciones SET datos ="'.$datosFinal.'"';
 				$Sql.=' WHERE idasignacion = "'.$valor.'"';
-				// mysqli_query($link,iconv("UTF-8","ISO-8859-15", $Sql)); // ejecuto el Sql
-				// mysqli_close($link); // Cierro el enlace...	
-				$data["divs"].=$Sql." <--> ";	    
-			} else if (($enArray==true) and (is_null($datosFinal) or empty($datosFinal))) { // Si es nulo, no tiene sentido la asignación
+				mysqli_query($link,iconv("UTF-8","ISO-8859-15", $Sql)); // ejecuto el Sql
+				mysqli_close($link); // Cierro el enlace...	
+				$data["divs"].="VALOR: ".$valor." SQL: ".$Sql." <--> ";
+			} else if (empty($datosFinal) and ($enArray==true)) {
+				$data["borrada"].="La asignación: ".$asignacion->asignacionDescripcion($valor)." se ha quedado sin datos, con lo que SE HA ELIMINADO.";
 				$Sql=""; // Como ejecuta varios Sql, al principio debe ser nulo.
-				// $link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
+				$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
 				$Sql='DELETE FROM tb_asignaciones';
 				$Sql.=' WHERE idasignacion = "'.$valor.'"';
-				// mysqli_query($link,iconv("UTF-8","ISO-8859-15", $Sql)); // ejecuto el Sql
-				// mysqli_close($link); // Cierro el enlace...	
-				$data["divs"].=$Sql." <--> ";	
-				$data["borrada"]="SI";
-			} // Fin de comprobar si ha existido un cambio
+				mysqli_query($link,iconv("UTF-8","ISO-8859-15", $Sql)); // ejecuto el Sql
+				mysqli_close($link); // Cierro el enlace...	
+				$data["divs"].=$Sql." <--> ";					
+			}
 			
-		} // Fin del foreach de asignación antigua
-
-	
+		} // Fin del foreach de asignación antigua	
 	
 	// =========================================================================
 	// 3) Si en la nueva no aparece la clase, añadir el id de alumno
 	// =========================================================================	
 
+	foreach ($nueva as $clave => $valor) {
+		$enArray = false; // Bandera que me indica si lo ha encontrado
+		$datosFinal=""; // Para que también me sirva de bandera, al inicio como vacío.			
+		$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
+		$Sql ='SELECT datos FROM tb_asignaciones WHERE idasignacion="'.$valor.'"';
+		// $data["divs"].=$Sql." <--> ";	
+		$result=mysqli_query($link,$Sql); // ejecuta la cadena sql y almacena el resultado el $result
+		$row = mysqli_fetch_array($result);
+		if (!is_null($row["datos"]) or !empty($row["datos"])) { // si no lo recupera, el valor por defecto)
+			  $datosFinal = $row["datos"]; // Guarda en esta variable el resultado
+			  // a) he encontrado los datos
+			  $valores = explode("#",$row["datos"]); // convierte la cadena en un array de valores
+			  // b) comprueba que el alumno está en ese array
+			  $claveEncontrada = array_search($_POST["clasenueva"],$valores); // Busca la clase nueva
+			  $data["claveEncontrada"]= $claveEncontrada;
+			  // c) Si el alumno está en el array, eleminarlo
+			  if ($claveEncontrada>=0 and is_numeric($claveEncontrada)) { // Sería FALSE si no lo encuentra
+				  $enArray = true;
+			  } // Fin del IF de clave encontrada	  
+		} // Fin del if que reconoce los datos: row datos
+		mysqli_free_result($result); 
+		mysqli_close($link); 
+		
+		if (!($enArray)) { // Si es falso, o sea, no encuentra en datos la clase nueva...
+			// DESCRIPCION
+			/* 
+			if (strlen($_POST["asignacion"])>0) { // si existe la variable de profesor...
+			// $retahilalarga = $curso->devuelveAsignacionLarga($_POST["asignacion"]); //
+			$cursosen = $curso->devuelveCursosdeAsignacion($curso->devuelveAsignacionLarga($_POST["asignacion"]),0);
+			// Tipo 0 -> que devuelve cursos en formatos cortos. El 1 -> la unidad tal como aparece en Séneca
+			$cursosen = str_replace("#",", ",$cursosen);
+			} 
+
+			$descripcion = strtoupper("Asig: ".$_POST["nombremateria"].", Prof: ".iconv("ISO-8859-15","UTF-8",$nombreprofesor).", Cursos:  ".$cursosen);  
+			*/
+			$datosFinal = $datosFinal."#".$_POST["alumno"]; // Guarda en esta variable el resultado más el dato del alumno
+			$Sql=""; // Como ejecuta varios Sql, al principio debe ser nulo.
+			$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
+			$Sql='UPDATE tb_asignaciones SET datos ="'.$datosFinal.'"';
+			$Sql.=' WHERE idasignacion = "'.$valor.'"';
+			mysqli_query($link,iconv("UTF-8","ISO-8859-15", $Sql)); // ejecuto el Sql
+			mysqli_close($link); // Cierro el enlace...	
+			$data["divs"].=$Sql." <--> ";	
+		} // Fin del if que comprueba lo de la clase nueva...
+			
+	} // Fin del foreach
 
 } // Fin del IF de parejas
 
@@ -145,9 +190,16 @@ if (!is_null($_POST["parejas"]) and !empty($_POST["parejas"])) {
 // 4) Cambiar en tb_alumno la unidad al alumno
 // ============================================
 
+	$unidadNueva = $curso->devuelverUnidadPorCursoCorto($_POST["clasenueva"]);
+	$Sql=""; // Como ejecuta varios Sql, al principio debe ser nulo.
+	$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
+	$Sql='UPDATE tb_alumno SET unidad ="'.$unidadNueva.'"';
+	$Sql.=' WHERE idalumno = "'.$_POST["alumno"].'"';
+	mysqli_query($link,iconv("UTF-8","ISO-8859-15", $Sql)); // ejecuto el Sql
+	mysqli_close($link); // Cierro el enlace...	
+	$data["divs"].=$Sql." <--> ";	
+
 echo json_encode($data);
-
-
 
 /* 
  

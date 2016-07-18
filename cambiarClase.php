@@ -83,10 +83,10 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
     <!-- *********************************************************** -->
      
 	<div id="test"> <!-- TESTER -->
-		<input id="idalumno" type="text" value="" style="display: text;">
-		<input id="cursoantiguo" type="text" value="" style="display: text;">
-		<input id="cursonuevo" type="text" value="" style="display: text;">
-		<input id="parejas" type="text" value="" style="display: text;">
+		<input id="idalumno" type="text" value="" style="display: none;">
+		<input id="cursoantiguo" type="text" value="" style="display: none;">
+		<input id="cursonuevo" type="text" value="" style="display: none;">
+		<input id="parejas" type="text" value="" style="display: none;">
 	    <p id="testear">
 	    </p>
     </div>	<!-- TESTER -->
@@ -117,6 +117,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				foreach($alumnosArray as $clave => $valor) {
 					$alumno->devuelveAlumno($valor);
 					$unidad = $alumno->devuelveUnidadDeUnAlumno($valor);
+					// $unidad = $curso->devuelveCursoCortoPorUnidad($unidad);
 					echo '<option unidad="'.$unidad.'" value="'.$valor.'">'.$alumno->esteAlumno["nombre2"].' ('.$unidad.')</option>';
 				}
 				echo '</select>';
@@ -357,6 +358,13 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			   .addClass("overflow5"); // carga un estilo que está en /css/estiloSelectMenuOverflow.css	
 			   
 		$( "#EscogerCurso" ).selectmenu({
+			open: function(event,ui) {
+				var escogerCurso = $("#EscogerCurso option:selected").text();	
+				var escogerCursoCorto = $("#EscogerCurso option:selected").attr("corto");
+				$("#cursonuevo").val(escogerCursoCorto);
+				$("#muestraCursoActual").html("A la nueva clase: "+escogerCurso);	
+				$("#pestañas").tabs("enable", 2); // activo la pestaña 1, la segunda
+			},		
 			change: function(event,ui) {
 				var escogerCurso = $("#EscogerCurso option:selected").text();	
 				var escogerCursoCorto = $("#EscogerCurso option:selected").attr("corto");
@@ -491,6 +499,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				try { // se reciben en formato de div
 				      alert(data);
 				      // var datos = jQuery.parseJSON(data);
+				      location.reload();
 				} catch(err) {
 				   console.log(err.message);
 				}	
