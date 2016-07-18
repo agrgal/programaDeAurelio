@@ -3,6 +3,8 @@
 	overflow: hidden;
 }
 
+
+
 #alumnos, #muestraAlumno, #cursos, #muestraCurso {
 	float: left;
 	width: 45%;
@@ -63,6 +65,17 @@
 	color: rgb(41, 39, 0);
 	/* background-color: rgb(231, 212, 195); */
 	text-shadow: rgb(185, 170, 156) 7px 6px 2px;
+}
+
+#paraGo {
+	float: left;
+	clear: both;
+	width: 100%;
+	text-align: center;
+}
+#go {
+	margin: 40px auto;
+	width: 350px;	
 }
 
 /* ============================ */

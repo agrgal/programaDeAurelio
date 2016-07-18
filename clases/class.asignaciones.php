@@ -138,6 +138,7 @@ class misAsignaciones
 		   // Le paso la unidad donde está el alumno y me devuelve el curso corto.
 		// 2) Tengo que encontrar las asignaciones en las que en "datos" encuentre el curso "1ESOE" o la id
 		$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
+		// Reestructuro SQL el 17-Julio...
 	    $Sql='SELECT idasignacion FROM tb_asignaciones ';
 	    $Sql.="WHERE datos LIKE '".$idal; // Si datos es del tipo 14, un sólo número
 	    $Sql.="' OR datos LIKE '%#".$idal; // Si encuentra la cadena #14

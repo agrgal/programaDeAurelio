@@ -86,6 +86,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		<input id="idalumno" type="text" value="" style="display: text;">
 		<input id="cursoantiguo" type="text" value="" style="display: text;">
 		<input id="cursonuevo" type="text" value="" style="display: text;">
+		<input id="parejas" type="text" value="" style="display: text;">
 	    <p id="testear">
 	    </p>
     </div>	<!-- TESTER -->
@@ -153,14 +154,16 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			<!-- ********************************************************** -->
 			<!-- Correspondencia entre opiniones-->
 			<!-- ********************************************************** --> 	
-			<div id="Correspondencia">
-				<input id="parejas" type="text" value="" style="display: text;">
+			<div id="Correspondencia">			
 				<div id="asignacionesAntiguas" class="effect7">
 					<h1>Asignaciones que tiene</h1>
 				</div>
 				<div id="asignacionesNuevas" class="effect7">
 					<h1>Asignaciones que podría tener</h1>
 				</div>
+				<div id="paraGo">
+					<button id="go">Ejecutar cambio</button> 
+				</div>	
 			</div>
 			<!-- ********************************************************** -->
 			<!-- Insertar instrucciones -->
@@ -475,19 +478,19 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		
 		
 		// ************************************
-		// DRAG AND DROP
+		// Boton de ejecución
 		// ************************************
-		// hay que conveertirlo en DRAG al momento de llamarlo
-		
+		$("#go").button();		
 
 				
 		// ************************************
 		// Pulso el botón de obtención de datos
 		// ************************************
 		$("#go").click(function(event,ui){
-			$.when(obtenerDatos(conNombreAlumno,conNombreAsignacion)).done(function(datos){
+			$.when(realizarCambio($("#idalumno").val(),$("#cursoantiguo").val(),$("#cursonuevo").val(),$("#parejas").val())).done(function(data){
 				try { // se reciben en formato de div
-				   	   
+				      alert(data);
+				      // var datos = jQuery.parseJSON(data);
 				} catch(err) {
 				   console.log(err.message);
 				}	
@@ -575,6 +578,31 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		      },
 		  });
 	  } // Fin de la función Obtener datos del filtro  
+	  
+	 //************************************
+	 // F3) realizarCambio
+	 function realizarCambio(alumno,claseantigua,clasenueva,parejas) {
+		 console.log("****************** Obtiene SQL *******************");
+		 console.log("alumno: "+alumno);
+		 console.log("Clase antigua: "+claseantigua);
+		 console.log("Clase nueva: "+clasenueva);
+		 console.log("parejas: "+parejas);
+		 return $.ajax({
+			  type: 'POST',
+			  dataType: 'text',	
+		      url: "./tutorias/scripts/realizaCambioClase.php", // En el script se construye la tabla...
+		      data: { 
+			  alumno: alumno, // La variable de sesión de la asignación se consigue en el script.
+			  claseantigua: claseantigua,
+			  clasenueva: clasenueva,
+			  parejas: parejas,	 
+		      },
+		      success: function(data, textStatus, jqXHR){ 			  
+				// alert(data);
+				return data;
+		      },
+		  });
+	  } // Fin de la función que realiza el cambio de clase.
 
 	  
  <!-- * =======================================================================================================   * --> 	
