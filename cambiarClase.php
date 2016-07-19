@@ -188,20 +188,20 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 	<!-- Notificaciones -->
 	<!-- ********************************************************** -->
 		
-		<div id="notificacionObtenido">
-			<div><h1>Se han obtenido los datos requeridos</h1></div>
+		<div id="notificacionGuardado">
+			<div><h1>Se han modificado los datos</h1></div>
 		</div>
 		
 	<!-- ********************************************************** -->
 	<!-- Diálogos -->
-	<!-- ********************************************************** -->
-    	
-    	<!-- <div id="dialog-confirm-nohaydatos" title="No hay datos">
-		   <p><span class="fa fa-exclamation-triangle fa-2x" style="float:left; margin:0 7px 20px 0;">
+	<!-- ********************************************************** -->    	
+		
+		<!-- Dialogo de Confirmación de grabar los datos -->	
+		<div id="dialog-confirm" title="Cambiar de clase">
+		   <p><span class="fa fa-spinner fa-pulse fa-2x" style="float:left; margin:0 7px 20px 0;">
 		   </span>
-		   No se han seleccionado datos...<span class="hoverAsignacion"></span>
-		   </p>
-		</div> -->
+		   ¿De verdad quieres cambiar a este alumno de Clase?</p>
+		</div>
     
 </div> <!-- FIN del CONTENEDOR PRINCIPAL -->
 
@@ -293,13 +293,13 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		// Defino diálogos y/o notificaciones
 		// ========================================================================================	
 		
-		 $("#notificacionObtenido").jqxNotification({
+		 $("#notificacionGuardado").jqxNotification({
                 width: 500, position: "top-right", opacity: 0.9,
                 autoOpen: false, animationOpenDelay: 300, autoClose: true, autoCloseDelay: 2000, template: "info"
          });
 		 
-		 /* 1d) Definición del diálogo de confirmación de grabar datos, borrar y modificar asignacion y confirmar que no hay datos
-		  $("#dialog-confirm, #dialog-confirm-borrar, #dialog-confirm-nohaydatos").dialog({
+		 // 1d) Definición del diálogo de confirmación de grabar datos, borrar y modificar asignacion y confirmar que no hay datos
+		  $("#dialog-confirm").dialog({
 			autoOpen: false,
 			modal: true,
 			maxWidth:600,
@@ -308,7 +308,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
             height: 300,
 			position: { my: "center center-100", at: "center center", of: "#container" }
 			// el "centro arriba" de mi cuadro de diálogo (my) , en el centro arriba (at) del contenedor (of)
-		 }); */	
+		 });
 
 		// ========================================================================================
 		// Defino 
@@ -495,15 +495,41 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		// Pulso el botón de obtención de datos
 		// ************************************
 		$("#go").click(function(event,ui){
-			$.when(realizarCambio($("#idalumno").val(),$("#cursoantiguo").val(),$("#cursonuevo").val(),$("#parejas").val())).done(function(data){
-				try { // se reciben en formato de div
-				      alert(data);
-				      // var datos = jQuery.parseJSON(data);
-				      location.reload();
-				} catch(err) {
-				   console.log(err.message);
-				}	
-			});
+			   event.preventDefault();
+			   // incluye información...			   
+			   $("#dialog-confirm").dialog({
+			    buttons : {
+				"Sí, Procede" : function() {
+				  // alert("dato grabado...");
+				  $(this).dialog("close");
+					$.when(realizarCambio($("#idalumno").val(),$("#cursoantiguo").val(),$("#cursonuevo").val(),$("#parejas").val())).done(function(data){
+						try { // se reciben en formato de div
+							  // alert(data);
+							  var datos = jQuery.parseJSON(data);
+							  var notificar = "El alumno/a "+$("#muestraAlumnoActual").text()+" "+$("#cursoAntiguoh2").text()+" "+$("#muestraCursoActual").text();	 
+							  if (datos.borrada=="") {
+								   $("#notificacionGuardado").html('<h1 style="font-size: 3em; font-weight: bold;">'+notificar+'</h1>');
+								   $("#notificacionGuardado").jqxNotification("open");
+							  } else {
+								  // No se si funciona bien
+								  notificar = notificar + "." + datos.borrada;
+								  $("#notificacionGuardado").html('<h1 style="font-size: 3em; font-weight: bold;'+notificar+'</h1>');
+								  $("#notificacionGuardado").jqxNotification("open");
+							  }
+							  setInterval(function(){ location.reload(); },5000); // A los 5 segundos recarga
+						} catch(err) {
+						   console.log(err.message);
+						}	
+					});	      
+			    },
+				"No,no... Cancela" : function() {
+				  $(this).dialog("close"); // no recarga la página. Simplemente anula la operación y sigue				 
+			    },
+				} //Fin de Buttons
+			}); // Fin de dialog-confirm
+			
+			$("#dialog-confirm").dialog("open"); // si no, no lo abre
+			
 		});  		
 	
 		

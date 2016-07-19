@@ -111,10 +111,10 @@
 }
 
 .divasignacionCambio2 {
-	width: 200px;
-	max-width: 200px;
+	width: 250px;
+	max-width: 250px;
 	height: auto;
-	background: #6AFFD4;
+	background: #E7D4C3;
 	font-size: 0.8em;
 	display: block-inline;
         border-radius: 10px;
@@ -149,8 +149,8 @@
 	bottom: 4px;
 	right: 4px;
 	text-align: center;
-	background: url("../imagenes/iconos/fingers-gesture.png") center no-repeat;
-	background-size: 80px 60px;
+	background: url("../imagenes/iconos/left_arrow.png") center no-repeat;
+	background-size: 100px 80px;
         border-radius: 10px;
         box-shadow: 5px 5px 5px black;
 }

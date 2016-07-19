@@ -110,6 +110,7 @@ Clase Cursos
 	function devuelveListaAlumnos ($curso) // dado un curso, devuelve la lista de alumnado separados por un #
 	function devuelveCursoCorto ($nombreCorto) // dado un nombre corto, devuelve la clave del array $ListaDeCursos...
 	function devuelveCursoCortoPorUnidad  ($nombreUnidad) // // 3c) Devuelve curso corto por nombre unidad. Doy 1 ESO E , y me devuelve 1ESOE
+	function devuelverUnidadPorCursoCorto ($corto) // 3d) Lo contrario. Doy un curso corto y devuelve la unidad.
 	function devuelveAsignacionLarga ($asignacionCorta) //
 	         // Doy una asignacion del tipo 1ESOC#12#45 y devuelve una cadena tipo 1#2#...#12#45 con los índices del alumnado
 	         // sin repetir y ordenada.
@@ -164,6 +165,9 @@ Clase asignaciones
 	    // Cual -->0 el idprofesor, Si Cual -> 1, el nombre
 	function asignacionMateria($idasignacion, $cual) // Dada una asignación, retorna el nombre de la materia
 	    // Cual -->0 el idmateria, Si Cual -> 1, el nombre
+	function asignacionDIV($id) // Calcula un div para los emails, con solo el profesor.
+	function asignacionDIV2($id) // Calcula un div para el cambio de clase: ya tiene materia, nombre profesor, clases...
+	function reconstruyeDescripcion($id) // Dada una asignación, recalcula y actualiza lo que poner en la descripción
 	    
 Clase opiniones
 ===============

@@ -291,6 +291,24 @@ class misAsignaciones
 		'</div>';
 		return $cadena;
 	} // ************************************************************************
+	
+	// 11) Dada una asignación, reconstruye y actualiza la descripción del mismo
+	public function reconstruyeDescripcion($id) {
+		$nombreProfesor = $this->asignacionProfesor($id,1);
+		$claveProfesor = $this->asignacionProfesor($id,0);
+		$nombreMateria = $this->asignacionMateria($id,1);		
+		$claveMateria = $this->asignacionMateria($id,0);		
+		// $clases = $this->clasecurso->devuelveCursosdeAsignacion($this->clasecurso->devuelveAsignacionLarga($id),0);
+		$clases = $this->clasecurso->devuelveCursosdeAsignacion($this->clasecurso->devuelveAlumnosAsignacion($id),0);
+		$cursosen = str_replace("#",", ",$clases);
+		$descripcion = strtoupper("Asig: ".$nombreMateria.", Prof: ".$nombreProfesor.", Cursos:  ".$cursosen);  
+		$Sql=""; // Como ejecuta varios Sql, al principio debe ser nulo.
+		$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
+		$Sql='UPDATE tb_asignaciones SET descripcion ="'.$descripcion.'"';
+		$Sql.=' WHERE idasignacion = "'.$id.'"';
+		mysqli_query($link, $Sql); // ejecuto el Sql
+		mysqli_close($link); // Cierro el enlace...			
+	} // ************************************************************************
 
 }
 

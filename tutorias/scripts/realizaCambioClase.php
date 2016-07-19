@@ -111,7 +111,6 @@ if (!is_null($_POST["parejas"]) and !empty($_POST["parejas"])) {
 			mysqli_close($link); 	    
 			
 			// e) Si hay una cadena reconstruida, UPDATE para actualizarla
-			// DESCRIPCION
 			if (($enArray==true) and !empty($datosFinal) ){ // Si ha existido un cambio en los datos
 				$Sql=""; // Como ejecuta varios Sql, al principio debe ser nulo.
 				$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
@@ -119,6 +118,7 @@ if (!is_null($_POST["parejas"]) and !empty($_POST["parejas"])) {
 				$Sql.=' WHERE idasignacion = "'.$valor.'"';
 				mysqli_query($link,iconv("UTF-8","ISO-8859-15", $Sql)); // ejecuto el Sql
 				mysqli_close($link); // Cierro el enlace...	
+				$asignacion->reconstruyeDescripcion($valor); // reconstruye la descripcion
 				$data["divs"].="VALOR: ".$valor." SQL: ".$Sql." <--> ";
 			} else if (empty($datosFinal) and ($enArray==true)) {
 				$data["borrada"].="La asignación: ".$asignacion->asignacionDescripcion($valor)." se ha quedado sin datos, con lo que SE HA ELIMINADO.";
@@ -161,17 +161,6 @@ if (!is_null($_POST["parejas"]) and !empty($_POST["parejas"])) {
 		mysqli_close($link); 
 		
 		if (!($enArray)) { // Si es falso, o sea, no encuentra en datos la clase nueva...
-			// DESCRIPCION
-			/* 
-			if (strlen($_POST["asignacion"])>0) { // si existe la variable de profesor...
-			// $retahilalarga = $curso->devuelveAsignacionLarga($_POST["asignacion"]); //
-			$cursosen = $curso->devuelveCursosdeAsignacion($curso->devuelveAsignacionLarga($_POST["asignacion"]),0);
-			// Tipo 0 -> que devuelve cursos en formatos cortos. El 1 -> la unidad tal como aparece en Séneca
-			$cursosen = str_replace("#",", ",$cursosen);
-			} 
-
-			$descripcion = strtoupper("Asig: ".$_POST["nombremateria"].", Prof: ".iconv("ISO-8859-15","UTF-8",$nombreprofesor).", Cursos:  ".$cursosen);  
-			*/
 			$datosFinal = $datosFinal."#".$_POST["alumno"]; // Guarda en esta variable el resultado más el dato del alumno
 			$Sql=""; // Como ejecuta varios Sql, al principio debe ser nulo.
 			$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
@@ -179,6 +168,7 @@ if (!is_null($_POST["parejas"]) and !empty($_POST["parejas"])) {
 			$Sql.=' WHERE idasignacion = "'.$valor.'"';
 			mysqli_query($link,iconv("UTF-8","ISO-8859-15", $Sql)); // ejecuto el Sql
 			mysqli_close($link); // Cierro el enlace...	
+			$asignacion->reconstruyeDescripcion($valor); // reconstruye la descripcion
 			$data["divs"].=$Sql." <--> ";	
 		} // Fin del if que comprueba lo de la clase nueva...
 			
@@ -201,9 +191,19 @@ if (!is_null($_POST["parejas"]) and !empty($_POST["parejas"])) {
 
 echo json_encode($data);
 
+
+// DESCRIPCION. IMPORTANTE, está como función dentro de la clase asignaciones...
 /* 
- 
+if (strlen($_POST["asignacion"])>0) { // si existe la variable de profesor...
+// $retahilalarga = $curso->devuelveAsignacionLarga($_POST["asignacion"]); //
+$cursosen = $curso->devuelveCursosdeAsignacion($curso->devuelveAsignacionLarga($_POST["asignacion"]),0);
+// Tipo 0 -> que devuelve cursos en formatos cortos. El 1 -> la unidad tal como aparece en Séneca
+$cursosen = str_replace("#",", ",$cursosen);
+} 
+
+$descripcion = strtoupper("Asig: ".$_POST["nombremateria"].", Prof: ".iconv("ISO-8859-15","UTF-8",$nombreprofesor).", Cursos:  ".$cursosen);  
 */
+
 
 ?>
 
