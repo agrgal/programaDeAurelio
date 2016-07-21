@@ -42,7 +42,8 @@ if ($_POST["alumno"]>0) {
 			$cadena="";
 			foreach ($asignacionAlumnoArray as $clave => $valor) {
 				// $cadena.= $asignacion->asignacionDIV2($valor); // lama a los divs que están en la clase asignación
-				$cadena.='<div class="bloque" id="'.$valor.'">'.$asignacion->asignacionDIV2($valor).'<div class="destino" id="'.$valor.'" title="by Mobiletuxedo in gestures"></div></div>';
+				$title=iconv("UTF-8","ISO-8859-15", "Arrastra una asignación de la derecha aquí");
+				$cadena.='<div class="bloque" id="'.$valor.'">'.$asignacion->asignacionDIV2($valor).'<div class="destino" id="'.$valor.'" title="'.$title.'"></div></div>';
 			}
 			$data["valido"]=1;
 			$data["divs"]= iconv("ISO-8859-15", "UTF-8",$cadena);

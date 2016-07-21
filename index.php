@@ -186,6 +186,10 @@ if (!isset($_SESSION['menuIZQ'])) { $_SESSION['menuIZQ']=0; }
 			
 	<?php } ?>
 	
+	<div id="aviso" class="effect7" style="margin-top: 40px; padding: 20px;">
+	<h1 style="text-align: justify; padding: 10px;">Por favor, lee las "<span style="color: #0000ff;">consideraciones importantes</span>" (<span style="color: #993300;">&lt;--</span>). Recuerda: puedes aumentar el tama&ntilde;o de la letra pulsando, a la vez, las teclas <span style="color: #993300;">CTRL</span> y "<span style="color: #993300;">+</span>", y para reducir el tama&ntilde;o de la letra pulsando <span style="color: #993300;">CTRL</span> y "<span style="color: #993300;">-</span>".</h1>
+	</div>
+	
 	</div> <!-- &&&& -->
 	
 	<!-- Comprobar el paso de parámetros si se activa -->

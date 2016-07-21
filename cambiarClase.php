@@ -294,19 +294,19 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		// ========================================================================================	
 		
 		 $("#notificacionGuardado").jqxNotification({
-                width: 500, position: "top-right", opacity: 0.9,
-                autoOpen: false, animationOpenDelay: 300, autoClose: true, autoCloseDelay: 2000, template: "info"
+                width: 700, position: "top-right", opacity: 0.9,
+                autoOpen: false, animationOpenDelay: 300, autoClose: true, autoCloseDelay: 5000, template: "info"
          });
 		 
 		 // 1d) Definición del diálogo de confirmación de grabar datos, borrar y modificar asignacion y confirmar que no hay datos
 		  $("#dialog-confirm").dialog({
 			autoOpen: false,
 			modal: true,
-			maxWidth:600,
-            maxHeight: 300,
-            width: 600,
-            height: 300,
-			position: { my: "center center-100", at: "center center", of: "#container" }
+			maxWidth:1500,
+            maxHeight: 650,
+            width: 1500,
+            height: 650,
+			position: { my: "center center-250", at: "center center", of: "#container" }
 			// el "centro arriba" de mi cuadro de diálogo (my) , en el centro arriba (at) del contenedor (of)
 		 });
 
@@ -496,7 +496,10 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		// ************************************
 		$("#go").click(function(event,ui){
 			   event.preventDefault();
-			   // incluye información...			   
+			   // incluye información...	
+			   var notificar = "El alumno/a "+$("#muestraAlumnoActual").text()+" "+$("#cursoAntiguoh2").text()+" "+$("#muestraCursoActual").text();	 
+			   $("#dialog-confirm").html($("#dialog-confirm").html()+'<h1>'+notificar+'</h1><h1>Recuerda: las asignaciones NO EMPAREJADAS deben hacer un cambio manual. Avisa a los profesores/as afectados para que hagan el cambio. La página se reiniciará tras el proceso.</h1>');				 
+			   // 		   
 			   $("#dialog-confirm").dialog({
 			    buttons : {
 				"Sí, Procede" : function() {
@@ -504,19 +507,16 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				  $(this).dialog("close");
 					$.when(realizarCambio($("#idalumno").val(),$("#cursoantiguo").val(),$("#cursonuevo").val(),$("#parejas").val())).done(function(data){
 						try { // se reciben en formato de div
-							  // alert(data);
+							  // alert(data); 
 							  var datos = jQuery.parseJSON(data);
-							  var notificar = "El alumno/a "+$("#muestraAlumnoActual").text()+" "+$("#cursoAntiguoh2").text()+" "+$("#muestraCursoActual").text();	 
-							  if (datos.borrada=="") {
+							   if (datos.borrada=="NO") {
 								   $("#notificacionGuardado").html('<h1 style="font-size: 3em; font-weight: bold;">'+notificar+'</h1>');
 								   $("#notificacionGuardado").jqxNotification("open");
 							  } else {
-								  // No se si funciona bien
-								  notificar = notificar + "." + datos.borrada;
-								  $("#notificacionGuardado").html('<h1 style="font-size: 3em; font-weight: bold;'+notificar+'</h1>');
+								  $("#notificacionGuardado").html('<h1 style="font-size: 3em; font-weight: bold;">'+notificar+'. Algunas asignaciones antiguas han sido borrada por quedarse sin datos.</h1>');
 								  $("#notificacionGuardado").jqxNotification("open");
 							  }
-							  setInterval(function(){ location.reload(); },5000); // A los 5 segundos recarga
+							  setInterval(function(){ location.reload(); },7000); // A los 7 segundos recarga
 						} catch(err) {
 						   console.log(err.message);
 						}	
