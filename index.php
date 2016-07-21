@@ -187,8 +187,14 @@ if (!isset($_SESSION['menuIZQ'])) { $_SESSION['menuIZQ']=0; }
 	<?php } ?>
 	
 	<div id="aviso" class="effect7" style="margin-top: 40px; padding: 20px;">
-	<h1 style="text-align: justify; padding: 10px;">Por favor, lee las "<span style="color: #0000ff;">consideraciones importantes</span>" (<span style="color: #993300;">&lt;--</span>). Recuerda: puedes aumentar el tama&ntilde;o de la letra pulsando, a la vez, las teclas <span style="color: #993300;">CTRL</span> y "<span style="color: #993300;">+</span>", y para reducir el tama&ntilde;o de la letra pulsando <span style="color: #993300;">CTRL</span> y "<span style="color: #993300;">-</span>".</h1>
+	<h1 style="text-align: justify; padding: 10px;">Por favor, lee las "<span style="color: #0000ff;">consideraciones importantes</span>" (<span style="color: #993300;"><img src="./imagenes/iconos/left_arrow.png" height="35px" width="auto"></span>). Recuerda: puedes aumentar el tama&ntilde;o de la letra pulsando, a la vez, las teclas <span style="color: #993300;">CTRL</span> y "<span style="color: #993300;">+</span>", y para reducir el tama&ntilde;o de la letra pulsando <span style="color: #993300;">CTRL</span> y "<span style="color: #993300;">-</span>".</h1>
 	</div>
+	
+	<div id="instrucciones" class="effect7" style="padding: 20px; width: 600px; height: auto; margin: 40px auto;">
+	<h1 style="text-align: center;">Instrucciones Iniciales del programa de Tutoría (Programa Aurelio)</h1>
+	<iframe style="text-align: center;" width="560" height="315" src="https://www.youtube.com/embed/CkZBplApMms" frameborder="0" allowfullscreen></iframe>
+	</div>
+		
 	
 	</div> <!-- &&&& -->
 	

@@ -92,6 +92,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 			<ul>
 				<li><a href="#eligeAsignacion">Elige Asignación</a></li>
 				<li><a href="#nuevaAsignacion">Nueva Asignación</a></li>
+				<li><a href="#instrucciones">Instrucciones</a></li>
 			</ul>
 			
 <!-- * =======================================================================================================   * --> 		
@@ -165,6 +166,10 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 			    
 			</div> <!-- Fin de crear nueva asignación -->
 			<!-- ********************************************************** --> 
+			
+			<div id="instrucciones">
+				<iframe width="560" height="315" src="https://www.youtube.com/embed/NKlwwFvMwiA" frameborder="0" allowfullscreen></iframe>
+			</div>
 			
 		</div> <!-- &&&& FIN DE LAS PESTAÑAS-->
 		
