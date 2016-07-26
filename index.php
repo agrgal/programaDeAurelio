@@ -87,6 +87,7 @@ if (!isset($_SESSION['menuIZQ'])) { $_SESSION['menuIZQ']=0; }
 				<?php 
 				   $profesorado->idprofesor = $_SESSION["profesor"];
 				   echo "¡Bienvenido/a ".cambiarnombre($profesorado->nombreEmpleado())."!";
+				   // echo $_SESSION["token"];
 				?>			
 			</h1>
 			<h2 style="text-align: center;">Has accedido correctamente al sistema</h2>

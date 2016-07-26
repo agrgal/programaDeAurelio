@@ -47,6 +47,15 @@ js_menu.js -> script javascript que permite la funcionalidad en menuIZQUIERDO
   variable de sesión $_SESSION["menuIZQ"]
 js_datepicker_espannol.js -> Pone en español los datepicker.
 
+Ataques
+=======
+
+*) Se comprueban los ataques SQL injection con mysqli_real_escape_string en muchas consultas a la base de datos
+*) Se comprueba el ataque XSS en la funcion compruebaPASS de la clase profesores, con $this->DNI = trim(strip_tags(htmlspecialchars($this->DNI))); // evita ataques XSS
+*) Se comprueba el ataque CSRF al elegir una asignacion en asignacion.php -> llamada ajax variablesesionAsignacion; se le pasa como parámetro el token de la 
+variable de sesión ALEATORIA establecida antes en compruebacontrasenna.php y se comprueba que es el mismo antes de establecer una sesión de asignación en variableAsignacion.php
+*) ¿? Necesito más protección... ¿¿??
+
 Variables de sesion
 ===================
 
@@ -59,6 +68,7 @@ $_SESSION['IDform']   // controla el ID en el formulario.
 $_SESSION['nombreTabla'] // Identifica el nombre de la tabla con la que se trabaja en el modo edición
 $_SESSION["idasignacion"] // Identifica la asignación elegida...
 $_SESSION["tutor"] // Guarda si es o no tutor (1 si es tutor)
+$_SESSION["token"] // Parámetro aleatorio.
 
 Clase profesores
 ================

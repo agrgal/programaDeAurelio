@@ -103,6 +103,9 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 			<!-- ********************************************************** --> 
 			<!-- Elige asignación -->
 			<div id="eligeAsignacion"> 
+				<input id="token" style="display: none;" value="<?php echo $_SESSION["token"]; ?>">
+				<!-- // token evita ataques CSRF https://www.funcion13.com/preven-falsificacion-peticion-sitios-cruzados-csrf/ 
+				Recupera en el input el token en la primera página -->
 				<?php 
 				foreach ($asignacion->listaDeAsignaciones["idasignacion"] as $clave => $valor) { 
 				  echo $asignacion->listaDeAsignaciones["div"][$clave]; // incluye el div que viene en class.asignaciones.php
@@ -521,7 +524,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 				});
 				$(this).parent().parent().css("background","#908cdb"); // color complementario a #82a3c3
 				// Asigna la variable de sesión
-				variablesesionAsignacion($(this).attr('id'));
+				variablesesionAsignacion($(this).attr('id'),$("#token").val());
 		  });		  
 		   
 		  // 11BIS) Escoge la asignación elegida al cargar la página...
@@ -748,9 +751,11 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
  <!-- * =======================================================================================================   * --> 
 	  
 	  // F4) Asignar a la variable de sesión
-	   function variablesesionAsignacion(valor) {
+	   function variablesesionAsignacion(valor,token) { // token, para evitar ataques CSRF
 				 var posting = $.post( "./asignaciones/scripts/variableAsignacion.php", { 
 					  lee: valor,
+					  token: token, // token evita ataques CSRF https://www.funcion13.com/preven-falsificacion-peticion-sitios-cruzados-csrf/
+					  // pasa el valor del token por POST a variableAsignacion
 				  });
 				  posting.done(function(data,status) { 
 					  // alert(data);

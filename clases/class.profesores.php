@@ -80,6 +80,7 @@ class profesores
         $Sql="SELECT idprofesor FROM tb_profesores WHERE DNI='%s'"; 
 	    // echo $Sql;
 	    $this->DNI = strtoupper($this->DNI); // convertirla en mayúsculas
+	    $this->DNI = trim(strip_tags(htmlspecialchars($this->DNI))); // evita ataques XSS
 	    $Sql = sprintf($Sql, mysqli_real_escape_string($link,$this->DNI)); // Seguridad que evita los ataques SQL Injection
         // echo $Sql;
         $result=mysqli_query($link,$Sql); // ejecuta la cadena sql y almacena el resultado el $result

@@ -33,6 +33,7 @@ if ($ID>0) {
              $_SESSION['permisos']=1+$profesores['administrador'][$key]; // establece la variable de permiso de la página
              // al sumar 1 queda 0-->sin acceso, 1 como profesor y 2 como administrador
              $_SESSION['profesor']=$ID; // Identificación del profesor
+             $_SESSION['token']= md5(uniqid(mt_rand(), true)); // Para intentar evitar los ataques CSRF
          }
       }            
       // echo '<p>'.iconv("ISO-8859-1", "UTF-8",  $cadena).'</p>';

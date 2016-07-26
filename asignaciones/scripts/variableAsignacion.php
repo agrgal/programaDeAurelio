@@ -18,7 +18,10 @@ include_once("../../funciones/funciones.php"); // funciones varias de conexión 
 
 session_start(); //activo variables de sesion
 
-if ($_POST["lee"]<>0) {
+if ($_POST["lee"]<>0 and $_POST["token"]==$_SESSION["token"]) { 
+   // token evita ataques CSRF https://www.funcion13.com/preven-falsificacion-peticion-sitios-cruzados-csrf/
+   // Si el token que se pasa no es el mismo que el token de la sesión, no asignará a la variable session y no 
+   // se puede continuar en el sitio.
    $_SESSION["idasignacion"]=$_POST["lee"];
    echo $_SESSION["idasignacion"];
 }
