@@ -80,6 +80,9 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
      
 	<div id="test"> <!-- TESTER -->
 	    <p id="testear">
+			<?php 
+			$asignacion->retiraHuerfanos($_SESSION["idasignacion"]); // Retira opiniones huérfanas.
+			?>
 	    </p>
 	    <input id="idasignacion" value="<?php echo $_SESSION["idasignacion"]; ?>" style="display: none;"> 
     </div>	<!-- TESTER -->

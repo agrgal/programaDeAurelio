@@ -310,6 +310,8 @@ class misOpiniones
 			return null;	
 		}
 	} // Fin del 10
+	
+
 
 }
 

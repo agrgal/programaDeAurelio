@@ -309,6 +309,50 @@ class misAsignaciones
 		mysqli_query($link, $Sql); // ejecuto el Sql
 		mysqli_close($link); // Cierro el enlace...			
 	} // ************************************************************************
+	
+	// ***********************************************************
+	// 12) dada una asignacion, retira las opiniones de alumnado que no pertenece a dicha asignacion
+	// Es posible si he estado cambiando alumnos de grupo
+	public function retiraHuerfanos($id) {
+		// ****************************************************************
+		// 1º) Obtiene los alumnos de esa asignacion
+		// ****************************************************************
+		$profesor = $this->asignacionProfesor($id, 0);
+		$alumnado = $this->devuelveListadoAlumnosdeEstaAsignacion($id,$profesor);
+		$alumnadoArray = explode("#",$alumnado);
+		// ****************************************************************
+		// 2º) Obtiene el alumnado que presenta opiniones de esa asignación
+		// ****************************************************************
+		$alumnadoConOpiniones=array();
+		$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
+		$asignacion = mysqli_real_escape_string($link,$asignacion);
+	    $Sql ='SELECT DISTINCT alumno FROM tb_opiniones WHERE asignacion="'.$id.'" ORDER BY alumno ASC';
+	    // $Sql = sprintf($Sql, mysqli_real_escape_string($link,$fecha)); // Seguridad que evita los ataques SQL Injection  	
+	    $result=mysqli_query($link,$Sql); // ejecuta la cadena sql y almacena el resultado el $result
+		 while ($row=mysqli_fetch_array($result)) {
+			$alumnadoConOpiniones[]=$row["alumno"];
+		 } // fin del while
+	    mysqli_free_result($result); 
+	    mysqli_close($link);
+	    // $alcoristra=implode("*",$alumnadoConOpiniones);
+	    // ***************************************************************************************
+		// 3º) Obtiene el alumnado que presenta opiniones de esa asignación Y NO PERTENECEN A ELLA
+		// ***************************************************************************************
+		$noestan = array_diff($alumnadoConOpiniones,$alumnadoArray); // Diferencia
+	    // ***************************************************************************************
+		// 4º) Borra opiniones de esesos alumnos
+		// ***************************************************************************************
+		foreach ($noestan as $valor) {		
+			$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
+			$Sql="DELETE FROM tb_opiniones WHERE alumno='%s'";
+			$Sql = sprintf($Sql, mysqli_real_escape_string($link,$valor)); // Seguridad que evita los ataques SQL Injection  	
+			mysqli_query($link, $Sql); // ejecuto el Sql
+			mysqli_close($link); // cierro la conexión    
+		}
+		
+		return NULL;
+		
+	} // *********************************************************
 
 }
 

@@ -79,6 +79,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
      
 	<div id="test"> <!-- TESTER -->
 	    <p id="testear">
+			<?php $asignacion->retiraHuerfanos($_SESSION["idasignacion"]); // Retira opiniones huérfanas. ?>
 			<?php // echo $_SESSION["idasignacion"]." - Prof: ".$_SESSION["profesor"]; ?>
 			<!-- <a id="grabar">Grabar</a> -->
 	    </p>
@@ -97,6 +98,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
             <ul>
 				<li><a href="#opinionesAlumno">Opinión alumno/a por alumno/a</a></li>
 				<li><a href="#Instrucciones">Instrucciones</a></li>
+				<li><a href="#InstruccionesHistorico">Inst. Hist. de Opiniones</a></li>
 			</ul>
  
     <!-- ******************************************************************************************** -->            
@@ -208,7 +210,11 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
     <!-- ******************************************************************************************** --> 				
 				
 				<div id="Instrucciones">
-					<p>Insertar aquí las instrucciones</p>
+					<p style="text-align: center; margin: 40px;"><iframe width="800" height="500" src="https://www.youtube.com/embed/htei6ygu5yQ" frameborder="0" allowfullscreen></iframe></p>
+				</div>
+				
+				<div id="InstruccionesHistorico">
+					<p style="text-align: center; margin: 40px;"></p>
 				</div>
 			
 			</div>

@@ -74,6 +74,10 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
                              // Establecidas las variables $curso->listaDeCursos y $curso->ListaDeNiveles   
     $asignacion->listarAsignaciones($_SESSION["profesor"]); // incluye ya todas las asignaciones de ese profesor
                              // En la variable $listaDeAsignaciones;
+    if ($_SESSION['idasignacion']>0) { // en caso de que exista y sea mayor que cero la variable de sesión de asignación
+		// echo $_SESSION["idasignacion"];
+		$asignacion->retiraHuerfanos($_SESSION["idasignacion"]); // Retira opiniones huérfanas.
+	}
     ?>    
     <!-- *********************************************************** -->
      
@@ -168,7 +172,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 			<!-- ********************************************************** --> 
 			
 			<div id="instrucciones">
-				<iframe width="560" height="315" src="https://www.youtube.com/embed/NKlwwFvMwiA" frameborder="0" allowfullscreen></iframe>
+				<p style="text-align: center; margin: 40px;"><iframe width="800" height="500" src="https://www.youtube.com/embed/NKlwwFvMwiA" frameborder="0" allowfullscreen></iframe></p>
 			</div>
 			
 		</div> <!-- &&&& FIN DE LAS PESTAÑAS-->
