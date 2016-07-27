@@ -214,7 +214,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 				</div>
 				
 				<div id="InstruccionesHistorico">
-					<p style="text-align: center; margin: 40px;"></p>
+					<p style="text-align: center; margin: 40px;"><iframe width="800" height="500" src="https://www.youtube.com/embed/-I9c8Q6az9I" frameborder="0" allowfullscreen></iframe></p>
 				</div>
 			
 			</div>

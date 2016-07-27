@@ -105,6 +105,10 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 			<div id="printerphoto" title="Imprime lista con fotos" title="Imprime lista con fotos" >
 				<a href="./pdf/scripts/listadoAlumnosFotosPDF.php"><img src="./imagenes/iconos/printer_photo.png"></a>
 			</div>
+			<!-- Instrucciones-->
+			<div id="instrucciones" style="position: absolute; left: 40px; top: 0px; " title="Instrucciones, Icono por Freepik en www.flaticon.com" >
+				<a href="https://youtu.be/zAdWGMYEPCQ" target="_blank"><img src="./imagenes/iconos/instrucciones.png" style="width: 100px; height: auto;" ></a>
+			</div>
 		</div>
 		<div id="ListadoAlumnos"> <!-- Zona de listado de alumnos --> 
 			<?php 
@@ -148,6 +152,8 @@ if (!(($_SESSION["permisos"]>=1) && ($_SESSION["tutor"]>=1))) { // en caso que n
 		</div>
 		
 		<!-- * ==========================  DIALOGOS  Y NOTIFICACIONES =====================================   * --> 
+		
+
 	
 	</div> <!-- &&&& FIN DEL CONTENEDOR-->	
 

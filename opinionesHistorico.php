@@ -130,8 +130,12 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 				<div id="cabecera2"><h1>Historial</h1></div>
 		        <div id="lista2">
 				</div>
+				<!-- ************ Enlace a las instrucciones ********* --> 
+				<div id="instrucciones" style="position: absolute; right: 15px; bottom: 2px; " title="Instrucciones, Icono por Freepik en www.flaticon.com" >
+					<a href="https://youtu.be/-I9c8Q6az9I" target="_blank"><img src="./imagenes/iconos/instrucciones.png" style="width: 100px; height: auto;" ></a>
+				</div>
 			</div> <!-- Fin del panel a la derecha  --> 
-	<!-- ********************************************************** --> 	
+	<!-- ********************************************************** --> 			
 		
 		</div>     <!-- Fin del contenedor de los paneles --> 
     <!-- ================================================================================================== --> 
@@ -161,6 +165,8 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 		   </p>
 		</div>
 			
+
+		
 	</div> <!-- &&&& FIN DEL CONTENEDOR-->	
 
 	<!-- ********************************************************** -->
@@ -240,10 +246,10 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 		  $("#dialog-confirm, #dialog-confirm-borrar, #dialog-confirm-nohaydatos").dialog({
 			autoOpen: false,
 			modal: true,
-			maxWidth:600,
-            maxHeight: 300,
-            width: 600,
-            height: 300,
+			maxWidth: 800,
+            maxHeight: 400,
+            width: 800,
+            height: 400,
 			position: { my: "center center-100", at: "center center", of: "#container" }
 			// el "centro arriba" de mi cuadro de diálogo (my) , en el centro arriba (at) del contenedor (of)
 		 });		 

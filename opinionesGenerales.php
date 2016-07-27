@@ -146,6 +146,9 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 					<li>IMPORTANTE: acepta los cambios pulsando GRABAR.</li>
 				</ol>
 			</div>
+			<p style="text-align: center; margin: 40px;">
+				<iframe width="800" height="500" src="https://www.youtube.com/embed/dvRLffYElB4" frameborder="0" allowfullscreen></iframe>
+			</p>	
 		</div>
 		
 	   </div> <!-- &&&& FIN DE PESTAÑAS-->	

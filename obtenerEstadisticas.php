@@ -201,7 +201,9 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			<!-- Insertar instrucciones -->
 			<!-- ********************************************************** --> 
 			<div id="Instrucciones">
-				
+				<p style="text-align: center; margin: 40px;">
+					<iframe width="800" height="600" src="https://www.youtube.com/embed/aRNBsj4LIM4" frameborder="0" allowfullscreen></iframe>
+				</p>
 			</div>
 		</div>
 			
