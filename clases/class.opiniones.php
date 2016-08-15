@@ -232,6 +232,86 @@ class misOpiniones
 	   return $cadenaReturn;
 	   // return $cadena;
 	}
+	
+	// ***********************************************************
+	// 8) Función que acepta una cadena SQL
+	// Retorna un array con la información
+	public function retornaValores($cadenaSQL) {
+		$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
+	    // $Sql ='SELECT id, items, observaciones FROM tb_opiniones WHERE fecha="'.$fecha.'" AND alumno="'.$alumno.'" AND asignacion="'.$asignacion.'"';
+	    // $Sql = sprintf($Sql, mysqli_real_escape_string($link,$fecha)); // Seguridad que evita los ataques SQL Injection  	
+	    $result=mysqli_query($link,$cadenaSQL); // ejecuta la cadena sql y almacena el resultado el $result
+        $ii=0;
+        $datos=array();
+        while ($row=mysqli_fetch_array($result)) {
+			if (!is_null($row["id"]) or !empty($row["id"])) { // si no lo recupera, el valor por defecto)
+				  	$datos[$ii]=array("id"=>$row["id"],"items"=>$row["items"],"asignacion"=>$row["asignacion"],"alumno"=>$row["alumno"]
+	                   ,"observaciones"=>html_entity_decode($row["observaciones"]),"fecha"=>$row["fecha"]);
+	                   // ,"observaciones"=>$row["observaciones"],"fecha"=>$row["fecha"]);
+	        }
+	        $ii++;
+		}
+		mysqli_free_result($result); 
+	    mysqli_close($link); 
+	    // Guardado todo en datos...        
+		
+		$datos_json=json_encode($datos); // codifica como json...
+		
+		if (!is_null($datos_json) or !empty($datos_json)) {
+			return $datos_json; //envia el valor dado como JSON... Obtener valores como $valor->{"id"}
+		} else {
+			return NULL;
+		}
+	} // Fin del 8
+	
+	// ***********************************************************
+	// 9) Función que acepta una cadena SQL
+	// Y retorna información estadistica del resultado: del tipo ITEM es la key y el valor la frecuencia que aparece.
+	public function itemsEstadistica($cadenaSQL) {
+		$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
+	    $result=mysqli_query($link,$cadenaSQL); // ejecuta la cadena sql y almacena el resultado el $result
+        $cadenaReturn=null;
+        while ($row=mysqli_fetch_array($result)) {
+			if (strlen($row["items"])>0) { // si no lo recupera, el valor por defecto)
+				  	$cadenaReturn.=$row["items"]."#";
+			}
+		}
+		mysqli_free_result($result); 
+	    mysqli_close($link); 	    
+	    if (!is_null($cadenaReturn)) {
+			$cadenaReturn=substr($cadenaReturn,0,strlen($cadenaReturn)-1);
+			// return $cadenaReturn;
+			$datos= explode("#",$cadenaReturn); // convierte la cadena en array
+			asort($datos);
+			// $datosOrdNoRepetidos = array_unique($datos,SORT_NUMERIC);	    
+			$datosOrdNoRepetidos=array_count_values($datos);	    
+			return $datosOrdNoRepetidos;
+		} else {
+			return NULL;
+		}
+	} // Fin del 9
+	
+	// ***********************************************************
+	// 10) Función que acepta una cadena SQL - La misma que la función 9 -
+	// Y retorna información estadistica del resultado POR ALUMNO...
+	public function itemsEstadisticaPorAlumno($cadenaSQL) {
+		$link=Conectarse(); // y me conecto. //dependiendo del tipo recupero uno u otro.
+	    $result=mysqli_query($link,$cadenaSQL); // ejecuta la cadena sql y almacena el resultado el $result
+        $cadenaReturn=null;
+        while ($row=mysqli_fetch_array($result)) {
+			$cadenaReturn.=$row["alumno"]."-".$row["items"]."*";
+		}
+		mysqli_free_result($result); 
+	    mysqli_close($link); 
+	    if (!is_null($cadenaReturn)) {	    
+			$cadenaReturn=substr($cadenaReturn,0,strlen($cadenaReturn)-1);
+			return $cadenaReturn; 
+	    } else {
+			return null;	
+		}
+	} // Fin del 10
+	
+
 
 }
 

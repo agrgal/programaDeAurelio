@@ -20,7 +20,7 @@ $profesorado = New profesores(); //variable de la clase profesores
 $curso = New misCursos(); // variable de la clase curso
 $alumno = New misAlumnos(); // variable de la clase alumnos
 $materia = New misMaterias(); // variable de la clase materia
-$asignacion = New misAsignaciones($curso, $profesorado, $materia); // Uso el constructor para pasarle la clase curso, profesorado y materias a Asignaciones
+$asignacion = New misAsignaciones($curso, $profesorado, $materia, $alumno); // Uso el constructor para pasarle la clase curso, profesorado, alumno y materias a Asignaciones
 
 // Variables de sesión
 session_start();
@@ -74,6 +74,10 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
                              // Establecidas las variables $curso->listaDeCursos y $curso->ListaDeNiveles   
     $asignacion->listarAsignaciones($_SESSION["profesor"]); // incluye ya todas las asignaciones de ese profesor
                              // En la variable $listaDeAsignaciones;
+    if ($_SESSION['idasignacion']>0) { // en caso de que exista y sea mayor que cero la variable de sesión de asignación
+		// echo $_SESSION["idasignacion"];
+		$asignacion->retiraHuerfanos($_SESSION["idasignacion"]); // Retira opiniones huérfanas.
+	}
     ?>    
     <!-- *********************************************************** -->
      
@@ -92,12 +96,16 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 			<ul>
 				<li><a href="#eligeAsignacion">Elige Asignación</a></li>
 				<li><a href="#nuevaAsignacion">Nueva Asignación</a></li>
+				<li><a href="#instrucciones">Instrucciones</a></li>
 			</ul>
 			
 <!-- * =======================================================================================================   * --> 		
 			<!-- ********************************************************** --> 
 			<!-- Elige asignación -->
 			<div id="eligeAsignacion"> 
+				<input id="token" style="display: none;" value="<?php echo $_SESSION["token"]; ?>">
+				<!-- // token evita ataques CSRF https://www.funcion13.com/preven-falsificacion-peticion-sitios-cruzados-csrf/ 
+				Recupera en el input el token en la primera página -->
 				<?php 
 				foreach ($asignacion->listaDeAsignaciones["idasignacion"] as $clave => $valor) { 
 				  echo $asignacion->listaDeAsignaciones["div"][$clave]; // incluye el div que viene en class.asignaciones.php
@@ -166,6 +174,10 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 			</div> <!-- Fin de crear nueva asignación -->
 			<!-- ********************************************************** --> 
 			
+			<div id="instrucciones">
+				<p style="text-align: center; margin: 40px;"><iframe width="800" height="500" src="https://www.youtube.com/embed/NKlwwFvMwiA" frameborder="0" allowfullscreen></iframe></p>
+			</div>
+			
 		</div> <!-- &&&& FIN DE LAS PESTAÑAS-->
 		
 <!-- * =======================================================================================================   * --> 	
@@ -191,7 +203,8 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 		<div id="dialog-confirm-borrar" title="Borrar datos">
 		   <p><span class="fa fa-trash fa-2x" style="float:left; margin:0 7px 20px 0;">
 		   </span>
-		   ¿De verdad quieres borrar esta Asignación?<span class="hoverAsignacion"></span>
+		   ¿De verdad quieres borrar esta Asignación? Deberías cancelar y obtener un PDF de las opiniones y opiniones generales referidas
+		   a esta asignación, pues se borrarán a su vez.<span class="hoverAsignacion"></span>
 		   </p>
 		</div>
 		
@@ -267,10 +280,10 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 		  $("#dialog-confirm, #dialog-confirm-modificar, #dialog-confirm-borrar, #dialog-confirm-nohaydatos").dialog({
 			autoOpen: false,
 			modal: true,
-			maxWidth:600,
-            maxHeight: 450,
-            width: 600,
-            height: 450,
+			maxWidth:1000,
+            maxHeight: 600,
+            width: 1000,
+            height: 600,
 			position: { my: "center center-100", at: "center center", of: "#container" }
 			// el "centro arriba" de mi cuadro de diálogo (my) , en el centro arriba (at) del contenedor (of)
 		 });
@@ -511,7 +524,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 				});
 				$(this).parent().parent().css("background","#908cdb"); // color complementario a #82a3c3
 				// Asigna la variable de sesión
-				variablesesionAsignacion($(this).attr('id'));
+				variablesesionAsignacion($(this).attr('id'),$("#token").val());
 		  });		  
 		   
 		  // 11BIS) Escoge la asignación elegida al cargar la página...
@@ -738,9 +751,11 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
  <!-- * =======================================================================================================   * --> 
 	  
 	  // F4) Asignar a la variable de sesión
-	   function variablesesionAsignacion(valor) {
+	   function variablesesionAsignacion(valor,token) { // token, para evitar ataques CSRF
 				 var posting = $.post( "./asignaciones/scripts/variableAsignacion.php", { 
 					  lee: valor,
+					  token: token, // token evita ataques CSRF https://www.funcion13.com/preven-falsificacion-peticion-sitios-cruzados-csrf/
+					  // pasa el valor del token por POST a variableAsignacion
 				  });
 				  posting.done(function(data,status) { 
 					  // alert(data);

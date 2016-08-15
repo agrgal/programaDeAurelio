@@ -8,6 +8,7 @@ class profesores
 	var $Empleado;	
 	var $listaprofesorado; 
 	var $DNI;
+	var $Email;
 
 
     // *******************************************
@@ -17,6 +18,26 @@ class profesores
 		// las funciones se deben llamar desde la página original
 		$this->Empleado = dado_Id($this->idprofesor,"Empleado","tb_profesores","idprofesor");
 		return $this->Empleado;
+	}
+	// *******************************************
+	
+	// *******************************************
+    // 1BIS) retorna el email del profesor dado su id
+	function profesorEmail()
+	{
+		// las funciones se deben llamar desde la página original
+		$this->Email = dado_Id($this->idprofesor,"email","tb_profesores","idprofesor");
+		return $this->Email;
+	}
+	// *******************************************
+	
+	// *******************************************
+    // 1BIS) retorna la contraseña del profesor dado su id
+	function profesorDNI()
+	{
+		// las funciones se deben llamar desde la página original
+		$this->DNI = dado_Id($this->idprofesor,"DNI","tb_profesores","idprofesor");
+		return $this->DNI;
 	}
 	// *******************************************
 	
@@ -59,7 +80,9 @@ class profesores
         $Sql="SELECT idprofesor FROM tb_profesores WHERE DNI='%s'"; 
 	    // echo $Sql;
 	    $this->DNI = strtoupper($this->DNI); // convertirla en mayúsculas
+	    $this->DNI = trim(strip_tags(htmlspecialchars($this->DNI))); // evita ataques XSS
 	    $Sql = sprintf($Sql, mysqli_real_escape_string($link,$this->DNI)); // Seguridad que evita los ataques SQL Injection
+        // echo $Sql;
         $result=mysqli_query($link,$Sql); // ejecuta la cadena sql y almacena el resultado el $result
 	    $row=mysqli_fetch_array($result);
 	    if (!is_null($row["idprofesor"]) or !empty($row["idprofesor"])) { // si no lo recupera, el valor por defecto)

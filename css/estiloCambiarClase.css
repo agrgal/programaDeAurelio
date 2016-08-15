@@ -1,0 +1,156 @@
+#EligeAlumno, #EligeCurso, #Correspondencia {
+    background: url("../imagenes/patterns/science-background.png") repeat; 
+	overflow: hidden;
+}
+
+
+
+#alumnos, #muestraAlumno, #cursos, #muestraCurso {
+	float: left;
+	width: 45%;
+	border: 0px solid black;
+	padding: 20px auto;
+	text-align: justify;
+}
+
+#muestraAlumno, #muestraCurso {
+	float: right;
+	width: 45%;
+	margin: 2px auto;
+}
+
+#muestraAlumno p, #muestraCurso p {
+	text-align: center;
+	font-size: 1.2em;
+	font-weight: bold;
+	/* vertical-align: text-bottom; */
+	color: rgb(41, 39, 0);
+	/* background-color: rgb(231, 212, 195); */
+	text-shadow: rgb(185, 170, 156) 7px 6px 2px;
+}
+
+#alumnos h2, #cursos h2 {
+	text-align: center;
+	font-size: 1em;
+	/* font-weight: bold; */
+	/* vertical-align: text-bottom; */
+	color: rgb(41, 39, 0);
+	/* background-color: rgb(231, 212, 195); */
+	text-shadow: rgb(185, 170, 156) 2px 1px 1px;
+}
+
+#cursos h2 {
+  text-align: left;
+}
+
+#asignacionesAntiguas, #asignacionesNuevas {
+	float: left;
+	width: 59%;
+	border: 0px solid black;
+	padding: 5px 5px;
+}
+
+#asignacionesNuevas {
+   width: 39%;
+   float: right;
+   padding-bottom: 20px;
+}
+
+#asignacionesAntiguas h1, #asignacionesNuevas h1 {
+	text-align: center;
+	font-size: 1.4em;
+	padding: 10px 10px;
+	/* font-weight: bold; */
+	/* vertical-align: text-bottom; */
+	color: rgb(41, 39, 0);
+	/* background-color: rgb(231, 212, 195); */
+	text-shadow: rgb(185, 170, 156) 7px 6px 2px;
+}
+
+#paraGo {
+	float: left;
+	clear: both;
+	width: 100%;
+	text-align: center;
+}
+#go {
+	margin: 40px auto;
+	width: 350px;	
+}
+
+/* ============================ */
+/* DIV para Cambio de clase     */
+/* ============================ */
+
+.bloque, .bloque2 {
+	width: 100%;
+	float: left;
+	border: 0px solid red;
+	text-align: center;
+	padding: 2px;
+	/* margin: 8px;	*/
+	clear: both;
+	position: relative;
+}
+
+.divasignacionCambio, .divasignacionCambio2 {
+  width: 45%;
+  max-width: 45%;
+  height: auto;
+  font-size: 1em;
+  font-weight: bold;
+  margin: 10px 10px;
+  padding: 4px;
+  border: 0px solid green;
+  float: left;
+  text-align: center;
+  /* background: #b7cde2; */
+  background: #FFE06A;
+        border-radius: 10px;
+        box-shadow: 5px 5px 5px black;
+}
+
+.divasignacionCambio2 {
+	width: 250px;
+	max-width: 250px;
+	height: auto;
+	background: #E7D4C3;
+	font-size: 0.8em;
+	display: block-inline;
+        border-radius: 10px;
+        box-shadow: 5px 5px 5px grey;
+}
+
+.divasignacionCambio h3, .divasignacionCambio2 h3, .divasignacionCambio h5, .divasignacionCambio2 h5 {
+	padding: 2px;
+	color: rgb(0, 0, 0);
+	/* background-color: rgb(231, 212, 195); */
+	text-shadow: rgb(185, 170, 156) 2px 2px 1px;
+}
+
+.divasignacionCambio h5, .divasignacionCambio2 h5 {
+	padding: 2px;
+	color: rgb(102, 0, 128);
+	/* background-color: rgb(231, 212, 195); */
+	text-shadow: rgb(185, 170, 156) 2px 2px 1px;
+}
+
+
+.destino {
+	width: 45%;
+	max-width: 45%;
+	height: auto;
+	margin: 10px 10px;
+    padding: 0px;
+	float: right;
+	border: 1px solid black; 
+	position: absolute;
+	top: 4px;
+	bottom: 4px;
+	right: 4px;
+	text-align: center;
+	background: url("../imagenes/iconos/left_arrow.png") center no-repeat;
+	background-size: 100px 80px;
+        border-radius: 10px;
+        box-shadow: 5px 5px 5px black;
+}

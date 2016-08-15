@@ -1,0 +1,53 @@
+/* Zona Origen */
+/* =============================== */
+/* http://www.css3generator.in/text-shadow.html */
+
+#ListadoAlumnos {
+ background: url("../imagenes/patterns/science-background.png") repeat; 
+ border: 0px solid orange;
+ padding: 20px 4px;
+ overflow: hidden;
+ text-align: center;
+}
+
+#CabeceraListadoAlumnos {
+	text-align: center;
+	border: 0px solid black;
+	position: relative
+}
+
+#CabeceraListadoAlumnos h1 {
+	font-size: 2em;
+    font-weight: bold;
+	text-shadow: 0 0 3px #004208, 0 0 5px #84C68C;
+}
+
+#FotoActual{
+	display: inline-block;
+	vertical-align: middle;
+	margin: 10px 10px;
+}
+
+#FotoActualImg {
+  width: 75px;
+  height: auto;
+}
+
+#printer, #printerphoto {
+  background: transparent; 
+  border: 0px solid black;
+  position: absolute;
+  width: 100px;
+  height: auto;
+  top: 0px;
+  right: 150px;
+}
+
+#printerphoto {
+  right: 50px;
+}
+
+#printer img, #printerphoto img {
+	width: 75px;
+	height: auto;
+}

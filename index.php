@@ -26,6 +26,7 @@ if (!isset($_SESSION['menuIZQ'])) { $_SESSION['menuIZQ']=0; }
 <head profile="http://www.w3.org/2005/10/profile">
   <!-- *** Principio del HEAD *************************************-->	
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-15" >
+  <meta name="robots" content="noindex,nofollow"> <!-- Evita que sea indexada en las búsquedas de Google -->
   <title>Índice - página de tutoría</title>
   <link rel="icon" 
         type="image/png" 
@@ -37,6 +38,7 @@ if (!isset($_SESSION['menuIZQ'])) { $_SESSION['menuIZQ']=0; }
   <!-- Linkar a hojas de estilo CSS -->
   <!-- ***************************** -->
   <?php include_once("./css/cargarestiloscss.php"); ?>
+  <link rel="stylesheet" href="./css/frase.css"> <!-- Efectos aplicados a esta hoja -->
  
   <!-- *** Final del HEAD, antes los ficheros de enlace a CSS ******-->
 </head>
@@ -77,7 +79,7 @@ if (!isset($_SESSION['menuIZQ'])) { $_SESSION['menuIZQ']=0; }
 			<div id="form" style="text-align: center; border: 0px solid black;"> 		     
 				 <form action="#">
 					<h3>Escribe tu contraseña de acceso &nbsp;&nbsp;
-					<input type="password" id="introducecontraseña" maxlength="10" size="12">
+					<input type="password" id="introducecontraseña" maxlength="10" size="12" onfocus="this.value='';">
 					&nbsp;&nbsp;y pulsa&nbsp;&nbsp;<a id="comprueba">Acceder</a></h3>
 				 </form> 
 			</div>
@@ -86,17 +88,129 @@ if (!isset($_SESSION['menuIZQ'])) { $_SESSION['menuIZQ']=0; }
 				<?php 
 				   $profesorado->idprofesor = $_SESSION["profesor"];
 				   echo "¡Bienvenido/a ".cambiarnombre($profesorado->nombreEmpleado())."!";
+				   // echo $_SESSION["token"];
 				?>			
 			</h1>
 			<h2 style="text-align: center;">Has accedido correctamente al sistema</h2>
 			<p  style="text-align: center;"><a id="abandonar">Cerrar sesión</a></p>
-			<p  style="text-align: center;">Pensar en si se puede poner alguna frase aleatoria...</p>
+			
+			<!-- Frase aleatoria; SCRIPT COPIADO DE https://es.wikiquote.org/wiki/Wikiquote:Frase_del_d%C3%ADa -->
+			<?php 
+			$registros = array();
+			if (($fichero = fopen("./otros/frases.csv", "r")) !== FALSE) {
+				// Lee los nombres de los campos
+				$nombres_campos = fgetcsv($fichero, 0, "###", "\"", "\"");
+				$num_campos = count($nombres_campos);
+				// Lee los registros
+				while (($datos = fgetcsv($fichero, 0, "###", "\"", "\"")) !== FALSE) {
+				// Crea un array asociativo con los nombres y valores de los campos
+					for ($icampo = 0; $icampo < $num_campos; $icampo++) {
+						$registro[$nombres_campos[$icampo]] = $datos[$icampo];
+						// echo $nombres_campos[$icampo];
+					}
+					// Añade el registro leido al array de registros
+					$registros[] = $registro;
+				}
+				fclose($fichero);
+
+				$aleatorio = rand(0,count($registros)-1); 
+				$frase = $registros[$aleatorio]["Frase"];
+				$autor = trim($registros[$aleatorio]["Autor"]);
+								
+			} ?>
+			<!-- Fin de frase aleatoria -->
+						
+			<div id="frase" class="effect7" style="width: 80%; margin: 10px auto; padding: 10px 10px;" >
+				<?php echo '<p>'.iconv("UTF-8","ISO-8859-15", "\"".trim($frase)."\", de ".$autor).'</p>'; ?>
+			
+			
+			<?php
+			$title = str_replace(" ", "_", $autor);
+			$results = array();
+			$pais=array(); $pais[0]="en"; $pais[1]="es";
+			foreach ($pais as $p) {
+				$imagesQuery = "http://".$p.".wikipedia.org/w/api.php?action=query&titles=".$title."&prop=images&format=json&imlimit=3";
+				$jsonResponse = file_get_contents($imagesQuery);
+				// echo $jsonResponse;
+				$json_array = json_decode($jsonResponse, true);
+				foreach($json_array['query']['pages'] as $page){
+					if(count($page['images']) > 0) {
+						foreach($page['images'] as $image){
+							// echo $image["title"];
+							// echo str_replace("_"," ",normaliza($title));
+							if (strpos($image["title"],str_replace("_"," ",$title))>0 or 
+							     strpos($image["title"],str_replace("_"," ",normaliza($title)))>0 
+							     ) {
+								$title2 = str_replace(" ", "_", $image["title"]);
+								$imageinfourl = "http://".$p.".wikipedia.org/w/api.php?action=query&titles=".$title2."&prop=imageinfo&iiprop=url&format=json&imlimit=5";
+								$imageinfo = file_get_contents($imageinfourl);
+								// echo $imageinfo;
+								$image_array = json_decode($imageinfo, true);
+								$image_pages = $image_array["query"]["pages"];
+								foreach($image_pages as $a){
+									$results["url"][] = $a["imageinfo"][0]["url"];
+								}
+							} // primero mira si el nombre coincide
+						} // Si hay fotos pero no resultados
+												
+						/* if(count($results["url"])<=0) {
+							foreach($page['images'] as $image){
+								$title2 = str_replace(" ", "_", $image["title"]);
+								$imageinfourl = "http://".$p.".wikipedia.org/w/api.php?action=query&titles=".$title2."&prop=imageinfo&iiprop=url&format=json&imlimit=5";
+								$imageinfo = file_get_contents($imageinfourl);
+								// echo $imageinfo;
+								$image_array = json_decode($imageinfo, true);
+								$image_pages = $image_array["query"]["pages"];
+								foreach($image_pages as $a){
+									$results["url"][] = $a["imageinfo"][0]["url"];
+								}
+							} // Si hay fotos pero no resultados
+						} // Fin de si no hay resultados */
+						
+					}
+				}
+			}
+			
+			// echo count($results["url"]);
+			//Si existe una imagen en wikipedia
+			if (count($results["url"])>0) {
+				$imagenAleatoria = rand(0,count($results["url"])-1);
+				echo '<p><img src="'.$results["url"][$imagenAleatoria].'"></p>';			
+			} 
+			
+			/* foreach ($results["url"] as $clave => $direccion) {
+				echo '<p>'.$clave.'<img src="'.$direccion.'"></p>';
+			} */
+			
+			echo '</div>'; // Fin del div de frases...
+			?>
+    
+			
 	<?php } ?>
+	
+	<div id="aviso" class="effect7" style="margin-top: 40px; padding: 20px;">
+	<h1 style="text-align: justify; padding: 10px;">Por favor, lee las "<span style="color: #0000ff;">consideraciones importantes</span>" (<span style="color: #993300;"><img src="./imagenes/iconos/left_arrow.png" height="35px" width="auto"></span>). Recuerda: puedes aumentar el tama&ntilde;o de la letra pulsando, a la vez, las teclas <span style="color: #993300;">CTRL</span> y "<span style="color: #993300;">+</span>", y para reducir el tama&ntilde;o de la letra pulsando <span style="color: #993300;">CTRL</span> y "<span style="color: #993300;">-</span>".</h1>
+	</div>
+	
+	<div id="instrucciones" class="effect7" style="padding: 20px; width: 600px; height: auto; margin: 40px auto;">
+	<h1 style="text-align: center;">Instrucciones Iniciales del programa de Tutoría (Programa Aurelio)</h1>
+	<iframe style="text-align: center;" width="560" height="315" src="https://www.youtube.com/embed/CkZBplApMms" frameborder="0" allowfullscreen></iframe>
+	</div>
+		
+	
 	</div> <!-- &&&& -->
 	
 	<!-- Comprobar el paso de parámetros si se activa -->
 	<?php // echo  "<p>Nivel: ".$_SESSION['permisos']."</p>"; ?>
 	<?php // echo  "<p>Profesor: ".$_SESSION['profesor']."</p>"; ?>
+	
+	<!-- ********************************************************** -->
+	<!-- ZONA DE DIALOGS O Notificaciones-->
+	<!-- ********************************************************** -->
+	
+		<div id="notificacionFallo"  class="notificacion">
+			<div><h1 style="font-size: 3em;">La contraseña no es correcta</h1></div>
+		</div>
 	
 	<!-- ********************************************************** -->
 	<!-- FIN DEL CONTENIDO PRINCIPAL -->
@@ -140,12 +254,28 @@ if (!isset($_SESSION['menuIZQ'])) { $_SESSION['menuIZQ']=0; }
 		console.log( "Load was performed." );
 		}); 
 		
+		 $("#notificacionFallo").jqxNotification({
+                width: 500, position: "top-right", opacity: 0.9,
+                autoOpen: false, animationOpenDelay: 500, autoClose: true, autoCloseDelay: 4000, template: "error"
+         });
 		
 		// Función para click del button de comprueba contraseña 
 		$("#comprueba")
 		.button()
-		.click(function(event) {
-		   recuperaInformacionProfesor(); // llama a la informacion del profesorado.
+		.click(function(event) {	   
+		   $.when(recuperaInformacionProfesor()).done(function(data){
+				try {
+					var datos = jQuery.parseJSON(data);
+					// alert(datos.idprofesor);
+					if (datos.idprofesor>0) {
+						location.reload();  // cambia la página.
+					} else {
+						$("#notificacionFallo").jqxNotification("open");						
+					}
+				} catch(err) {
+					console.log(err.message);
+				}	
+		   });
 		});
 		
 		// Función para click del button de comprueba contraseña. Así coge el estilo del botón
@@ -157,7 +287,15 @@ if (!isset($_SESSION['menuIZQ'])) { $_SESSION['menuIZQ']=0; }
 		.click(function(event) {
 		   cerrarSesion(); // llama a la informacion del profesorado.
 		});	
+		
+		// Al empezar pone un valor a cero
+		// $("#introducecontraseña").val("");
 				
+	 }); // Fin del document ready
+	 
+	 $(window).load(function() {
+		 // Me aseguro que tras recargar la página, se borran los cambios de autocompletar
+		 $("#introducecontraseña").val("");
 	 });
 	 
 	 // ******************************************************
@@ -167,16 +305,23 @@ if (!isset($_SESSION['menuIZQ'])) { $_SESSION['menuIZQ']=0; }
 	 // F1) Llama al script y recupera informacion del profesor
 		function recuperaInformacionProfesor() {
 				 var id = $("#introducecontraseña").val();
-				 var posting = $.post( "./profesores/scripts/compruebacontrasenna.php", { 
-					  lee: id,
-				  });
-				  posting.done(function(data,status) { 
-					  // $("#testear").html(data);
-					  // aunque envía datos, al establecer las variables de sesión y recargar
-					  // la página es suficiente
-					  // al tner el script una cabecera como ISO-8859-15 se acabn los problemas de conversión... :-)
-					  location.reload();
-				  });
+				 // alert(id);
+				 return $.ajax({
+					  type: 'POST',
+					  dataType: 'text',
+					  url: "./profesores/scripts/compruebacontrasenna.php", 
+					  data: { // Parece que las llamadas con ajax van mejor que con POST...
+					  lee: id, 
+					  },					 		 
+						  success: function(data, textStatus, jqXHR){
+							 // alert(data);
+							 return data;
+						  },
+						  error: function (jqXHR , textStatus, errorThrown) {
+							  return "";
+						  }
+			      });
+				 
 		} 
 		
 		// F2) Llama al script y recupera informacion del profesor

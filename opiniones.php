@@ -22,7 +22,7 @@ $curso = New misCursos(); // variable de la clase curso
 $alumno = New misAlumnos(); // variable de la clase alumnos
 $materia = New misMaterias(); // variable de la clase materia
 $opiniones = New misOpiniones(); // variable de la clase opiniones
-$asignacion = New misAsignaciones($curso, $profesorado, $materia); // Uso el constructor para pasarle la clase curso, profesorado y materias a Asignaciones
+$asignacion = New misAsignaciones($curso, $profesorado, $materia, $alumno); // Uso el constructor para pasarle la clase curso, profesorado, alumno y materias a Asignaciones
 
 // Variables de sesión
 session_start();
@@ -79,6 +79,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
      
 	<div id="test"> <!-- TESTER -->
 	    <p id="testear">
+			<?php $asignacion->retiraHuerfanos($_SESSION["idasignacion"]); // Retira opiniones huérfanas. ?>
 			<?php // echo $_SESSION["idasignacion"]." - Prof: ".$_SESSION["profesor"]; ?>
 			<!-- <a id="grabar">Grabar</a> -->
 	    </p>
@@ -97,6 +98,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
             <ul>
 				<li><a href="#opinionesAlumno">Opinión alumno/a por alumno/a</a></li>
 				<li><a href="#Instrucciones">Instrucciones</a></li>
+				<li><a href="#InstruccionesHistorico">Inst. Hist. de Opiniones</a></li>
 			</ul>
  
     <!-- ******************************************************************************************** -->            
@@ -189,6 +191,17 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 						?>
 						
 					</div> <!-- *** FIN DEL CONTENEDOR OPINIONES*** -->
+					
+					<!-- Imprimir los resultados -->
+					<div id="printer" title="Imprime informe para el profesor/a" title="Imprime informe para el profesor/a" >
+						<!-- <a id="imprimir" href="./pdf/scripts/listadoResultadosPDF.php" ><img src="./imagenes/iconos/printer_pdf.png"></a> -->
+						<form id="formularioImprimir" action="./pdf/scripts/listadoInformeProfesor.php" method="POST">
+							<input id="sendFecha" name="sendFecha" type="text" style="display: none;" value="">
+							<!-- <button type="submit"><img src="./imagenes/iconos/printer_pdf.png"></button> -->
+							<a id="imprimir" ><img src="./imagenes/iconos/printer_pdf.png"></a>
+						</form>
+					</div>
+				
 	<!-- ********************************************************** -->
 				</div> <!-- *** FIN DEL CONTENEDOR OPINION UN ALUMNO *** -->
 				
@@ -197,7 +210,11 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
     <!-- ******************************************************************************************** --> 				
 				
 				<div id="Instrucciones">
-					<p>Insertar aquí las instrucciones</p>
+					<p style="text-align: center; margin: 40px;"><iframe width="800" height="500" src="https://www.youtube.com/embed/htei6ygu5yQ" frameborder="0" allowfullscreen></iframe></p>
+				</div>
+				
+				<div id="InstruccionesHistorico">
+					<p style="text-align: center; margin: 40px;"><iframe width="800" height="500" src="https://www.youtube.com/embed/-I9c8Q6az9I" frameborder="0" allowfullscreen></iframe></p>
 				</div>
 			
 			</div>
@@ -254,7 +271,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
   <!-- <script src="./htmlsuelto/js_menu.js"></script>   Incorpora al script los menús a la izquierda -->  
   <script type="text/javascript" src="./jquery/jqx/jqxcore.js"></script>
   <script type="text/javascript" src="./jquery/jqx/jqx-all.js"></script> 
-  <!-- Owl carousel --> 
+  <!-- Owl carousel -->
   <script type="text/javascript" src="./owl-carousel/owl.carousel.js"></script>
   <!-- Editor de texto froala. Non commercial use -->
   <script src="./jquery/froala/js/froala_editor.min.js"></script>  
@@ -267,8 +284,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
   <script src="./jquery/froala/js/plugins/font_family.min.js"></script>
   <script src="./jquery/froala/js/plugins/font_size.min.js"></script>
   <script src="./jquery/froala/js/plugins/block_styles.min.js"></script>
-  <script src="./jquery/froala/js/plugins/video.min.js"></script>
-  
+  <script src="./jquery/froala/js/plugins/video.min.js"></script> 
   <script>     
      
      $(document).ready(function() {  		 
@@ -347,6 +363,15 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
                 width: 500, position: "top-right", opacity: 0.9,
                 autoOpen: false, animationOpenDelay: 500, autoClose: true, autoCloseDelay: 4000, template: "warning"
          });
+         
+        // ************************************
+		// Al hacer click en el icono impresora
+		// ************************************
+
+		$("#imprimir").click(function(event,ui){
+			// alert("Imprime...");
+			document.getElementById("formularioImprimir").submit();
+		}); 
 
 		// ========================================================================================
         // DEFINO tabs. LLAMO Pestañas. Defino editor en zonaEscribir. Defino fecha
@@ -391,6 +416,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 					   $("#editor").editable("setHTML", "", true); // campo texto lo pone a cero
 					   inicializaItems(); // Pone en pantalla el primer grupo de items...					   
 					   fechaDada = $("#muestrafecha").val();
+					   $("#sendFecha").val(fechaDada); // SENDFECHA
 					   fechaTrabajo = convertirFecha(fechaDada); //???
 					   $.when(obtenerOpinion(indexAlumno,fechaDada)).done(function(data2){
 							try {
@@ -415,7 +441,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 			    if (RefrescaSelectMenuFechas) { // Permite o no refrescar datos según esta variable...
 					
 				var fechaNueva = $("#listaFechas option:selected").attr("mysql"); // fecha en formato mysql
-				// alert("Estoy en select menu... Dada: "+fechaDada+" Nueva: "+fechaNueva);
+				// alert("Estoy en select menu... Dada: "+fechaDada+" Nueva: "+fechaNueva);				
 				
 				$.when(insertarOpinion(indexAlumno,fechaDada,getItemsElegidos()),
 			           obtenerOpinion(indexAlumno,fechaNueva)).done(function(data1,data2,data3){
@@ -449,7 +475,8 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 						// alert(data3[0]);
 						fechaTrabajo = $("#listaFechas option:selected").val();
 						$("#fecha").datepicker("setDate",fechaTrabajo);
-						fechaDada = $("#muestrafecha").val();		
+						fechaDada = $("#muestrafecha").val();	
+						$("#sendFecha").val(fechaDada); // SENDFECHA
 					}); // Fin del when	
 					
 				    } // Fin del IF RefrescaSelectMenuFechas				    
@@ -458,7 +485,6 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 			})
 			.selectmenu("menuWidget")
 			   .addClass("overflow3"); // carga un estilo que está en /css/estiloSelectMenuOverflow.css
-
             
 		// ========================================================================================
         // DEFINO EL MENÚ DE LOS GRUPOS
@@ -492,7 +518,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 			// paginationNumbers: true,	 
 			beforeInit: function (elemento) {
 				$(".divalumno").each(function(index){
-					$(this).addClass("divalumno2"); // cambia la clase del divalumno...
+					$(this).addClass("divalumnoOpiniones"); // cambia la clase del divalumno...
 					$(this).children("#image").css("background-size","90px 90px"); // tamaño imagen div
 			  		$(this).children("#image").css("width","200px"); // tamaño imagen div
 			        $(this).children("#image").css("height","125px"); // tamaño imagen div
@@ -827,6 +853,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 		 // Al inicio elige una opción del grupo Items
          inicializaItems();
          var fechaDada = $("#muestrafecha").val(); // inicializa la variable fechaDada
+         $("#sendFecha").val(fechaDada); // SENDFECHA
          // alert(fechaDada);
 			
 	 }); // fin del document ready

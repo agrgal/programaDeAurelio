@@ -1,0 +1,124 @@
+/* #acordeon.ui-accordion {
+	float: left;
+	width: 50%;
+	border: 0px solid red;
+} */
+
+.ui-tabs .ui-tabs-nav li a { /* ¿Cómo se cambia a solo una set de pestañas? */
+  font-size:0.9em !important;
+}
+
+#CadenaSQL {
+    float: right;
+	width: 45%;
+	border: 0px solid green;
+	padding: 5px;
+	margin-right: -5px;
+	text-align: center;
+}
+
+#FiltrodeDatos {
+    background: url("../imagenes/patterns/science-background.png") repeat; 
+	overflow: hidden;
+}
+
+#Datos {
+    background: url("../imagenes/patterns/science-background.png") repeat; 
+	text-align: center;
+}
+
+/* Colocar iconos de impresoras */
+#printer, #printerphoto {
+  background: transparent; 
+  border: 0px solid black;
+  position: absolute;
+  width: 100px;
+  height: auto;
+  top: 10px;
+  right: 100px;
+}
+
+#printer img, #printerphoto img {
+	width: 75px;
+	height: auto;
+}
+
+#MostrarDatos {
+	overflow: hidden;
+	border: 0px solid orange;
+	margin: 4px auto;
+	text-align: center;
+}
+
+#MostrarDatos h1 {
+  font-size: 1.3em;
+  font-weight: bold;
+  /* vertical-align: text-bottom; */
+  color: rgb(41, 39, 0);
+  /* background-color: rgb(231, 212, 195); */
+  text-shadow: rgb(185, 170, 156) 7px 6px 2px;
+}
+
+
+/* Estilo de la tabla de los datos */
+
+.tablaDATOS { /* tabla en la que aparecen los datos */
+  width: 90%;
+  max-width: 90%;
+  margin: 2px auto;
+  text-align: justify;
+}
+
+.tablaDATOS td {
+  text-align: justify;
+  padding: 2px 15px;
+  border: 0px solid black;
+  font-size: 1em;
+}
+
+/* CSS de los divs de Fechas */
+
+/* Botón de mostrar los datos */
+#go {
+  margin: 10px auto;
+}
+
+/* Clase del div donde se encuentran las evaluaciones */
+#contieneEvaluaciones {
+    width: 50%;
+    float: left;
+    border: 0px solid red;
+    text-align:center;
+}
+
+.divNombreEval2 {
+background-color: #82A3C3;
+width: 45%;
+
+padding: 4px;
+margin: 12px 12px; /* con text-align: center en eligeEval se centran */
+display: inline-block;
+vertical-align: middle;
+font-variant: small-caps;
+text-transform: uppercase;
+font-family: Averia Gruesa Libre;
+font-weight: bold;
+color: #131385;
+text-align: center;
+font-size: 0.75em;
+word-wrap: break-word;
+
+line-height: 1.4;
+-webkit-border-radius: 13px 13px 13px 13px;
+-moz-border-radius: 13px 13px 13px 13px;
+border-radius: 13px 13px 13px 13px;
+-moz-box-shadow: 6px 7px 6px 3px rgba(161, 205, 212, 0.59);
+-webkit-box-shadow: 6px 7px 6px 3px rgba(161, 205, 212, 0.59);
+box-shadow: 6px 7px 6px 3px rgba(161, 205, 212, 0.59);
+}
+
+.divNombreEvalSeleccionado2 {
+  background-color: #7FC7AE;
+}
+
+

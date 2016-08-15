@@ -1,0 +1,74 @@
+
+#cambioPassword, #cambioEmail {
+	width: 95%;
+	float: left;
+	overflow: hidden;
+	border: 0px solid black;
+	text-align: center;
+	margin: 20px auto;
+	padding: 18px 18px;
+	clear: both;
+	position: relative;
+}
+
+#cambioEmail {
+	width: 95%;
+	float: left;
+}
+
+.botonCambiar {
+  position: absolute;
+  width: 350px;
+  height: auto;
+  top: 20px;
+  right: 10px;
+  border: 0px solid black;
+}
+
+.relieve {
+   text-shadow: 1px 1px white, -1px -1px #333;
+   background-color: #9E9789;
+   color: #FBEDBA;
+   padding: 10px;
+   font-size: 1.4em;
+   text-align: center;
+} 
+
+.tipocomic, label {
+color: #000000;
+/* text-shadow:
+-2px -2px 0 #82A3C3,
+1px -2px 0 #82A3C3,
+-2px 2px 0 #82A3C3,
+2px 2px 0 #82A3C3,
+1px 1px #82A3C3,
+2px 2px #82A3C3,
+3px 3px #82A3C3,
+4px 4px #82A3C3; */
+font-size: 1.1em;
+font-family: 'Comic', cursive;
+}
+
+#cambioPassword h1, #cambioEmail h1 {
+	color: #00000;
+	text-shadow: 6px 6px 0px rgba(255, 233, 145,0.5);
+	font-size: 1.8em;
+	font-family: 'Comic', cursive;
+}
+
+.notificacion h1 {
+    font-size: 3em;
+	font-family: 'Comic', cursive;
+}
+
+#cambioPasswordInside, #cambioEmailInside {
+	text-align: justify;
+	border: 0px solid black;
+	margin: 8px;
+	padding: 28px 8px;
+}
+
+#cambioPasswordInside input, #cambioEmailInside input, label {
+	margin: 20px;
+}
+

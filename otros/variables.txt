@@ -1,25 +1,40 @@
 Repasar o introducir
 ====================
+[*] Marcadas como terminadas
 1º) Seguridad en el INDEX.php
 2º) Estilos en los menús a la izquierda
-3º) Menú de tutoría... Cuando llegue el momento hay que hacerlo.
+[*] 3º) Menú de tutoría... Cuando llegue el momento hay que hacerlo.
 4º) En formulario -> scripts -> InsertarFORM (¿Y en modificarForm?) terminar la funcion tipología
     que reconoce si hay un tipo de datos y si el valor pasado pertenece a él.
 5º) En editaFormulario, intentar cambiar un poco más lo del label del slider...
-6º) En class.alumnos.php, en devuelveAlumno, recuperar foto si existe...
+[*] 6º) En class.alumnos.php, en devuelveAlumno, recuperar foto si existe...
 7º) En asignacion.php, en el dialogo de confirmación de grabar o no, mostrar los datos de la asignación...
     dialog-confim... span confirmarAsignacion
-8º) En opiniones.php: repasar lo del sincronismo de las llamadas AJAX. Lo he conseguido gracias a retornar 
+[*] 8º) En opiniones.php: repasar lo del sincronismo de las llamadas AJAX. Lo he conseguido gracias a retornar 
 la "promesa" con return $.ajax y usar la función $.when( ).done(function(){  }); ¡¡Parece que funciona !!
 8ºB) En opiniones.php: repasar lo de incluir una entrada con "la última fecha"...
-8ºC) Creé una llanda AJAX llamada setVariableSesionAlumno por si hacía falta hacer un reload, estableciendo una
+[*] 8ºC) Creé una llanda AJAX llamada setVariableSesionAlumno por si hacía falta hacer un reload, estableciendo una
 variable de sesión idAlumno. No la he usado en opiniones, aunque dejo la función de llamada y el script por si me hace falta posteriormente.
 8ºD) ¿opción Autosave apagar-encender o establecer tiempo? ¿Opción Grabar con un botón? 
 8ºE) Instrucciones de Opiniones. ¿Introducir Instrucciones de Asignaciones?
 9º) Repasar todos los <title>
-10º) En listaPanel.php, script de opiniones Histórico, incluir foto si existe...
+[*] 10º) En listaPanel.php, script de opiniones Histórico, incluir foto si existe...
 11º) En "Histórico de Opiniones", quizás mejorar un poco más el aspecto de los botones...
-12º) Opiniones Generales. Modificar instrucciones.
+[*] 12º) Opiniones Generales. Modificar instrucciones. 
+13º) Mejorar en listadoAlumnado.php el centrar foto actual en la ventana modal que pide el borrado o inclusión de foto.
+[*] 14º) Las imágenes de las fotografías se almacenan en la carpeta UPLOAD
+[*] 15º) En la carpeta PDF se generan temporalmente los pdf a descargar. Los scripts dentro de la carpeta scripts.
+16º) Repasar, en la listaAlumnosPDF.php, verprint.css la lista de alumnos. ¿La tabla de otra forma?
+17º) Terminada la presentación de datos. 
+[*] 18º) ¿QUÉ OCURRE SI BORRO UNA ASIGNACIÓN? ¿BORRO LOS DATOS, O NO?
+19º) Repasar tamaño ventanas modales de ASIGNACIÓN
+[*] 20º) INTENTO instalar funciones estadísticas. ¡Ojo! PHP 7. Paso, creo las funciones en funciones.php
+21º) En cambiar contraseña... ¿Cómo puñetas se borra el contenido inicial si accedo directamente tras la página de reconocimiento?
+[*] 22º) Tamaño al principio de los editores FROALA. Ver parte de correo. HECHO: sólo hay que cambiar el font-size del div.
+[*] 23º) En cambioClase y /tutoria/scripts/realizaCambioClase... ¿borrar opiniones de asignaciones antiguas NO EMPAREJADAS? Pensarlo. Se soluciona con
+la función en la clase asignaciones retiraHuérfanos, que comprueba opiniones huérfanas (opiniones cuyos alumnos NO ESTÁN en una asignación) y que se 
+comprueba cada vez que se entra en dicha asignación, borrándose.
+24º) A falta de todo el trabajo de Administración que tenía la otra. 
 
 
 Includes htmlsuelto
@@ -34,6 +49,15 @@ js_menu.js -> script javascript que permite la funcionalidad en menuIZQUIERDO
   variable de sesión $_SESSION["menuIZQ"]
 js_datepicker_espannol.js -> Pone en español los datepicker.
 
+Ataques
+=======
+
+*) Se comprueban los ataques SQL injection con mysqli_real_escape_string en muchas consultas a la base de datos
+*) Se comprueba el ataque XSS en la funcion compruebaPASS de la clase profesores, con $this->DNI = trim(strip_tags(htmlspecialchars($this->DNI))); // evita ataques XSS
+*) Se comprueba el ataque CSRF al elegir una asignacion en asignacion.php -> llamada ajax variablesesionAsignacion; se le pasa como parámetro el token de la 
+variable de sesión ALEATORIA establecida antes en compruebacontrasenna.php y se comprueba que es el mismo antes de establecer una sesión de asignación en variableAsignacion.php
+*) ¿? Necesito más protección... ¿¿??
+
 Variables de sesion
 ===================
 
@@ -45,7 +69,8 @@ $_SESSION['menuIZQ']  // Identifica el menú que fue pulsado y lo recuerda
 $_SESSION['IDform']   // controla el ID en el formulario.
 $_SESSION['nombreTabla'] // Identifica el nombre de la tabla con la que se trabaja en el modo edición
 $_SESSION["idasignacion"] // Identifica la asignación elegida...
-$_SESSION["tutor"] // Guarda si es o no tutor
+$_SESSION["tutor"] // Guarda si es o no tutor (1 si es tutor)
+$_SESSION["token"] // Parámetro aleatorio.
 
 Clase profesores
 ================
@@ -98,6 +123,8 @@ Clase Cursos
 	function devuelveCurso ($cual) // devuelve, según la clave un curso - nivel -clase y un div.
 	function devuelveListaAlumnos ($curso) // dado un curso, devuelve la lista de alumnado separados por un #
 	function devuelveCursoCorto ($nombreCorto) // dado un nombre corto, devuelve la clave del array $ListaDeCursos...
+	function devuelveCursoCortoPorUnidad  ($nombreUnidad) // // 3c) Devuelve curso corto por nombre unidad. Doy 1 ESO E , y me devuelve 1ESOE
+	function devuelverUnidadPorCursoCorto ($corto) // 3d) Lo contrario. Doy un curso corto y devuelve la unidad.
 	function devuelveAsignacionLarga ($asignacionCorta) //
 	         // Doy una asignacion del tipo 1ESOC#12#45 y devuelve una cadena tipo 1#2#...#12#45 con los índices del alumnado
 	         // sin repetir y ordenada.
@@ -105,6 +132,7 @@ Clase Cursos
 	         // dada una signación con la retahíla de alumnos 1#2#24#45#...#23#467...
 	         // devuelve una cadena con los cursos 1ESOC#1ESOD... a los que pertenecen esos alumnos.
 	         // según el valor $tipo: 0-> devuelve cursos cortos 1ESOD. Con 1 -> como en Séneca 1 ESO D
+	function devuelveAlumnosAsignacion ($idasignacion) // acepta idasignacion y devuelve retahíla de idalumnos de esa asignación
 	
 Clase alumnos
 =============
@@ -113,7 +141,9 @@ Clase alumnos
 	                 // idalumno, nombre (Apellidos, Nombre), nombre2 (Nombre + Apellidos), unidad, div
 	                
 	function devuelveAlumno ($id) // según el id busca en la base de datos los parámetros para esteAlumno
-
+    function devuelveUnidadDeUnAlumno ($idal) // devuelve el curso de un alumno
+    function devuelveNombreAlumno ($idal) // devuelve el nombre en formato Nombre Apll1 Apll2
+    
 Clase asignaciones
 ===================
 
@@ -139,8 +169,20 @@ Clase asignaciones
 	    // Funcion que retorna si es tutor o no
 	function devuelveListadoAlumnosdeEstaAsignacion ($id, $profesor) {	    
 	    // Función que retorna el listado de alumnos de una asignación
+	function devuelveAsignacionesDondeEstaUnAlumno ($idal)
+		// devuelve un listado de asignaciones que corresponden a un alumno
+	function devuelveAsignacionesDeUnaTutoria($id, $profesor)
+	    // Función que, dado un id y el valor del profesor, retorna las asignaciones de esa tutoría
+	    // dado id (identifiación de la tutoría)  y profesor
+	function asignacionDescripcion($idasignacion) // devuelve la descripción dando su id simplemente
+	function asignacionProfesor($idasignacion, $cual) //devuelve el Nombre del profesor de una asignacion. 
+	    // Cual -->0 el idprofesor, Si Cual -> 1, el nombre
+	function asignacionMateria($idasignacion, $cual) // Dada una asignación, retorna el nombre de la materia
+	    // Cual -->0 el idmateria, Si Cual -> 1, el nombre
+	function asignacionDIV($id) // Calcula un div para los emails, con solo el profesor.
+	function asignacionDIV2($id) // Calcula un div para el cambio de clase: ya tiene materia, nombre profesor, clases...
+	function reconstruyeDescripcion($id) // Dada una asignación, recalcula y actualiza lo que poner en la descripción
 	    
-    	    
 Clase opiniones
 ===============
 
@@ -155,6 +197,10 @@ Clase opiniones
         // devuelve un array codificado en JSON  con los valores de items y observaciones 
      function retornaItem ($id) // dado un identificador de item, id, recupera un json con el valor de ese identificador
      function itemsElegidos ($cadena) // dada una cadena del tipo 9#14#.. devuelve los items separados por punto y coma.
+     function retornaValores($cadenaSQL) // Doy una cadena SQL y retorna un array con los datos obtenidos DE CADA OPINION. // ARREGLADA 12-06-2016
+     function itemsEstadistica($cadenaSQL) // Doy una cadenaSQL y por cada item devuelve su frecuencia de aparición
+     function itemsEstadisticaPorAlumno($cadenaSQL) // Misma cadena SQL y devuelve cada alumno con sus items.
+     function retiraHuerfanos($id) // Dada una ID limpia la tabla de opiniones de aquellas cuyos alumnos YA no pertenecen a la asignación.
      
 Clase evaluaciones
 ==================
@@ -168,4 +214,15 @@ Clase evaluaciones
                                             // Cero, si no lo encuentra.
                                             // Si id es false, retorna la fecha de fin del período de evaluación que toca para esa fecha.
                                             // Si fuera del período, la fecha actual.
-                                 
+             
+Clase materias
+==============
+
+	 function devuelveMateria ($id)	// Dada una ide de materia, devuelve la información sobre ella.
+	 function listaMaterias() // Lista todas las materias
+	 
+Clase opiniones generales
+=========================
+
+	function checkOpinion($evaluacion, $asignacion) // comprueba si existe o no una Opinión General, una evaluación para una asignación. Si existe devuelve su id.
+	function retornaValores($cadenaSQL) // retorna los valores de una opinión general.

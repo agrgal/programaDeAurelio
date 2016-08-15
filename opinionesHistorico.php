@@ -23,7 +23,7 @@ $curso = New misCursos(); // variable de la clase curso
 $alumno = New misAlumnos(); // variable de la clase alumnos
 $materia = New misMaterias(); // variable de la clase materia
 $opiniones = New misOpiniones(); // variable de la clase opiniones
-$asignacion = New misAsignaciones($curso, $profesorado, $materia); // Uso el constructor para pasarle la clase curso, profesorado y materias a Asignaciones
+$asignacion = New misAsignaciones($curso, $profesorado, $materia, $alumno); // Uso el constructor para pasarle la clase curso, profesorado, alumno y materias a Asignaciones
 
 
 // Variables de sesión
@@ -80,6 +80,9 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
      
 	<div id="test"> <!-- TESTER -->
 	    <p id="testear">
+			<?php 
+			$asignacion->retiraHuerfanos($_SESSION["idasignacion"]); // Retira opiniones huérfanas.
+			?>
 	    </p>
 	    <input id="idasignacion" value="<?php echo $_SESSION["idasignacion"]; ?>" style="display: none;"> 
     </div>	<!-- TESTER -->
@@ -127,8 +130,12 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 				<div id="cabecera2"><h1>Historial</h1></div>
 		        <div id="lista2">
 				</div>
+				<!-- ************ Enlace a las instrucciones ********* --> 
+				<div id="instrucciones" style="position: absolute; right: 15px; bottom: 2px; " title="Instrucciones, Icono por Freepik en www.flaticon.com" >
+					<a href="https://youtu.be/-I9c8Q6az9I" target="_blank"><img src="./imagenes/iconos/instrucciones.png" style="width: 100px; height: auto;" ></a>
+				</div>
 			</div> <!-- Fin del panel a la derecha  --> 
-	<!-- ********************************************************** --> 	
+	<!-- ********************************************************** --> 			
 		
 		</div>     <!-- Fin del contenedor de los paneles --> 
     <!-- ================================================================================================== --> 
@@ -158,6 +165,8 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 		   </p>
 		</div>
 			
+
+		
 	</div> <!-- &&&& FIN DEL CONTENEDOR-->	
 
 	<!-- ********************************************************** -->
@@ -237,10 +246,10 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 		  $("#dialog-confirm, #dialog-confirm-borrar, #dialog-confirm-nohaydatos").dialog({
 			autoOpen: false,
 			modal: true,
-			maxWidth:600,
-            maxHeight: 300,
-            width: 600,
-            height: 300,
+			maxWidth: 800,
+            maxHeight: 400,
+            width: 800,
+            height: 400,
 			position: { my: "center center-100", at: "center center", of: "#container" }
 			// el "centro arriba" de mi cuadro de diálogo (my) , en el centro arriba (at) del contenedor (of)
 		 });		 
@@ -554,6 +563,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 			  fecha: fechaDada, // La variable de sesión de la asignación se consigue en el script.
 			  });
 		  posting.done(function(data,status) { 
+			  // alert(data);
 			  $(lista).html(data);
 			  // $(lista).refresh();
 			  // location.reload();

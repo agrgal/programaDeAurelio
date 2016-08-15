@@ -1,0 +1,54 @@
+/* Estilo enviar Email */
+
+#profesorado, #escribir {
+	width: 95%;
+	padding: 20px 20px;
+	border: 0px solid black;
+	margin: 10px 10px;
+	float: left;
+	overflow: hidden;
+	position: relative;
+}
+
+#profesorado h1 {
+	text-align: center;
+}
+
+#enviarMensaje {
+	position: absolute;
+	top: 55px;
+	right: 55px;
+}
+
+#escribir h2 {
+	text-align: left;
+	margin: 20px 0px 8px 10px;
+	font-weight: bold;
+		text-shadow:7px 1px 10px rgba(145, 255, 233,0.8);
+	font-size: 40px;
+	color: #121234;
+	font-family:Averia Gruesa Libre;
+}
+
+.zonaEscrituraEmail{
+    width: 98%;
+    margin: 5px auto;
+    padding: 4px 4px;
+    
+	-moz-box-shadow: 7px 7px 2px 4px rgba(18, 115, 27, 0.29);
+	-webkit-box-shadow: 7px 7px 2px 4px rgba(18, 115, 27, 0.29);
+	box-shadow: 7px 7px 2px 4px rgba(18, 115, 27, 0.29);
+
+	background: -webkit-linear-gradient(214deg, #121234 5%, #343412 100%);
+	background: -moz-linear-gradient(214deg, #121234 5%, #343412 100%);
+	background: -o-linear-gradient(214deg, #121234 5%, #343412 100%);
+	background: -ms-linear-gradient(214deg, #121234 5%, #343412 100%);
+	background: linear-gradient(304deg, #121234 5%, #343412 100%);
+
+}
+
+#zonaEscrituraEmailAsunto {
+	width: 80%;
+	border: 0px solid red;
+	margin: 5px 10px;
+}

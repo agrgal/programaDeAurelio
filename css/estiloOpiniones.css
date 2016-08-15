@@ -76,7 +76,7 @@
 
 /* ======== Imagen del alumnado ========= */
 
-.divalumno2 {
+.divalumnoOpiniones {
     width: 200px;
     height: 125px;
 }
@@ -91,8 +91,10 @@
     float: right;
     margin: 5px auto;
     margin-top: 10px;
-    margin-left: 20px;
-    padding-left: 10px;
+    margin-left: 20px; /* original 20 px */
+    padding-left: 20px; /* original 20 px */
+    padding-top: 20px;
+    padding-bottom: 20px;
     width: 72%;
     text-align: center;
 }
@@ -166,6 +168,22 @@
 
 .ui-selectmenu-text { /* Del listado de fechas . reduzco un poco su tamaño */
 	font-size: 1em;
+}
+
+/* Colocar iconos de impresoras */
+#printer, #printerphoto {
+  background: transparent; 
+  border: 0px solid black;
+  position: absolute;
+  width: 100px;
+  height: auto;
+  top: 10px;
+  right: 100px;
+}
+
+#printer img, #printerphoto img {
+	width: 75px;
+	height: auto;
 }
 
 

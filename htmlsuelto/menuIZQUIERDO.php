@@ -14,8 +14,10 @@ session_start();
 			if ($_SESSION["idasignacion"]>1) { // sólo si está establecida la variable de sesión
 				echo '<li><a href="./opiniones.php">Opiniones alumno por alumno</a></li>';
 				echo '<li><a href="./opinionesHistorico.php">Histórico de opiniones</a></li>';
-				echo '<li><a href="./opinionesGenerales.php">Opinión General de una clase</a></li>';
+				echo '<li><a href="./opinionesGenerales.php">Opinión General de una clase</a></li>';				
+				// echo '<li><a href="./cambioDatos.php">Cambiar contraseña y correo electrónico</a></li>';
 		    }
+		    echo '<li><a href="./cambioDatos.php">Cambiar contraseña y correo electrónico</a></li>';
 	echo '</ul>';
 	} else if ($_POST["lee"]=="3" || (!isset($_POST["lee"]) && $_SESSION["menuIZQ"]=="3")) { // Menú del Administrador
 	$_SESSION["menuIZQ"]=3; // la establece por si acaso
@@ -30,12 +32,17 @@ session_start();
 		</ul>
 	    ';
 	
-	} else if ($_POST["lee"]=="2" || (!isset($_POST["lee"]) && $_SESSION["menuIZQ"]=="2")) { // Menú del Administrador
+	} else if ($_POST["lee"]=="2" || (!isset($_POST["lee"]) && $_SESSION["menuIZQ"]=="2")) { // Menú del Tutor
 	$_SESSION["menuIZQ"]=2; // la establece por si acaso
 	echo'
 		<h2 style="text-align: center; font-weight: bold;"> Menú del Tutor/a </h2>
 		<ul class="menuIZQul">
-			<li><a href="./#">Prueba que hay que quitar</a></li>
+			<li><a href="./listadoAlumnos.php">Listado de los alumnos/as de mi tutoría</a></li>
+			<li><a href="./obtenerDatosTutor.php">Datos en mi tutoría</a></li>
+			<li><a href="./obtenerDatosGenerales.php">Datos Generales</a></li>
+			<li><a href="./obtenerEstadisticas.php">Datos Estadísticos</a></li>
+			<li><a href="./enviarEmail.php">Enviar email al equipo educativo</a></li>
+			<li><a href="./cambiarClase.php">Cambiar alumno/a de clase</a></li>
 		</ul>
 	    ';
 	} else {

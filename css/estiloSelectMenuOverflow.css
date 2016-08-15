@@ -1,4 +1,4 @@
-.overflow, .overflow2, .overflow3 {
+.overflow, .overflow2, .overflow3 , .overflow4, .overflow5, .overflow6 {
  height: 300px; /* permite limitar la lista del select menu */
  text-align: left;
  font-weight: bold;
@@ -12,6 +12,17 @@
 
 .overflow3 {
  font-size: 1em;
+}
+
+.overflow4, .overflow5 {
+ width: 600px;
+ height: 400px;
+ font-size: 1.1em;
+ color: black;
+}
+
+.overflow6 {
+ height: auto;
 }
 
 #selectorTAG {

@@ -13,7 +13,7 @@ include_once("./clases/class.alumnos.php"); //clase que recupera datos de alumno
 // include_once("./clases/class.materias.php"); //clase que recupera datos de materias
 // include_once("./clases/class.asignaciones.php"); //clase que recupera datos de materias
 // include_once("./clases/class.opiniones.php"); //clase que recupera datos de opiniones
-include_once("./clases/class.evaluaciones.php"); //clase que recupera datos de alumnos
+include_once("./clases/class.evaluaciones.php"); //clase que recupera datos de evaluaciones
 
 // incluyo las variables de esas clases
 $calendario = New micalendario(); // variable de calendario. Lo necesito para la cabecera
@@ -24,7 +24,7 @@ $alumno = New misAlumnos(); // variable de la clase alumnos
 // $materia = New misMaterias(); // variable de la clase materia
 // $opiniones = New misOpiniones(); // variable de la clase opiniones
 // $asignacion = New misAsignaciones($curso, $profesorado, $materia); // Uso el constructor para pasarle la clase curso, profesorado y materias a Asignaciones
-$evaluacion = New misEvaluaciones(); // variable de la clase alumnos
+$evaluacion = New misEvaluaciones(); // variable de la clase Evaluaciones
 
 // Variables de sesión
 session_start();
@@ -146,6 +146,9 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 					<li>IMPORTANTE: acepta los cambios pulsando GRABAR.</li>
 				</ol>
 			</div>
+			<p style="text-align: center; margin: 40px;">
+				<iframe width="800" height="500" src="https://www.youtube.com/embed/dvRLffYElB4" frameborder="0" allowfullscreen></iframe>
+			</p>	
 		</div>
 		
 	   </div> <!-- &&&& FIN DE PESTAÑAS-->	
