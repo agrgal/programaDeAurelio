@@ -26,6 +26,7 @@ if (!isset($_SESSION['menuIZQ'])) { $_SESSION['menuIZQ']=0; }
 <head profile="http://www.w3.org/2005/10/profile">
   <!-- *** Principio del HEAD *************************************-->	
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-15" >
+  <meta name="robots" content="noindex,nofollow"> <!-- Evita que sea indexada en las búsquedas de Google -->
   <title>Índice - página de tutoría</title>
   <link rel="icon" 
         type="image/png" 
