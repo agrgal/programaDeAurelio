@@ -6,8 +6,8 @@ $puertatrasera="seri11700767";
 // variables de conexion mysql
 $mysql_server="";
 $mysql_login="root";
-$mysql_pass="7171";
-$bd="bdtutoria";
+$mysql_pass="seri11700767";
+$bd="bdseritium";
 // variables de conexion GMAIL
 $remitente="instituto.seritium@gmail.com";
 $remitentepuerto=465;
