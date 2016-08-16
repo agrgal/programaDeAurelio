@@ -26,6 +26,7 @@
   
   <!-- FROALA Editor -->
   <!-- <link media="screen" rel="stylesheet" href="./jquery/froala/css/froala_editor.min.css">
-  <link media="screen" rel="stylesheet" href="./jquery/froala/css/froala_style.min.css"> -->
+  <link media="screen" rel="stylesheet" href="./jquery/froala/css/froala_style.min.css">-->
   
+
 

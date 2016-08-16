@@ -34,6 +34,21 @@ color: #184208;
 font-family:Averia Gruesa Libre;
 }	
 
+#editorOpinion, #editorActuaciones, #editorMejora { /* cargando el editor froala, es posible que no sirvan todas estas características */
+	font-size: 33px;
+	font-family: Comic Sans MS,Arial,Verdana;
+	text-align: justify;
+	margin-top: 10px;
+	margin-left: 5px;
+	padding: 10px;
+	background-color: rgba(0, 60, 30, 0.2);
+	    border-radius: 2px;
+        box-shadow: 2px 2px 2px darkgreen;
+    min-height: 1em;
+    width: 95%;
+    overflow: hidden;
+}
+
 #eligeEval {
 	float:right;
 	width: 10%;
@@ -42,7 +57,7 @@ font-family:Averia Gruesa Libre;
 	text-align: center;
 }
 
-.zonaEscrituraOpiniones {
+/* .zonaEscrituraOpiniones {
     width: 98%;
     margin: 5px auto;
     padding: 4px 4px;
@@ -62,7 +77,7 @@ transform:rotateZ(0.2deg);
 -moz-transform:rotateZ(0.2deg);
 -webkit-transform:rotateZ(0.2deg);
 -o-transform:rotateZ(0.2deg);
-}
+} */
 
 /* Clase del div donde se encuentran las evaluaciones */
 .divNombreEval {
