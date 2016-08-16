@@ -119,11 +119,12 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 			<h2></h2>
 			<h2>Asunto</h2>
 			<div class="zonaEscrituraEmail" id="zonaEscrituraEmailAsunto">
-				<div id="editorAsunto" class="froala-view" title="Escribe asunto" style="font-size: 28px;"></div>
+				<!-- <div id="editorAsunto" class="froala-view" title="Escribe asunto" style="font-size: 28px;"></div> -->
+				<textarea id="editorAsunto" title="Escribe asunto" style="font-size: 28px;"></textarea>
 			</div>
 			<h2>Cuerpo del Mensaje</h2>
 			<div class="zonaEscrituraEmail" >
-				<div id="editorMensaje" class="froala-view" title="Escribe el mensaje a enviar"  style="font-size: 40px;"></div>
+				<textarea id="editorMensaje" title="Escribe el mensaje a enviar"  style="font-size: 35px;"></textarea>
 			</div>
 			<button id="enviarMensaje"><i class="fa fa-envelope" style="font-size: 4em;"></i></button>
 		</div>
@@ -180,7 +181,8 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
   <script type="text/javascript" src="./jquery/jqx/jqx-all.js"></script> 
   <!-- Owl carousel 
   <script type="text/javascript" src="./owl-carousel/owl.carousel.js"></script>
-  <!-- Editor de texto froala. Non commercial use -->
+ 
+  <!-- Editor de texto froala. Non commercial use 
   <script src="./jquery/froala/js/froala_editor.min.js"></script>  
   <script src="./jquery/froala/js/langs/es.js"></script>  
   <script src="./jquery/froala/js/plugins/char_counter.min.js"></script>
@@ -191,7 +193,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
   <script src="./jquery/froala/js/plugins/font_family.min.js"></script>
   <script src="./jquery/froala/js/plugins/font_size.min.js"></script>
   <script src="./jquery/froala/js/plugins/block_styles.min.js"></script>
-  <script src="./jquery/froala/js/plugins/video.min.js"></script>
+  <script src="./jquery/froala/js/plugins/video.min.js"></script>-->
   
   <script>     
      
@@ -255,8 +257,10 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		 // ========================================================================================
 		 $('#enviarMensaje').click(function(e) {
 			var SPara = $("#Para").val();
-			var SAsunto = $("#editorAsunto").editable("getHTML", false, false);
-			var SMensaje = $("#editorMensaje").editable("getHTML", false, false);
+			// var SAsunto = $("#editorAsunto").editable("getHTML", false, false);
+			// var SMensaje = $("#editorMensaje").editable("getHTML", false, false);
+			var SAsunto = $("#editorAsunto").val();
+			var SMensaje = $("#editorMensaje").val();
 			$.when(sendEmail(SPara, SAsunto, SMensaje)).done(function(data){
 				try {
 					// alert(data);
@@ -278,7 +282,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		 // Cuadro de escritura 
 		 // **********************************
 
-		 $('#editorMensaje').editable({ // idioma también cargando el es.js 
+		 /* $('#editorMensaje').editable({ // idioma también cargando el es.js 
 				 inlineMode: false, language: 'es', maxCharacters: 3000,
 				 placeholder: 'Escribe el cuerpo del mensaje. Hasta 3000 caracteres...', 
 				 heightMin: 100, heightMax: 300, height: 200,
@@ -298,8 +302,8 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 					   ,"createLink", "insertHorizontalRule", "table","html"]
 		 });
 		 // **********************************
-		 
-		 
+		 */
+		 	 
 	 
 		// Al pulsar sobre un div de profesor, se cambia su color y se añade un dato al div Para
 		$('.divasignacionEmail').click(function(e) { 
