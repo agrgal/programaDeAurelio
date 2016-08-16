@@ -153,13 +153,17 @@
 }
 
 #editor { /* cargando el editor froala, es posible que no sirvan todas estas características */
-	font-size: 1.1em;
-	text-align: left;
+	font-size: 33px;
+	font-family: Comic Sans MS,Arial,Verdana;
+	text-align: justify;
+	margin-top: 10px;
 	padding: 10px;
 	background-color: rgba(0, 60, 30, 0.2);
 	    border-radius: 2px;
         box-shadow: 2px 2px 2px darkgreen;
     min-height: 1em;
+    width: 90%;
+    overflow: hidden;
 }
 
 /* ========= =============================================================  ===== */

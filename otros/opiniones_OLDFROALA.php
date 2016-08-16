@@ -51,9 +51,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
   <!-- Linkar a hojas de estilo CSS -->
   <!-- ***************************** -->
   <?php include_once("./css/cargarestiloscss.php"); ?>
-  <!-- include libraries(jQuery, bootstrap) -->
-
-  
+ 
   <!-- *** Final del HEAD, antes los ficheros de enlace a CSS ******-->
 </head>
 
@@ -173,8 +171,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 						  <!-- Zona de escritura -->
 						  <div id="zonaEscribir">
 							  <!-- Editor FROALA. Importante, añadir la clase froala-view -->
-							  <!-- <div id="editor"></div> -->
-							  <textarea id="editor" onkeyup="textAreaAdjust(this);" onfocus="textAreaAdjust(this);"></textarea>
+							  <div id="editor" class="froala-view"></div>
 						  </div>
 					    </div>
 						<h3>...bien puedes eligir una pre-establecida</h3>
@@ -270,17 +267,15 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
   
   <script src="./jquery/external/jquery/jquery.js"></script>
   <script src="./jquery/jquery-ui.min.js"></script> <!-- version 1.11.2 -->
-  
   <!-- <script src="//code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script> <!-- version 1.11.0 -->
   <!-- <script src="./htmlsuelto/js_menu.js"></script>   Incorpora al script los menús a la izquierda -->  
   <script type="text/javascript" src="./jquery/jqx/jqxcore.js"></script>
   <script type="text/javascript" src="./jquery/jqx/jqx-all.js"></script> 
   <!-- Owl carousel -->
-  <script type="text/javascript" src="./owl-carousel/owl.carousel.js"></script>  
-  
-  
+  <script type="text/javascript" src="./owl-carousel/owl.carousel.js"></script>
+   
   <!-- Editor de texto froala. Non commercial use -->
-  <!-- <script src="./jquery/froala/js/froala_editor.min.js"></script>  
+  <script src="./jquery/froala/js/froala_editor.min.js"></script>  
   <script src="./jquery/froala/js/langs/es.js"></script>  
   <script src="./jquery/froala/js/plugins/char_counter.min.js"></script>
   <script src="./jquery/froala/js/plugins/tables.min.js"></script>
@@ -290,7 +285,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
   <script src="./jquery/froala/js/plugins/font_family.min.js"></script>
   <script src="./jquery/froala/js/plugins/font_size.min.js"></script>
   <script src="./jquery/froala/js/plugins/block_styles.min.js"></script>
-  <script src="./jquery/froala/js/plugins/video.min.js"></script> -->
+  <script src="./jquery/froala/js/plugins/video.min.js"></script>
   <script>     
      
      $(document).ready(function() {  		 
@@ -383,12 +378,17 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
         // DEFINO tabs. LLAMO Pestañas. Defino editor en zonaEscribir. Defino fecha
         // ========================================================================================
         
-         $('#pestañas').tabs();  		 
-	 
-	    // AQUí el editor
-	    // **************
-		// $("#editor").autoResize(); 
-
+         $('#pestañas').tabs();      
+		 
+		 // Cuadro de escritura 
+		 $('#editor').editable({ // idioma también cargando el es.js 
+			 inlineMode: false, language: 'es', maxCharacters: 5000,
+			 placeholder: 'Escribe algo. Hasta 5000 caracteres...', 
+			 buttons: ["bold", "italic", "underline", "strikeThrough","sep"
+			           ,"fontFamily", "fontSize", "formatBlock", "color","sep"
+			           ,"insertOrderedList", "insertUnorderedList", "outdent", "indent", "sep"
+			           ,"createLink", "insertHorizontalRule", "table","html"]
+		 });
 		 
 		 // Fecha		 
 		 $("#fecha").datepicker({  			 
@@ -414,8 +414,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 				   onSelect: function (event) {
 					   event.preventDefault;
 					   $("#borrartodo").click(); // borra todos los items
-					   // $("#editor").editable("setHTML", "", true); // campo texto lo pone a cero
-					   $("#editor").val("");
+					   $("#editor").editable("setHTML", "", true); // campo texto lo pone a cero
 					   inicializaItems(); // Pone en pantalla el primer grupo de items...					   
 					   fechaDada = $("#muestrafecha").val();
 					   $("#sendFecha").val(fechaDada); // SENDFECHA
@@ -462,8 +461,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 						}
 				        // Limpieza de datos en pantalla
 				        $("#borrartodo").click(); // borra todos los items
-				        // $("#editor").editable("setHTML", "", true); // campo texto lo pone a cero
-			            $("#editor").val("");
+				        $("#editor").editable("setHTML", "", true); // campo texto lo pone a cero
 			            inicializaItems(); // Pone en pantalla el primer grupo de items...
 			            // Segundo conjunto de datos.
 			      		// alert(data2[0]);
@@ -564,8 +562,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 						}
 				        // Limpieza de datos en pantalla
 				        $("#borrartodo").click(); // borra todos los items
-				        // $("#editor").editable("setHTML", "", true); // campo texto lo pone a cero
-						$("#editor").val("");
+				        $("#editor").editable("setHTML", "", true); // campo texto lo pone a cero
 				        // $("#fecha").datepicker("setDate",fechaTrabajo); // pone la fecha escogida 
 			            inicializaItems(); // Pone en pantalla el primer grupo de items...
 			            // Segundo conjunto de datos.
@@ -839,9 +836,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 		 
 		 // Retorno de Obtener opinion. Datos proceden de la obtención mediante la llamada a opinionesAlumnos
 		 function opiniones(observaciones,itemsCadena) {
-			   // $("#editor").editable("setHTML", observaciones, true); // obtiene las observaciones...
-			   // alert(observaciones);
-			   $("#editor").val(observaciones);
+			   $("#editor").editable("setHTML", observaciones, true); // obtiene las observaciones...
 			   var items=itemsCadena.split("#"); // obtiene un array con los items...
 			   //los items tienen que venir ya borrados... llamada a la función borrar todo...
 			   // alert(datos2.items);
@@ -853,7 +848,6 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 			   $("#zonaEscribir").appendTo("#contenedorOpinionesElegidas"); // pongo la zona escribir al final		 
 		 }
 			
-		
 		 // *****************************************************************************
 		 // Condiciones de CARGA AL INICIO, cuando ya todo se ha ejecutado... ¡¡Pues sí!!
 		 // *****************************************************************************
@@ -872,12 +866,11 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 	 //************************** 
 	 // F1) Graba/modifica una opinion...
 	 function insertarOpinion(idAlumno,fechaEscogida,cadenaItems) {
-		     // alert($("#editor").val());
 		     console.log("****************** Grabar Opinión *******************");
 		     console.log("fechaMySQL: "+fechaEscogida);
 		     console.log("alumno: "+idAlumno);
 		     console.log("cadenaItems: "+cadenaItems);
-		     console.log("observaciones: "+$("#editor").val());
+		     console.log("observaciones: "+$("#editor").editable("getHTML", false, false));
 		     console.log("idasignacion: "+$("#idasignacion").val());
 			 return $.ajax({
 			      type: 'POST',
@@ -887,8 +880,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 				  fecha: fechaEscogida, // el campo oculto, que tiene la fecha formateada tipo MySQL
 				  alumno: idAlumno, // La variable de sesión de la asignación se consigue en el script.
 				  items: cadenaItems,
-				  observaciones: $("#editor").val(), 
-				  //  $("#editor").val(), // $("#editor").editable("getHTML", false, false), // ver FROALA methods
+				  observaciones: $("#editor").editable("getHTML", false, false), // ver FROALA methods
 				  idasignacion: $("#idasignacion").val(),
 				  },					 		 
 		          success: function(data, textStatus, jqXHR){
@@ -962,13 +954,6 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 		  });
 	 } // Fin de la función de obtener 
 	  
-     // ************************************
-     // F5) Función que recalcula el alto del cuadro de texto del textarea 
-		function textAreaAdjust(o) {
-			o.style.height = "1px";
-			o.style.height = (33 + o.scrollHeight)+"px";
-		}
-		
  <!-- * =======================================================================================================   * --> 	
 
   </script>

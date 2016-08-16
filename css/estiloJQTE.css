@@ -1,0 +1,14 @@
+ /* editor area JQTE */
+ 
+.jqte_editor, .jqte_source {
+    min-height:150px;
+	text-align: justify;
+}
+
+.jqte * {
+	font-size: 30px;
+}
+
+.jqte_toolbar , .jqe_tool, .jqte_tool_label {
+	font-size: 14px;
+}

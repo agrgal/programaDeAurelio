@@ -112,15 +112,19 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 				<h2>Opinión sobre la clase</h2>
 					<!-- Editor FROALA. Importante, añadir la clase froala-view -->
 					<div class="zonaEscrituraOpiniones" >
-						 <div id="editorOpinion" class="froala-view" title="Inserta una OPINIÓN sobre la clase en GENERAL"></div>
+						 <!-- <div id="editorOpinion" class="froala-view" title="Inserta una OPINIÓN sobre la clase en GENERAL"></div> -->
+						 <textarea id="editorOpinion" title="Inserta una OPINIÓN sobre la clase en GENERAL"
+						 onkeyup="textAreaAdjust(this);" onfocus="textAreaAdjust(this);"></textarea>
 					</div>
 				<h2>Actuaciones llevadas a cabo</h2>
 					<div class="zonaEscrituraOpiniones">
-						<div id="editorActuaciones" class="froala-view" title="¿Qué ACTUACIONES has llevado a cabo en esta evaluación con este grupo?"></div>
+						<textarea id="editorActuaciones" title="¿Qué ACTUACIONES has llevado a cabo en esta evaluación con este grupo?"
+						onkeyup="textAreaAdjust(this);" onfocus="textAreaAdjust(this);"></textarea>
 					</div>
 				<h2>Propuestas de mejora</h2>
 					<div class="zonaEscrituraOpiniones">
-						<div id="editorMejora" class="froala-view" title="¿Qué opinas que debe MEJORAR en este grupo?"></div>
+						<textarea id="editorMejora" title="¿Qué opinas que debe MEJORAR en este grupo?"
+						onkeyup="textAreaAdjust(this);" onfocus="textAreaAdjust(this);"></textarea>
 					</div>	
 			</div>
 			
@@ -226,8 +230,9 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
   <script type="text/javascript" src="./jquery/jqx/jqxscrollbar.js"></script> 
   <!-- Owl carousel --> 
   <script type="text/javascript" src="./owl-carousel/owl.carousel.js"></script>
+  
   <!-- Editor de texto froala. Non commercial use -->
-  <script src="./jquery/froala/js/froala_editor.min.js"></script>  
+  <!-- <script src="./jquery/froala/js/froala_editor.min.js"></script>  
   <script src="./jquery/froala/js/langs/es.js"></script>  
   <script src="./jquery/froala/js/plugins/char_counter.min.js"></script>
   <script src="./jquery/froala/js/plugins/tables.min.js"></script>
@@ -237,7 +242,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
   <script src="./jquery/froala/js/plugins/font_family.min.js"></script>
   <script src="./jquery/froala/js/plugins/font_size.min.js"></script>
   <script src="./jquery/froala/js/plugins/block_styles.min.js"></script>
-  <script src="./jquery/froala/js/plugins/video.min.js"></script>
+  <script src="./jquery/froala/js/plugins/video.min.js"></script>-->
   
   <script>     
      
@@ -313,14 +318,14 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
      // ========================================================================================
 	 
 	 // Cuadro de escritura 
-	 $('#editorOpinion, #editorActuaciones, #editorMejora').editable({ // idioma también cargando el es.js 
+	 /* $('#editorOpinion, #editorActuaciones, #editorMejora').editable({ // idioma también cargando el es.js 
 			 inlineMode: false, language: 'es', maxCharacters: 3000,
 			 placeholder: 'Escribe algo. Hasta 3000 caracteres...', 
 			 buttons: ["bold", "italic", "underline", "strikeThrough","sep"
 			           ,"fontFamily", "fontSize", "formatBlock", "color","sep"
 			           ,"insertOrderedList", "insertUnorderedList", "outdent", "indent", "sep"
 			           ,"createLink", "insertHorizontalRule", "table","html"]
-	 });
+	 }); */
 
 	 // ========================================================================================	 
 	 // Evaluación pulsada por defecto al INICIAR LA APLICACIÓN 
@@ -376,17 +381,24 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 		   $.when(obtenerOpinionGeneral(evalPulsada)).done(function(data){
 				try {
 				   var datos = jQuery.parseJSON(data); // recupera en el array datos los valores
-				   $("#editorOpinion").editable("setHTML", datos.opinion, true); // obtiene la opinion
-				   $("#editorActuaciones").editable("setHTML", datos.actuaciones, true); // obtiene las actuaciones
-				   $("#editorMejora").editable("setHTML", datos.mejora, true); // obtiene las mejoras 
+				   // $("#editorOpinion").editable("setHTML", datos.opinion, true); // obtiene la opinion
+				   // $("#editorActuaciones").editable("setHTML", datos.actuaciones, true); // obtiene las actuaciones
+				   // $("#editorMejora").editable("setHTML", datos.mejora, true); // obtiene las mejoras 
+				   $("#editorOpinion").val(datos.opinion);
+				   $("#editorActuaciones").val(datos.actuaciones);
+				   $("#editorMejora").val(datos.mejora);
 				   notificaciones(4,'<div><h1><i class="fa fa-info-circle" style="color: darkblue;"></i>&nbsp;Dato recuperado correctamente</h1></div>');
 				} catch(err) {
 				   console.log(err.message);
-				   $("#editorOpinion").editable("setHTML", "", true); // opinion vacía
-				   $("#editorActuaciones").editable("setHTML", "", true); // actuaciones vacías
-				   $("#editorMejora").editable("setHTML", "", true); // mejoras vacía
+				   // $("#editorOpinion").editable("setHTML", "", true); // opinion vacía
+				   // $("#editorActuaciones").editable("setHTML", "", true); // actuaciones vacías
+				   // $("#editorMejora").editable("setHTML", "", true); // mejoras vacía
+				   $("#editorOpinion").val("");
+				   $("#editorActuaciones").val("");
+				   $("#editorMejora").val("");
 				   notificaciones(5,'<div><h1><i class="fa fa-exclamation-circle" style="color: red;"></i>&nbsp;El dato no existe aún</h1></div>');
 				}	
+
 		   });
 	 } // Fin de la funciones Obtener Opinion
 	 
@@ -426,9 +438,9 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 	 function insertarOpinionGeneral(evaluacion) {
 		     console.log("****************** Grabar Opinión *******************");
 		     console.log("eval: "+evaluacion);
-		     console.log("opinion: "+$("#editorOpinion").editable("getHTML", false, false));
-		     console.log("actuaciones: "+$("#editorActuaciones").editable("getHTML", false, false));
-		     console.log("mejora: "+$("#editorMejora").editable("getHTML", false, false));
+		     // console.log("opinion: "+$("#editorOpinion").editable("getHTML", false, false));
+		     // console.log("actuaciones: "+$("#editorActuaciones").editable("getHTML", false, false));
+		     // console.log("mejora: "+$("#editorMejora").editable("getHTML", false, false));
 		     console.log("idasignacion: "+$("#idasignacion").val());
 		     return $.ajax({
 			      type: 'POST',
@@ -436,10 +448,13 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 			      url: "./opiniones/scripts/insertarOpinionGeneral.php", 
 			      data: { // Parece que las llamadas con ajax van mejor que con POST...
 				  evaluacion: evaluacion, // variable con la evaluación escogida
-				  opinion: $("#editorOpinion").editable("getHTML", false, false),
-		          actuaciones: $("#editorActuaciones").editable("getHTML", false, false),
-		          mejora: $("#editorMejora").editable("getHTML", false, false),
-				  idasignacion: $("#idasignacion").val(),
+				  // opinion: $("#editorOpinion").editable("getHTML", false, false),
+		          // actuaciones: $("#editorActuaciones").editable("getHTML", false, false),
+		          // mejora: $("#editorMejora").editable("getHTML", false, false),
+		          opinion: $("#editorOpinion").val(),
+		          actuaciones: $("#editorActuaciones").val(),
+		          mejora: $("#editorMejora").val(),		  
+				  idasignacion: $("#idasignacion").val(),				  
 				  },					 		 
 		          success: function(data, textStatus, jqXHR){
 					 // alert(data);
@@ -474,6 +489,13 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 			  }
 		  }); 
 	  } // Fin de la función Obtener dato 
+	  
+	       // ************************************
+     // F5) Función que recalcula el alto del cuadro de texto del textarea 
+		function textAreaAdjust(o) {
+			o.style.height = "1px";
+			o.style.height = (33 + o.scrollHeight)+"px";
+		}
 	  
  <!-- * =======================================================================================================   * --> 	
 
