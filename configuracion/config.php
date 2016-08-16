@@ -2,16 +2,16 @@
 // Variables de...
 $cerrarasignacion=false;
 $otra=false;
-$puertatrasera="seri11700767";
+$puertatrasera="********";
 // variables de conexion mysql
 $mysql_server="";
 $mysql_login="root";
-$mysql_pass="seri11700767";
+$mysql_pass="********";
 $bd="bdseritium";
 // variables de conexion GMAIL
 $remitente="instituto.seritium@gmail.com";
 $remitentepuerto=465;
 $remitenteSMTPHOST="smtp.gmail.com";
 $remitenteSMTPSecure = 'ssl';
-$remitentepass="seri11700767";
+$remitentepass="**********";
 ?>
