@@ -60,7 +60,9 @@ class misCursos
 	// 2) Funcion que retorna los distintos valores de niveles dentro de la lista de cursos
 	public function listarNiveles () {
 	   $this->listarCursos(); // llama a la función que lista los cursos
-	   $this->listaDeNiveles["nivel"] = array_unique($this->listaDeCursos['nivel']);	   
+	   $cursosDados = array_unique($this->listaDeCursos['nivel']);
+	   $this->listaDeNiveles["nivel"] = array_filter($cursosDados, function($var) {return !is_null($var); });
+	   // $this->listaDeNiveles["nivel"] = array_filter(array_unique($this->listaDeCursos['nivel']), function($value) { return $value !== ''; })	   
 	   sort($this->listaDeNiveles["nivel"]);
 	   foreach($this->listaDeNiveles["nivel"] as $clave => $valor) {
 		   $this->listaDeNiveles["input"][$clave]=

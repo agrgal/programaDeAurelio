@@ -83,7 +83,12 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
      
 	<div id="test"> <!-- TESTER -->
 	    <p id="testear">
-			<?php // echo 'Imprime variable de sesión '.$_SESSION["idasignacion"]." - ".$_SESSION["profesor"]; ?>
+			<?php // echo 'Imprime variable de sesión '.$_SESSION["idasignacion"]." - ".$_SESSION["profesor"]; 
+				// foreach ($curso->listaDeCursos["corto"] as $clave=>$valor) {
+				// 	echo $clave." - ".$valor.'</br>';
+					// echo $curso->listaDeNiveles["input"][$clave]."&nbsp;&nbsp;";
+				// }
+			?>
 	    </p>
     </div>	<!-- TESTER -->
     
@@ -141,7 +146,8 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 							<h3>Elige un curso</h3>
 							<?php // Posiciona los niveles 
 							foreach ($curso->listaDeNiveles["nivel"] as $clave=>$valor) {
-								echo $curso->listaDeNiveles["input"][$clave]."&nbsp;&nbsp;";
+								// echo $clave." - ".$valor;
+								if (!is_null($valor) and !empty($valor)) {echo $curso->listaDeNiveles["input"][$clave]."&nbsp;&nbsp;";}
 							}
 							?>
 						</div>
