@@ -213,9 +213,6 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
     <!-- ******************************************************************************************** --> 				
 				
 				<div id="Instrucciones">
-					<p style="text-align: justify; margin: 40px;">
-					Nota 19-Nov-2016: La pantalla se bloquea mientras guarda datos en el servidor. Guarda datos automáticamente cada 40s. 
-					</p>
 					<p style="text-align: center; margin: 40px;"><iframe width="800" height="500" src="https://www.youtube.com/embed/htei6ygu5yQ" frameborder="0" allowfullscreen></iframe></p>
 				</div>
 				
@@ -280,8 +277,6 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
   <script type="text/javascript" src="./jquery/jqx/jqx-all.js"></script> 
   <!-- Owl carousel -->
   <script type="text/javascript" src="./owl-carousel/owl.carousel.js"></script>  
-  <!-- Block pagina -->
-  <script type="text/javascript" src="./jquery/block/jquery.blockUI.js"></script> 
   
   
   <!-- Editor de texto froala. Non commercial use -->
@@ -297,19 +292,18 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
   <script src="./jquery/froala/js/plugins/block_styles.min.js"></script>
   <script src="./jquery/froala/js/plugins/video.min.js"></script> -->
   <script>     
-   
- 		 // Versiones de JQUERY y JQUERY-UI
+     
+     $(document).ready(function() {  		 
+		 
+		 // Versiones de JQUERY y JQUERY-UI
 		 // alert($().jquery);
-	     // alert($.ui.version);    
-     
-     $(document).ready(function() {  	
-     
+	     // alert($.ui.version);	
+	     
 	    // Variables globales       		 
         var opcionMenu; // Menú actualmente elegido de items
         var indexAlumno; //Alumno actualmente en la zona del carrusel 
         var fechaTrabajo = new Date();
         var RefrescaSelectMenuFechas = true; // Esta variable permite refrescar o no el select menu...
-        var tiempoRefresco = 40*1000; // tiempo de set interval (19-11-2016 --> cada 40 s)
 
         // ========================================================================================
         // Incorpora otros scripts
@@ -351,21 +345,18 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 		setInterval(function(){
 		  if (indexAlumno>0) {
 			   $.when(insertarOpinion(indexAlumno,fechaDada,getItemsElegidos())).done(function(data){
-				    bloquear(); // bloqueo hasta no terminar llamadas ajax
-				    try {
+				   try {
 					console.log("Interval Activo. Fecha Dada: "+fechaDada+ " Indice alumno: "+indexAlumno);
 					var recupera = jQuery.parseJSON(data);
 					recupera.notificacion = '<div><h1><b>Automático</b></h1></div>' + recupera.notificacion;
 					notificaciones(recupera.devolver,recupera.notificacion); // pasa los datos a la función...
-					document.getElementById("editor").focus(); // añado el insertar el foco en la caja de texto para seguir escribiendo.
 					}
 					catch(err) {
 					console.log(err.message);
 					}
-					desbloquear(); // desbloquear hasta no terminar llamadas ajax
 			   });
 		  } // Guarda o modifica los datos que sean..
-		},tiempoRefresco);
+		},20000);
 
 	    // ========================================================================================
         // Defino diálogos y/o notificaciones
@@ -410,8 +401,7 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 				   beforeShow: function(event) { // Justo antes de mostrarlo, guarda lo de la fecha anterior...
 					   event.preventDefault;  
 					   $.when(insertarOpinion(indexAlumno,fechaDada,getItemsElegidos())).done(function(data){
-						    bloquear(); // bloqueo hasta no terminar llamadas ajax
-						    try {
+						   try {
 							console.log("Before Show. Fecha Dada: "+fechaDada+ " Indice alumno: "+indexAlumno);
     						var recupera = jQuery.parseJSON(data);
     						notificaciones(recupera.devolver,recupera.notificacion); // pasa los datos a la función...
@@ -419,7 +409,6 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 						    catch(err) {
 							console.log(err.message);
 						    }
-						    desbloquear(); // bloqueo hasta no terminar llamadas ajax
 					   });
 				   },
 				   onSelect: function (event) {
@@ -432,14 +421,12 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 					   $("#sendFecha").val(fechaDada); // SENDFECHA
 					   fechaTrabajo = convertirFecha(fechaDada); //???
 					   $.when(obtenerOpinion(indexAlumno,fechaDada)).done(function(data2){
-							bloquear(); // bloqueo hasta no terminar llamadas ajax
 							try {
 							   var datos2 = jQuery.parseJSON(data2); // recupera en el array datos los valores
 							   opiniones(datos2.observaciones,datos2.items);
 							} catch(err) {
 								console.log(err.message);
 							}	
-							desbloquear(); // bloqueo hasta no terminar llamadas ajax
 					   });
 				   },
 					   
@@ -465,10 +452,6 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 						// por eso los datos están en el lugar 0
 						// alert(data1[0]);
 						// parsea datos de lo primero que retorna
-						
-						// Bloqueo
-						bloquear();
-						
 						try {
 							console.log("SELECT 1.- Notificación");
     						var datos1 = jQuery.parseJSON(data1[0]);
@@ -497,10 +480,6 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 						$("#fecha").datepicker("setDate",fechaTrabajo);
 						fechaDada = $("#muestrafecha").val();	
 						$("#sendFecha").val(fechaDada); // SENDFECHA
-						
-						// Desbloqueo
-						desbloquear();
-						
 					}); // Fin del when	
 					
 				    } // Fin del IF RefrescaSelectMenuFechas				    
@@ -575,10 +554,6 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 						// por eso los datos están en el lugar 0
 						// alert(data1[0]);
 						// parsea datos de lo primero que retorna
-						
-						// Bloqueo
-						bloquear();
-						
 						try {
 							console.log("Carosuel 1.- Notificación...");
     						var datos1 = jQuery.parseJSON(data1[0]);
@@ -621,9 +596,6 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 						catch(err) {
 							console.log(err.message);
 						}
-						
-						// Desbloqueo
-						desbloquear();
 				});	
 			},
 		 });
@@ -880,21 +852,6 @@ if ($_SESSION['permisos']<1) { // en caso que no tenga permisos para entrar
 			   });	
 			   $("#zonaEscribir").appendTo("#contenedorOpinionesElegidas"); // pongo la zona escribir al final		 
 		 }
-		 
-		 // *******************************
-		 // función bloquear y desbloquear
-		 // *******************************
-		 function bloquear() {
-			 $.blockUI({ 
-				 message: '<h1 style="padding: 1em;">...Espera, por favor... Grabando Datos ...</h1>',
-				 theme: true, // set to true to use with jQuery UI themes 
-				 title: 'Bloqueo de pantalla',				 
-			 }); 
-		 }
-		 
-		 function desbloquear() {
-			 setTimeout($.unblockUI, 500);
-		 }	 
 			
 		
 		 // *****************************************************************************
