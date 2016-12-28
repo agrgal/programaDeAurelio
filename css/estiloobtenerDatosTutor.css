@@ -201,24 +201,24 @@
 	overflow:hidden;
 }
 
-#QuieroFotoSN {
-    border: 0px solid black;
+#QuieroFotoSN, #QuieroPageBreak {
+    border: 0px solid green;
     margin: 2px 10px;
 	float:left;
 	width: 50%;
 	text-align: center;
-	clear: both;
+	/* clear: both; */
 }
 
-#QuieroFotoSN h3 {
+#QuieroFotoSN h3, #QuieroPageBreak h3 {
 	font-size: 0.9em;
 }
 
-#FotoYN {
-	border: 2px solid black;
+#fotoYN, #PageBreakYN {
+	border: 0px solid red;
 	float:left;
 	width: 40%;
-	clear:both;
+	/* clear:both; */
 }
 
 #TituloListaDeOpciones {

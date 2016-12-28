@@ -1,3 +1,4 @@
+
 <?php
 //header('Content-Type: text/html; charset=UTF-8'); // importante; especifica el charset de caracteres.
 header('Content-Type: text/html; charset=ISO-8859-15'); // importante; especifica el charset de caracteres.
@@ -63,6 +64,7 @@ $html = iconv("UTF-8","ISO-8859-15",$html); // No sé por qué, pero funciona me
 // $html = str_replace("./upload", "../../upload", $html);
 $html = str_replace('src="./imagenes/', 'style="width: 75px; height:auto; max-width: 75px; max-height: 125px; margin-right: 10px;" src="../../imagenes/', $html);
 $html = str_replace('src="./upload/', 'style="width: 75px; height:auto; max-width: 75px; max-height: 125px; margin-right: 10px;" src="../../upload/', $html);
+$html = str_replace('</br>','<pagebreak>',$html); // añade salto de página
 // $html = htmlspecialchars($html, ENT_QUOTES);
 // Fin del html 
 

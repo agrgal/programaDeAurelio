@@ -28,28 +28,20 @@ $devuelve="No hay datos que mostrar";
 
 /* echo $_POST["conNombreAlumno"]." - ".$_POST["conNombreAsignacion"] */
 
-/* echo strpos($_POST["SQL"], "BY asignacion") */
-
 if ($_POST["SQL"]) {
 	$datos = json_decode($opiniones->retornaValores($_POST["SQL"]));
 	$total=count($datos);
 	if ($total>0) { $apostilla = "<h2>Se han obtenido un total de ".$total." registros</h2>"; }
 	$devuelve="";	
-	$antiguoNombre=0; // Para poder llevar el control de los saltos
-	$antiguaAsignacion=0; // Para poder llevar el control de los saltos
 	foreach ($datos as $clave => $valor) {
-		// Introduce salto
-		if ($antiguoNombre>0 and $antiguoNombre<>$valor->{"alumno"} and $_POST["salto"]==1 and strpos($_POST["SQL"], "BY alumno")>0) { $salto='</br>'; } else {$salto="";}
+		
+		
 		// Obtiene el nombre del alumno
 		$alumnos->devuelveAlumno($valor->{"alumno"});
-		$antiguoNombre = $valor->{"alumno"}; // Asigno al antiguo nombre el valor del id del alumno
 		$nombreAlumno = $alumnos->esteAlumno["nombre2"];
 		if ($_POST["foto"]==1) { $imagen = '<img src="'.$alumnos->esteAlumno["foto"].'" >';  }
 		// Obtiene el nombre de la asignacion
-		// Introduce salto por asignación
-		if ($antiguaAsignacion>0 and $antiguaAsignacion<>$valor->{"asignacion"} and $_POST["salto"]==1 and strpos($_POST["SQL"], "BY asignacion")>0) { $salto2='</br>'; } else {$salto2="";}
 		$descripcion = $asignaciones->asignacionDescripcion($valor->{"asignacion"});
-		$antiguaAsignacion = $valor->{"asignacion"}; // Asigno a la antigua asignación el valor de id de asignación
 		// Obtiene la fecha		
 		// $fecha = fechaMySQL2DatePicker($valor->{"fecha"});
 		$fecha = fechaMySQL2Larga($valor->{"fecha"}); // fecha en formato largo...
@@ -62,8 +54,7 @@ if ($_POST["SQL"]) {
 		if ($retahila) { $textoPresentar.='<b>ITEMS:&nbsp;</b>'.$retahila." // "; }
 		if ($observaciones) { $textoPresentar.='<b>OBSERVACIONES:&nbsp;</b>'.$observaciones." // "; }
 		if ($textoPresentar) { $textoPresentar=substr($textoPresentar,0,-4); }		
-		if ($textoPresentar) { 
-			$devuelve.=$salto.$salto2; // introduzco un salto de línea  (pongo los dos para que no se pisen; los dos a la vez no pueden ser)      
+		if ($textoPresentar) {         
 			$devuelve.='<table id="'.$valor->{"id"}.'" class="tablaDATOS" elegir="0" alumno="'.$valor->{"alumno"}.'" items="'.$valor->{"items"}.'" observaciones="'.$observaciones.'" >
 			  <tr>';
 			  if ($_POST["foto"]==1) { $devuelve.='<td id="'.$valor->{"id"}.'" rowspan="3" class="TDimagen" >'.$imagen.'</td>'; }
@@ -74,7 +65,6 @@ if ($_POST["SQL"]) {
 			  $devuelve.='<b>EN FECHA:&nbsp;</b>'.$fecha.'</td></tr>
 			  <tr><td>'.$textoPresentar.'</td></tr>
 			  </table><hr class="separador">';
-			  // $devuelve.='<p>'.$salto.'</p>'; // introduzco un salto de línea
 		} // Fin del if comprueba nulidad
 		
 		/* 
@@ -85,7 +75,6 @@ if ($_POST["SQL"]) {
 			<p>'.$retahila.'</p>
 			'.$observaciones.'
 			</div>'; */
-			
 	} // Fin del foreach	
 } // Fin del IF 
 
@@ -96,7 +85,7 @@ if ($devuelve=="") {
 	// echo htmlspecialchars($devuelve,ENT_QUOTES);
 	echo $devuelve.$apostilla;
 } 
-
+  
 ?>
 
 

@@ -167,10 +167,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 						<div id="Opciones">
 							<div id="QuieroFotoSN"><h3>Elige si quieres los resultados con o sin fotografías</h3></div>
 						    <div id="fotoYN" title="Elige si quieres que en la lista a parezcan o no las fotografías"></div>
-						    </br>
-						    <div id="QuieroPageBreak"><h3>Elige si quieres resultados en distintas páginas (IMPORTANTE: ordenar primero por nombre o asignación)</h3></div>
-						    <div id="PageBreakYN" title="Elige si quieres resultados en distintas páginas (IMPORTANTE: ordenar primero por nombre o asignación)"></div>
-						    <div id="TituloListaDeOpciones"><h3>Arrastra los items y colócalos en el orden en el que se mostrarán los datos. Doble click en fechas para ordenar de menor a mayor o viceversa.</h3></div>
+						    <div id="TituloListaDeOpciones"><h3>Arrastra los items y colócalos en el orden en el que se mostrarán los datos.</h3></div>
 						    <div id="ListaDeOpciones">
 								<ul id="ordenable">
 									  <li dt="fecha ASC" id="OrdenFecha" class="ui-state-default" title="Docle Click si quieres cambiar el orden de las fechas"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Ordenar por Fecha "las más antiguas primero"</li>
@@ -320,7 +317,6 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		
 		// 2) Botones de tutoría
 		$("#fotoYN").buttonset(); // escribo los inputs directamente 
-		$("#PageBreakYN").buttonset(); // escribo los inputs directamente 
 		
 		 // ===========================================================================================
 		 // DEFINO tabs. LLAMO Pestañas. y también el acordeon, y los botones de fecha. Lista ordenable
@@ -558,18 +554,6 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 				// rtl: true, // de derecha a izquierda
 				// orientation: 'vertical'
 			});
-		//2) Botón para el SwitchButton de fotos
-            $('#PageBreakYN').jqxSwitchButton({ 
-				height: 100, 
-				width: 290,  
-				checked: false, 
-				theme:'ui-sunny',
-				onLabel:'Con salto',
-				offLabel:'Sin salto',
-				// rtl: true, // de derecha a izquierda
-				// orientation: 'vertical'
-			});
-		
 		
 		// ************************************
 		// Pulso el botón de obtención de datos
@@ -690,9 +674,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 	 // F1) Obtener datos del filtro
 	 function obtenerDatos(conNombreAlumno,conNombreAsignacion) {
 		 if ($("#fotoYN").jqxSwitchButton('checked')) { var fotoSN = 1; } else { var fotoSN=0; }
-		 if ($("#PageBreakYN").jqxSwitchButton('checked')) { var saltoSN = 1; } else { var saltoSN=0; }
 		 // alert(fotoSN);
-		 // alert(saltoSN);
 		 // alert(conNombreAlumno);
 		 // alert(conNombreAsignacion);
 		 console.log("****************** Obtiene SQL *******************");
@@ -704,8 +686,7 @@ if ($_SESSION["permisos"]==2) { $mostrar="text"; } else {  $mostrar="none"; } //
 		      url: "./tutorias/scripts/obtenerDatos.php", // En el script se construye la tabla...
 		      data: { 
 			  SQL: $("#SQL").text(), // La variable de sesión de la asignación se consigue en el script.	
-			  foto: fotoSN,	
-			  salto: saltoSN,	
+			  foto: fotoSN,		
 			  conNombreAlumno: conNombreAlumno,
 			  conNombreAsignacion: conNombreAsignacion,  
 		      },
