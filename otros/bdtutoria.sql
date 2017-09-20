@@ -376,7 +376,7 @@ CREATE TABLE `tb_profesores` (
 --
 
 INSERT INTO `tb_profesores` (`idprofesor`, `Empleado`, `DNI`, `IDEA`, `tutorde`, `email`, `administrador`) VALUES
-(21, 'Gallardo Rodríguez, Aurelio', '31667329d', 'agalrod329', '', 'inf2bacseritium@gmail.com', 0);
+(21, 'Gallardo Rodríguez, Aurelio', '45678921F', 'fghtyui456', '', 'inf2bacseritium@gmail.com', 0);
 --
 -- Indexes for dumped tables
 --
